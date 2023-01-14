@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 use PDO;
 
+$isApi = request()->isXmlHttpRequest() && str(request()->path())->explode('/')->first() === 'api';
+$getVersion = $isApi ? str(request()->path())->explode('/')->skip(1)->first() : '1';
 defined('DB_VERSION') || define('DB_VERSION', str($dbv = request()->header('db-version'))->prepend($dbv ? 'v' : null)->toString());
-defined('API_VERSION') || define('API_VERSION', str(request()->path())->explode('/')->skip(1)->first());
-defined('USER_MODEL') || define('USER_MODEL', 'App\Models\\'.API_VERSION.'\\User');
+defined('API_VERSION') || define('API_VERSION', $getVersion);
+defined('USER_MODEL') || define('USER_MODEL', ! $isApi ? \App\Models\User::class : 'App\Models\\'.API_VERSION.'\\User');
 
 class CustomConfigServiceProvider extends ServiceProvider
 {
@@ -39,21 +41,26 @@ class CustomConfigServiceProvider extends ServiceProvider
     {
         // Load Custom Helpers
         if (file_exists(app_path('Helpers'))) {
-            array_filter(File::files(app_path('Helpers')), function ($file) {
+            array_filter(File::files(app_path('Helpers')), function (\Symfony\Component\Finder\SplFileInfo $file) {
                 if ($file->getExtension() === 'php' && stripos($file->getFileName(), 'helper') !== false) {
-                    require_once app_path('Helpers/'.$file->getFileName());
+                    require_once $file->getPathName();
                 }
             });
         }
 
         config([
             'auth.providers.users.model' => USER_MODEL,
+            'markable.user_model' => USER_MODEL,
             'app.api' => [
                 'version' => [
                     'string' => API_VERSION,
                     'code' => str(API_VERSION)->remove('v')->append('.0.0')->toString(),
                     'int' => (int) str(API_VERSION)->remove('v')->toString(),
                 ],
+            ],
+            'musonza_chat.routes' => [
+                'prefix' => 'api/v'.(int) str(API_VERSION)->remove('v')->toString().'/messenger',
+                'middleware' => ['auth:sanctum'],
             ],
         ]);
 

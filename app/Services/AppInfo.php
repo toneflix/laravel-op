@@ -7,9 +7,9 @@ class AppInfo
     public static function basic()
     {
         return [
-            'name' => 'Greyflix.io',
+            'name' => 'Laravel OP',
             'version' => env('APP_VERSION', config('app.api.version.code', '1.0.0')),
-            'author' => 'Greysoft Technologies Ltd.',
+            'author' => 'Toneflix Code.',
             'updated' => env('LAST_UPDATE', '2022-11-02 00:27:53'),
         ];
     }

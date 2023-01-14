@@ -19,30 +19,10 @@ use ToneflixCode\LaravelFileable\Media;
 
 Route::get('/', function () {
     return view('login', ['api_welcome' => [
-        'Welcome to GreyFlix v1' => AppInfo::basic(),
+        'Welcome to Laravel OP v1' => AppInfo::basic(),
     ],
     ]);
 });
-
-Route::prefix('console')->name('console.')->group(function () {
-    Route::get('/login', [WebUser::class, 'login'])
-        ->middleware('guest')
-        ->name('login');
-
-    Route::post('/login', [WebUser::class, 'store'])
-    ->middleware('guest');
-
-    Route::post('/logout', [WebUser::class, 'destroy'])
-    ->middleware(['web', 'auth'])
-    ->name('logout');
-
-    Route::get('/user', [WebUser::class, 'index'])
-    ->middleware(['web', 'auth', 'admin'])
-    ->name('user');
-});
-
-Route::get('/artisan/backup/action/{action?}', [WebUser::class, 'backup'])->middleware(['web', 'auth', 'admin']);
-Route::get('/artisan/{command}/{params?}', [WebUser::class, 'artisan'])->middleware(['web', 'auth', 'admin']);
 
 Route::get('get/images/{file}', function ($file) {
     return (new Media)->privateFile($file);

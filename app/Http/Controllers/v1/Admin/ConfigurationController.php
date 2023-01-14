@@ -5,53 +5,49 @@ namespace App\Http\Controllers\v1\Admin;
 use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Models\v1\Configuration;
-// use App\Models\v1\File;
-// use App\Models\v1\Transaction;
-// use App\Models\v1\User;
-use App\Services\Media;
+use App\Traits\Meta;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
-// use Flowframe\Trend\Trend;
+use ToneflixCode\LaravelFileable\Media;
+use Winter\LaravelConfigWriter\ArrayFile;
 
 class ConfigurationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    use Meta;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    protected $data_type = [
+        'prefered_notification_channels' => 'array',
+        'keep_successful_queue_logs' => 'boolean',
+        'task_completion_reward' => 'number',
+        'strict_mode' => 'boolean',
+        'rich_stats' => 'boolean',
+        'slack_debug' => 'boolean',
+        'slack_logger' => 'boolean',
+        'verify_email' => 'boolean',
+        'verify_phone' => 'boolean',
+        'token_lifespan' => 'number',
+        'use_queue' => 'boolean',
+        'force_https' => 'boolean',
+
+    ];
 
     public function saveSettings(Request $request)
     {
-        \Gate::authorize('can-do', ['configuration']);
-
         if ($request->has('type') && $request->type == 'configuration') {
             return $this->saveConfiguration($request);
         }
+
+        $abval = (bool) $request->auth_banner ? 'mimes:jpg,png' : 'sometimes';
+        $wbval = (bool) $request->welcome_banner ? 'mimes:jpg,png' : 'sometimes';
+        $dbval = (bool) $request->default_banner ? 'mimes:jpg,png' : 'sometimes';
 
         $this->validate($request, [
             'contact_address' => ['nullable', 'string'],
             'currency' => ['required', 'string'],
             'currency_symbol' => ['nullable', 'string'],
-            'default_banner' => [Rule::requiredIf(fn () => ! config('settings.default_banner')), 'mimes:jpg,png'],
-            'auth_banner' => [Rule::requiredIf(fn () => ! config('settings.auth_banner')), 'mimes:jpg,png'],
-            'welcome_banner' => [Rule::requiredIf(fn () => ! config('settings.welcome_banner')), 'mimes:jpg,png'],
+            'default_banner' => [Rule::requiredIf(fn () => ! config('settings.default_banner')), $dbval],
+            'auth_banner' => [Rule::requiredIf(fn () => ! config('settings.auth_banner')), $abval],
+            'welcome_banner' => [Rule::requiredIf(fn () => ! config('settings.welcome_banner')), $wbval],
             'frontend_link' => ['nullable', 'string'],
             'prefered_notification_channels' => ['required', 'array'],
             'keep_successful_queue_logs' => ['nullable'],
@@ -64,12 +60,13 @@ class ConfigurationController extends Controller
             'verify_phone' => ['nullable', 'boolean'],
         ]);
 
-        collect($request->all())->except(['_method'])->map(function ($config, $key) use ($request) {
+        $conf = ArrayFile::open(base_path('config/settings.php'));
+        $data = collect($request->all())->except(['_method'])->map(function ($config, $key) use ($request, $conf) {
             $key = str($key)->replace('__', '.')->__toString();
             if ($request->hasFile($key)) {
                 (new Media)->delete('default', pathinfo(config('settings.'.$key), PATHINFO_BASENAME));
                 $save_name = (new Media)->save('default', $key, $config);
-                $config = (new Media)->image('default', $save_name, asset('media/default.jpg'));
+                $config = (new Media)->getMedia('default', $save_name, asset('media/default.jpg'));
             } elseif (($type = collect($this->data_type))->has($key)) {
                 if (! is_array($config) && $type->get($key) === 'array') {
                     $config = valid_json($config, true, explode(',', $config));
@@ -80,7 +77,9 @@ class ConfigurationController extends Controller
                 }
             }
 
-            Config::write("settings.{$key}", $config);
+            $conf->set($key, $config);
+            $conf->write();
+            return $config;
         });
 
         $settings = collect(config('settings'))
@@ -92,7 +91,7 @@ class ConfigurationController extends Controller
                     'facebook' => collect(config('services.facebook'))->filter(fn ($v, $k) => stripos($k, 'secret') === false),
                 ],
                 'configurations' => (new Configuration())->build(),
-            ]);
+            ])->merge($data);
 
         return $this->buildResponse([
             'data' => collect($settings)->put('refresh', ['settings' => $settings]),
@@ -112,6 +111,9 @@ class ConfigurationController extends Controller
                 $vals[] = 'file';
                 $vals[] = 'mimes:jpg,png,jpeg,gif,mpeg,mp4,webm';
                 $key = $key.'.*';
+            } elseif ($config->type === 'number') {
+                $vals[] = 'integer';
+                $vals[] = 'max:'.($config->max ? $config->max : 999999999999);
             } else {
                 $vals[] = $config->type ?? 'string';
             }
@@ -137,9 +139,6 @@ class ConfigurationController extends Controller
             $key = $config->key;
             $value = $request->input($key);
             if ($config->type === 'files' && $request->hasFile($key) && is_array($request->file($key))) {
-                // dd(collect($request->file($key))->keys(), $config->files->keys()->push(...collect($request->file($key))->keys()));
-                // foreach ($request->file($key) as $index => $image) {
-                // }
                 foreach ($request->file($key) as $index => $image) {
                     if (isset($config->files[$index])) {
                         $config->files[$index]->delete();
@@ -153,6 +152,8 @@ class ConfigurationController extends Controller
                 $config->files()->save(new Image([
                     'file' => (new Media)->save('default', $key, $config->files[0]->file ?? null),
                 ]));
+            } elseif ($config->type === 'file' && $request->has($key)) {
+                $config->files()->delete();
             } else {
                 $config->value = $value;
                 $config->save();
@@ -165,14 +166,5 @@ class ConfigurationController extends Controller
             'status' => 'success',
             'status_code' => HttpStatus::OK,
         ]);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function loadStats(Request $request)
-    {
-        //
     }
 }

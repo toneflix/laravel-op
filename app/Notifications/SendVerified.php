@@ -44,14 +44,14 @@ class SendVerified extends Notification implements ShouldQueue
     {
         $message = [
             'name' => $notifiable->firstname,
-            'message_line1' => 'You are receiving this email because you just verified your at account '.config('settings.site_name').' and we want to use this medium to welcome you into our community',
-            'close_greeting' => 'Regards, <br/>'.config('settings.site_name'),
+            'message_line1' => __('You are receiving this email because you just verified your at account :0 and we want to use this medium to welcome you into our community', [config('settings.site_name')]),
+            'close_greeting' => __('Regards, <br/>:0', [config('settings.site_name')]),
         ];
 
         return (new MailMessage)->view(
             ['email', 'email-plain'], $message
         )
-        ->subject('Welcome to the '.config('settings.site_name').' community.');
+        ->subject(__('Welcome to the :0 community.', [config('settings.site_name')]));
     }
 
     /**
@@ -82,7 +82,7 @@ class SendVerified extends Notification implements ShouldQueue
     {
         return [
             'type' => 'verification',
-            'title' => ($this->type === 'mail') ? 'Email Address Verified' : 'Phone Number Verified',
+            'title' => ($this->type === 'mail') ? __('Email Address Verified') : __('Phone Number Verified'),
             'message' => __('Your account has been verified successfully, welcome to our community.'),
         ];
     }

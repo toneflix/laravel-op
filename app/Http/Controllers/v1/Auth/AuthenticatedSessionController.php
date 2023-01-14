@@ -19,17 +19,6 @@ class AuthenticatedSessionController extends Controller
 {
     use Extendable;
 
-    public function index()
-    {
-        if ($user = Auth::user()) {
-            $errors = $code = $messages = $action = null;
-
-            return view('web-user', compact('user', 'errors', 'code', 'action'));
-        }
-
-        return view('login');
-    }
-
     /**
      * Handle an incoming authentication request.
      *
