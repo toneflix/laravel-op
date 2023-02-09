@@ -18,10 +18,9 @@ use ToneflixCode\LaravelFileable\Media;
 */
 
 Route::get('/', function () {
-    return view('login', ['api_welcome' => [
+    return ['api_welcome' => [
         'Welcome to Laravel OP v1' => AppInfo::basic(),
-    ],
-    ]);
+    ]];
 });
 
 Route::get('get/images/{file}', function ($file) {
