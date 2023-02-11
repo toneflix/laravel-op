@@ -29,7 +29,9 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->text('address')->nullable();
             $table->string('password');
+            $table->boolean('mentor')->default(false);
             $table->boolean('verified')->default(false);
+            $table->integer('verification_level')->default(0);
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->json('access_data')->nullable();
             $table->json('privileges')->nullable();
@@ -37,9 +39,11 @@ return new class extends Migration
             $table->string('window_token')->nullable();
             $table->string('email_verify_code')->nullable();
             $table->string('phone_verify_code')->nullable();
+            $table->timestamp('last_seen')->nullable();
             $table->timestamp('last_attempt')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
+            $table->boolean('hidden')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

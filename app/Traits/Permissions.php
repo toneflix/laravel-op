@@ -10,34 +10,60 @@ trait Permissions
     protected $user;
 
     protected $allowed = [
+        'super-admin' => [
+            'viewHorizon',
+            'super',
+        ],
         'admin' => [
+            'admins',
+            'super',
+            'support',
             'website',
+            'anything',
             'dashboard',
+            'categories',
             'transactions',
             'front_content',
             'subscriptions',
             'configuration',
-            'users.list',
-            'users.user',
-            'users.update',
-            'users.delete',
-            'users.manage',
+            'plan.manage',
+            'advert.manage',
+            'feedback.manage',
             'content.create',
             'content.update',
             'content.delete',
-            'company.manage',
-            'company.create',
-            'company.update',
-            'company.delete',
+            'orders.list',
+            'orders.order',
+            'orders.update',
+            'orders.delete',
+            'orders.manage',
+            'users.list',
+            'users.user',
+            'users.delete',
+            'users.manage',
+            'users.update',
+            'users.verify',
         ],
         'manager' => [
-            'users.user',
             'dashboard',
-            'subscriptions',
             'transactions',
+            'subscriptions',
+            'feedback.manage',
+            'users.user',
+            'users.list',
+            'orders.list',
+            'orders.order',
+        ],
+        'support' => [
+            'support',
         ],
         'user' => [
-            //
+            'users.list',
+            'users.user',
+            'users.delete',
+            'users.manage',
+            'users.update',
+            'users.verify',
         ],
     ];
 
@@ -47,11 +73,25 @@ trait Permissions
      * @param  App\Models\User  $user
      * @return Permissions
      */
-    public function setPermissionsUser(User $user): Permissions
+    public function setPermissionsUser(User | \App\Models\User $user)//: Permissions
     {
+        // Merge the allowed permissions for super-admin and admin
+        $this->allowed['super-admin'] = array_merge($this->allowed['super-admin'], $this->allowed['admin']);
+
         $this->privileges = $user->privileges;
 
         return $this;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param  App\Models\User  $user
+     * @return bool
+     */
+    public function isOwner(User $user, $item): bool
+    {
+        return ($item->user_id ?? $item->user->id ?? null) === $user->id;
     }
 
     /**
@@ -64,11 +104,15 @@ trait Permissions
     {
         if ($this->listPriviledges()->contains($permission)) {
             foreach (($this->privileges ?? []) as $user_permission) {
-                if (collect($this->allowed[$user_permission])->contains($permission) ||
-                collect($this->allowed[$user_permission])->contains(str($permission)->explode('.')->first())) {
-                    return true;
-                }
-                if (in_array($permission, $this->allowed[$user_permission], true)) {
+                if (isset($this->allowed[$user_permission])) {
+                    if (collect($this->allowed[$user_permission])->contains($permission)// ||
+                        // collect($this->allowed[$user_permission])->contains(str($permission)->explode('.')->first())
+                    ) {
+                        return true;
+                    } elseif (in_array($permission, $this->allowed[$user_permission], true)) {
+                        return true;
+                    }
+                } elseif (str($user_permission)->is($permission)) {
                     return true;
                 }
             }
@@ -105,7 +149,7 @@ trait Permissions
     {
         $permissions = [];
         foreach (($this->privileges ?? []) as $user_permission) {
-            $permissions[] = $this->allowed[$user_permission];
+            $permissions[] = $this->allowed[$user_permission] ?? [];
         }
 
         return collect($permissions)->flatten()->toArray();

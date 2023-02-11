@@ -31,18 +31,6 @@ return [
                 'default' => 'default.png',
                 'secure' => true,
             ],
-            'videos' => [
-                'path' => 'files/videos/',
-                'secure' => true,
-            ],
-            'movies' => [
-                'path' => 'files/movies/',
-                'secure' => true,
-            ],
-            'music' => [
-                'path' => 'files/music/',
-                'secure' => true,
-            ],
         ],
     ],
     'image_sizes' => [

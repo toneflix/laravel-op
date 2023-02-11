@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\v1\Configuration;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -101,7 +103,7 @@ if (! function_exists('random_img')) {
     function random_img($dir = null, $get_link = true)
     {
         try {
-            $dir = trim($dir ?? 'images/bank', '/');
+            $dir = trim($dir ?? 'images', '/');
             $array = array_filter(File::files(public_path($dir)), function ($file) {
                 if ($file->getExtension() === 'png' || $file->getExtension() === 'jpg' || $file->getExtension() === 'jpeg') {
                     return true;
@@ -141,5 +143,20 @@ if (! function_exists('valid_json')) {
                     ? $default
                     : $isValid
                 );
+    }
+}
+
+if (! function_exists('conf')) {
+    function conf($key = null, $default = null)
+    {
+        $config = Configuration::get()->mapWithKeys(function ($item) {
+            return [$item->key => $item->value];
+        });
+
+        if (is_null($key)) {
+            return $config;
+        }
+
+        return Arr::get($config, $key, $default);
     }
 }

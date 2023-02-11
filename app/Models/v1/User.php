@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable as Scoutable;
 use Propaganistas\LaravelPhone\Exceptions\CountryCodeException;
 use Propaganistas\LaravelPhone\Exceptions\NumberFormatException;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException;
@@ -24,7 +25,7 @@ use ToneflixCode\LaravelFileable\Traits\Fileable;
 
 class User extends Authenticatable implements MustVerifyEmail, Searchable
 {
-    use HasApiTokens, HasFactory, Notifiable, Extendable, Permissions, Fileable;
+    use HasApiTokens, HasFactory, Notifiable, Extendable, Permissions, Fileable, Scoutable;
 
     /**
      * The attributes that are mass assignable.
@@ -66,7 +67,6 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'email_verified_at' => 'datetime',
         'phone_verified_at' => 'datetime',
         'last_attempt' => 'datetime',
         'access_data' => 'array',
@@ -74,6 +74,9 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
         'verified' => 'boolean',
         'settings' => 'array',
         'dob' => 'datetime',
+        'last_seen' => 'datetime',
+        'hidden' => 'boolean',
+        'verification_level' => 'integer',
     ];
 
     /**
@@ -82,10 +85,15 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
      * @var array
      */
     protected $appends = [
+        'about',
         'avatar',
         'fullname',
+        'role_name',
         'wallet_bal',
+        'role_route',
         'permissions',
+        'basic_stats',
+        'onlinestatus',
     ];
 
     /**
@@ -128,14 +136,53 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
         });
     }
 
+    /**
+     * Get the name of the index associated with the model.
+     *
+     * @return string
+     */
+    public function searchableAs()
+    {
+        return 'users_index';
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    #[SearchUsingPrefix(['id', 'email', 'username'])]
+    public function toSearchableArray()
+    {
+        return [
+            'id' => (int) $this->id,
+            'email' => $this->email,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'username' => $this->username,
+            'country' => $this->country,
+            'state' => $this->state,
+            'city' => $this->city,
+        ];
+    }
+
     public function getSearchResult(): SearchResult
     {
         return new \Spatie\Searchable\SearchResult(
             $this,
-            $this->firstname,
-            $this->lastname,
-            $this->about,
-            $this->email,
+            $this->fullname,
+        );
+    }
+
+    /**
+     * Add a cool default for empty user about.
+     *
+     * @return string
+     */
+    protected function about(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ?? config('default_user_about', 'Only business minded!'),
         );
     }
 
@@ -148,6 +195,18 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
     {
         return Attribute::make(
             get: fn () => $this->images['image'] ?? $this->default_image,
+        );
+    }
+
+    public function basicStats(): Attribute
+    {
+        $friends = $this->friends;
+
+        return new Attribute(
+            get: fn () => [
+                'followers' => 0,
+                'following' => 0,
+            ],
         );
     }
 
@@ -189,6 +248,30 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
         return $this->phone_verified_at !== null;
     }
 
+    public function scopeIsOnline($query, $is_online = true)
+    {
+        if ($is_online) {
+            // Check if the user's last last_seen was less than 5 minutes ago
+            $query->where('last_seen', '>=', now()->subMinutes(5));
+        } else {
+            // Check if the user's last last_seen was more than 5 minutes ago
+            $query->where('last_seen', '<', now()->subMinutes(5));
+        }
+    }
+
+    public function scopeIsOnlineWithPrivilege($query, $privilege = 'admin', $is_online = true, $exclude = [])
+    {
+        $query->whereJsonContains('privileges', $privilege);
+        $query->whereNotIn('id', $exclude);
+
+        if ($is_online) {
+            // Scope to only online users
+            $query->isOnline();
+        }
+
+        $query->inRandomOrder();
+    }
+
     public function markEmailAsVerified()
     {
         $this->last_attempt = null;
@@ -215,6 +298,18 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
         }
 
         return false;
+    }
+
+    /**
+     * Return the user's online status
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function onlinestatus(): Attribute
+    {
+        return new Attribute(
+            get: fn () => ($this->last_seen ?? now()->subMinutes(6))->gt(now()->subMinutes(5)) ? 'online' : 'offline',
+        );
     }
 
     /**

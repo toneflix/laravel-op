@@ -1,7 +1,7 @@
 {
     "name": "toneflix-code/laravel-op",
     "type": "project",
-    "description": "Laravel OP is simple fork of Laravel packed with other features and libraries frequently used within the toneflix ecosystem.",
+    "description": "Laravel OP is a simple fork of Laravel that provides a set of tools to help you build your Laravel application faster and easier. It is a collection of useful classes, traits, and functions that I have found useful in my own projects. It is a work in progress and I will be adding more features as I need them. I hope you find it useful too.",
     "keywords": [
         "framework",
         "laravel",
@@ -15,10 +15,12 @@
         "andreaselia/laravel-api-to-postman": "^1.13",
         "flowframe/laravel-trend": "^0.1.1",
         "guzzlehttp/guzzle": "^7.2",
+        "haydenpierce/class-finder": "^0.4.4",
         "hrace009/config-writer": "^1.3",
         "laravel-notification-channels/twilio": "^3.2",
         "laravel/framework": "^9.5.0",
         "laravel/sanctum": "^3.0",
+        "laravel/scout": "^9.6",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
         "madnest/madzipper": "^1.3",

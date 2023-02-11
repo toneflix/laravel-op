@@ -28,7 +28,7 @@ class SearchController extends Controller
             //     $query->registerModel(Category::class, 'title', 'description');
             // }
 
-            if (in_array('company', $scope)) {
+            if (in_array('user', $scope)) {
                 $query->registerModel(User::class, function (ModelSearchAspect $modelSearchAspect) use ($private) {
                     $modelSearchAspect
                     ->addSearchableAttribute('firstname')
@@ -63,10 +63,10 @@ class SearchController extends Controller
                 'id' => $result->searchable->id,
                 'key' => str($result->searchable->id)->append($result->type)->slug(),
                 'url' => $result->url,
-                'url' => ['company' => $item->company->slug ?? $item->shop->slug ?? null, 'item' => $item->slug],
+                'route' => ['company' => $item->company->slug ?? $item->shop->slug ?? null, 'item' => $item->slug],
                 'title' => $result->title,
                 'type' => $result->type === 'companies' ? $item->type : $result->type,
-                'image' => $item->images['image'] ?? $item->images['banner'] ?? $item->image_url ?? $item->banner_url ?? null,
+                'image' => $item->media_file ?? '',
                 'description' => str($item->description ?? $item->about ?? $item->intro ?? $item->details ?? $item->basic_info ?? $item->short_desc ?? '')->words(25)->__toString(),
             ];
         });
