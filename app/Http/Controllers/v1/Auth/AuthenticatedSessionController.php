@@ -5,7 +5,7 @@ namespace App\Http\Controllers\v1\Auth;
 use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\UserResource;
 use App\Models\v1\UserSocialAuth;
 use App\Traits\Extendable;
 use DeviceDetector\DeviceDetector;

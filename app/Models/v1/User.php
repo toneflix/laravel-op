@@ -343,6 +343,42 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
     }
 
     /**
+     * Interact with the user's role.
+     *
+     * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function roleName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ($this->role === 'user'
+                ? 'User'
+                : ($this->role === 'admin'
+                    ? 'Admin'
+                    : 'Unknown'
+                )
+            ),
+        );
+    }
+
+    /**
+     * Interact with the user's role.
+     *
+     * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function roleRoute(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ($this->role === 'user'
+                ? 'feeds'
+                : ($this->role === 'admin'
+                    ? 'feeds'
+                    : 'feeds'
+                )
+            ),
+        );
+    }
+
+    /**
      * Route notifications for the mail channel.
      *
      * @param  \Illuminate\Notifications\Notification  $notification

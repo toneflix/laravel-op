@@ -4,7 +4,7 @@ namespace App\Http\Controllers\v1\Auth;
 
 use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\v1Resource;
+use App\Http\Resources\v1\User\UserResource;
 use App\Models\v1\User;
 use App\Traits\Extendable;
 use DeviceDetector\DeviceDetector;
@@ -149,7 +149,7 @@ class RegisteredUserController extends Controller
      * Log the newly registered user in
      *
      * @param  string  $token
-     * @return App\Http\Resources\v1\UserResource
+     * @return \App\Http\Resources\v1\User\UserResource
      */
     public function preflight($token)
     {

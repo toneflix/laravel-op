@@ -5,7 +5,7 @@ namespace App\Http\Controllers\v1\Auth;
 use App\EnumsAndConsts\HttpStatus;
 use App\Events\PhoneVerified;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\UserResource;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;

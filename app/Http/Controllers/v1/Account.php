@@ -4,7 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\UserResource;
 use App\Http\Resources\v1\WalletCollection;
 use App\Traits\Meta;
 use Illuminate\Http\Request;

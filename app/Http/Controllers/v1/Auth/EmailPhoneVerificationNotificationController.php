@@ -4,7 +4,7 @@ namespace App\Http\Controllers\v1\Auth;
 
 use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\UserResource;
 use Illuminate\Http\Request;
 
 class EmailPhoneVerificationNotificationController extends Controller
