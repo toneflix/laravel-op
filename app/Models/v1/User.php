@@ -15,6 +15,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable as Scoutable;
+use Overtrue\LaravelFollow\Traits\Followable;
+use Overtrue\LaravelFollow\Traits\Follower;
 use Propaganistas\LaravelPhone\Exceptions\CountryCodeException;
 use Propaganistas\LaravelPhone\Exceptions\NumberFormatException;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException;
@@ -25,7 +27,7 @@ use ToneflixCode\LaravelFileable\Traits\Fileable;
 
 class User extends Authenticatable implements MustVerifyEmail, Searchable
 {
-    use HasApiTokens, HasFactory, Notifiable, Extendable, Permissions, Fileable, Scoutable;
+    use HasApiTokens, HasFactory, Notifiable, Extendable, Permissions, Fileable, Scoutable, Follower, Followable;
 
     /**
      * The attributes that are mass assignable.
@@ -246,6 +248,22 @@ class User extends Authenticatable implements MustVerifyEmail, Searchable
     public function hasVerifiedPhone()
     {
         return $this->phone_verified_at !== null;
+    }
+
+    /**
+     * Get all of the user's reviews.
+     */
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    /**
+     * Get all of the reviews made by this user.
+     */
+    public function reviewed()
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function scopeIsOnline($query, $is_online = true)

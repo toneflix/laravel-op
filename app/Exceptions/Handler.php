@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if (!config('app.testing')) {
+        if (! config('app.testing')) {
             if ($request->isXmlHttpRequest() || request()->is('api/*')) {
                 $line = method_exists($e, 'getFile') ? ' in '.$e->getFile() : '';
                 $line .= method_exists($e, 'getLine') ? ' on line '.$e->getLine() : '';
@@ -114,15 +114,15 @@ class Handler extends ExceptionHandler
 
     protected function renderException(string $msg, $code = 404, array $misc = [])
     {
-        if (request()->is('api/*')) {
+        if (request()->is('api/*') || request()->isXmlHttpRequest()) {
             return $this->buildResponse(collect([
-                'message' => $msg,
+                'message' => $msg ? $msg : HttpStatus::message($code),
                 'status' => 'error',
-                'status_code' => $code,
+                'status_code' => (int) $code,
             ])->merge($misc));
         } else {
             return $this->buildResponse(collect([
-                'message' => $msg,
+                'message' => $msg ? $msg : HttpStatus::message($code),
             ])->merge($misc));
         }
     }

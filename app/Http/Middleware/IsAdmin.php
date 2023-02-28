@@ -18,7 +18,7 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         if (Auth::user()->role !== 'admin') {
-            return redirect()->route('market.index');
+            return redirect()->route('index');
         }
 
         return $next($request);

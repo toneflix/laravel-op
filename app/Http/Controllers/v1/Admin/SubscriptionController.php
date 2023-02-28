@@ -77,7 +77,7 @@ class SubscriptionController extends Controller
             return $this->buildResponse([
                 'message' => $count->count() === 1
                     ? __(":0's subscription has been deleted", [$count->first()])
-                    : __(":0 subscriptions have been deleted.", [$count->count()]),
+                    : __(':0 subscriptions have been deleted.', [$count->count()]),
                 'status' => 'success',
                 'status_code' => HttpStatus::ACCEPTED,
             ]);

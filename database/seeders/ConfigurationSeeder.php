@@ -18,7 +18,7 @@ class ConfigurationSeeder extends Seeder
             [
                 'key' => 'site_name',
                 'title' => 'Site Name',
-                'value' => 'Laravel OP',
+                'value' => env('APP_NAME', 'Laravel OP'),
                 'type' => 'string',
                 'count' => null,
                 'max' => null,

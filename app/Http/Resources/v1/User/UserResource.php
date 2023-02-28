@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\v1\User;
 
-use App\Http\Resources\v1\Business\CompanyResource;
 use App\Services\AppInfo;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -38,6 +37,10 @@ class UserResource extends JsonResource
             'role_name' => $this->role_name,
             'type' => $this->type,
             'onlinestatus' => $this->onlinestatus,
+            'followers_count' => $this->followers()->count(),
+            'followings_count' => $this->followings()->count(),
+            'follows_you' => auth()->user() ? $this->isFollowing(auth()->user()) : false,
+            'you_follow' => auth()->user() ? $this->isFollowedBy(auth()->user()) : false,
             $this->mergeWhen($previleged && ! in_array($route, []) && ! str($route)->contains(['messenger.', 'vision.']), [
                 'dob' => $this->dob,
                 'address' => $this->address,

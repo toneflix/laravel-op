@@ -7,9 +7,9 @@ use App\Models\v1\User;
 use App\Traits\Extendable;
 use App\Traits\Permissions;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Gate;
-// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {

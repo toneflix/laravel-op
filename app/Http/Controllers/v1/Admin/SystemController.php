@@ -6,8 +6,8 @@ use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Services\AdminStatistics;
 use App\Services\ChartsPlus;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SystemController extends Controller
 {
@@ -26,7 +26,7 @@ class SystemController extends Controller
                 $message
                   ->to($request->input('email'))
                   ->subject('Test Mail');
-              });
+            });
             $message = 'Test mail sent successfully.';
             $status = HttpStatus::OK;
         } elseif ($service === 'sms') {
@@ -37,11 +37,11 @@ class SystemController extends Controller
             (new \Twilio\Rest\Client(
                 config('twilio-notification-channel.account_sid'),
                 config('twilio-notification-channel.auth_token')
-            ))->messages->create( $request->input('phone'), [
-                  'from' => config('twilio-notification-channel.from'),
-                  'body' => 'It Works!'
-                ]
-              );
+            ))->messages->create($request->input('phone'), [
+                'from' => config('twilio-notification-channel.from'),
+                'body' => 'It Works!',
+            ]
+            );
             $message = 'Test sms sent successfully.';
             $status = HttpStatus::OK;
         } elseif ($service === 'push') {

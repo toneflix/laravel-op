@@ -14,13 +14,14 @@ class PaystackProcessor
     use Meta;
 
     protected $request;
+
     protected $user;
 
     /**
      * PaystackProcessor constructor.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\v1\User $user
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\v1\User  $user
      */
     public function __construct(Request $request, User $user = null)
     {
@@ -31,10 +32,8 @@ class PaystackProcessor
     /**
      * Initialize a paystack transaction.
      *
-     * @param int $amount
-     *
-     * @param callable $callback
-     *
+     * @param  int  $amount
+     * @param  callable  $callback
      * @return \Illuminate\Support\Collection
      */
     public function initialize(int $amount = 0, callable $callback = null)
@@ -97,9 +96,8 @@ class PaystackProcessor
     /**
      * Verify a transaction payment
      *
-     * @param Request $request
-     * @param callable $callback
-     *
+     * @param  Request  $request
+     * @param  callable  $callback
      * @return \Illuminate\Support\Collection
      */
     public function verify(callable $callback = null)

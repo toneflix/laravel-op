@@ -79,6 +79,7 @@ class ConfigurationController extends Controller
 
             $conf->set($key, $config);
             $conf->write();
+
             return $config;
         });
 

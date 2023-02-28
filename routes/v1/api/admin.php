@@ -1,19 +1,18 @@
 <?php
 
-use App\Http\Controllers\v1\Admin\ConfigurationController;
 use App\Http\Controllers\v1\Admin\AdvertController;
+use App\Http\Controllers\v1\Admin\ConfigurationController;
 use App\Http\Controllers\v1\Admin\Home\HomepageContentController;
 use App\Http\Controllers\v1\Admin\Home\HomepageController;
-use App\Http\Controllers\v1\Admin\Home\HomepageOfferingsController;
 use App\Http\Controllers\v1\Admin\Home\HomepageServicesController;
 use App\Http\Controllers\v1\Admin\Home\HomepageSlidesController;
 use App\Http\Controllers\v1\Admin\Home\NavigationController;
 use App\Http\Controllers\v1\Admin\PlanController;
+use App\Http\Controllers\v1\Admin\SubscriptionController;
 use App\Http\Controllers\v1\Admin\SystemController;
 use App\Http\Controllers\v1\Admin\TransactionController;
 use App\Http\Controllers\v1\Admin\UsersController;
 use App\Http\Controllers\v1\Admin\WalletController;
-use App\Http\Controllers\v1\Admin\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'admin'])->name('admin.')->prefix('admin')->group(function () {
@@ -26,7 +25,6 @@ Route::middleware(['auth:sanctum', 'admin'])->name('admin.')->prefix('admin')->g
         Route::apiResource('homepage', HomepageController::class);
         Route::apiResource('{homepage}/content', HomepageContentController::class);
         Route::apiResource('{homepage}/slides', HomepageSlidesController::class);
-        Route::apiResource('offerings', HomepageOfferingsController::class);
         Route::apiResource('services', HomepageServicesController::class);
         Route::put('navigations/{navigation}/reorder', [NavigationController::class, 'reorder'])->name('reorder');
         Route::apiResource('navigations', NavigationController::class);

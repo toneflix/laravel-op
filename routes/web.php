@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\WebUser;
-use App\Services\AppInfo;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use ToneflixCode\LaravelFileable\Media;
+use ToneflixCode\LaravelVisualConsole\Controllers\ManagementController;
+use ToneflixCode\LaravelVisualConsole\Middleware\RedirectIfAuthenticated;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +17,17 @@ use ToneflixCode\LaravelFileable\Media;
 |
 */
 
-Route::get('/', function () {
-    return ['api_welcome' => [
-        'Welcome to Laravel OP v1' => AppInfo::basic(),
-    ]];
-});
+if (request()->isXmlHttpRequest()) {
+    Route::get('/', function () {
+        return ['api_welcome' => [
+            __('Welcome to :0 v1', [env('APP_NAME', 'Laravel OP')]) => AppInfo::basic(),
+        ]];
+    })->name('index');
+} else {
+    Route::get('/', [ManagementController::class, 'login'])
+        ->middleware(['web', RedirectIfAuthenticated::class])
+        ->name('index');
+}
 
 Route::get('get/images/{file}', function ($file) {
     return (new Media)->privateFile($file);

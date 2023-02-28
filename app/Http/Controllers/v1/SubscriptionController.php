@@ -5,7 +5,6 @@ namespace App\Http\Controllers\v1;
 use App\EnumsAndConsts\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\SubscriptionResource;
-use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
 {

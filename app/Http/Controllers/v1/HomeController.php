@@ -142,7 +142,6 @@ class HomeController extends Controller
                         ->where('slug', '!=', '')
                         ->get(['id', 'title', 'slug']);
 
-
         return $this->buildResponse([
             'message' => 'OK',
             'status' => 'success',

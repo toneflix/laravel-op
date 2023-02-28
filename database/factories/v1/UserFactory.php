@@ -56,7 +56,6 @@ class UserFactory extends Factory
         return $this->afterMaking(function () {
         })
         ->afterCreating(function (\App\Models\v1\User $user) {
-
         });
     }
 }
