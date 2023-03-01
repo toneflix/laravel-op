@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileUnacceptableForCollection;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -50,27 +51,42 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->reportable(function (Request $request, Throwable $e) {
+            //
+        });
+    }
+
     public function render($request, Throwable $e)
     {
-        if (! config('app.testing')) {
+        if (config('app.testing', false) === false) {
             if ($request->isXmlHttpRequest() || request()->is('api/*')) {
-                $line = method_exists($e, 'getFile') ? ' in '.$e->getFile() : '';
-                $line .= method_exists($e, 'getLine') ? ' on line '.$e->getLine() : '';
-                $getMessage = method_exists($e, 'getMessage') ? $e->getMessage().$line : 'An error occured'.$line;
+                $line = method_exists($e, 'getFile') ? ' in ' . $e->getFile() : '';
+                $line .= method_exists($e, 'getLine') ? ' on line ' . $e->getLine() : '';
+                $getMessage = method_exists($e, 'getMessage') ? $e->getMessage() . $line : 'An error occured' . $line;
+                $plainMessage = method_exists($e, 'getMessage') ? $e->getMessage() : null;
+                $aborted = @$e->getTrace()[0]['function'] === 'abort';
 
                 return match (true) {
                     $e instanceof NotFoundHttpException ||
-                    $e instanceof ModelNotFoundException => $this->renderException(
-                        HttpStatus::message(HttpStatus::NOT_FOUND),
+                        $e instanceof ModelNotFoundException => $this->renderException(
+                        $aborted ? $plainMessage : HttpStatus::message(HttpStatus::NOT_FOUND),
                         HttpStatus::NOT_FOUND
                     ),
                     $e instanceof AuthorizationException ||
-                    $e instanceof AccessDeniedHttpException => $this->renderException(
-                        HttpStatus::message(HttpStatus::FORBIDDEN),
+                        $e instanceof AccessDeniedHttpException ||
+                        $e->getCode() === HttpStatus::FORBIDDEN => $this->renderException(
+                        $plainMessage ?? HttpStatus::message(HttpStatus::FORBIDDEN),
                         HttpStatus::FORBIDDEN
                     ),
                     $e instanceof AuthenticationException ||
-                    $e instanceof UnauthorizedHttpException => $this->renderException(
+                        $e instanceof UnauthorizedHttpException => $this->renderException(
                         HttpStatus::message(HttpStatus::UNAUTHORIZED),
                         HttpStatus::UNAUTHORIZED
                     ),
@@ -87,11 +103,11 @@ class Handler extends ExceptionHandler
                         HttpStatus::message(HttpStatus::UNPROCESSABLE_ENTITY),
                         HttpStatus::UNPROCESSABLE_ENTITY
                     ),
-                    // $e instanceof FileUnacceptableForCollection => $this->renderException(
-                    //     __('You have selected an invalid image file.'),
-                    //     HttpStatus::UNPROCESSABLE_ENTITY,
-                    //     ['errors' => [collect($request->file())->keys()->first() => __('You have selected an invalid image file.')]]
-                    // ),
+                    $e instanceof FileUnacceptableForCollection => $this->renderException(
+                        __('You have selected an invalid image file.'),
+                        HttpStatus::UNPROCESSABLE_ENTITY,
+                        ['errors' => [collect($request->file())->keys()->first() => __('You have selected an invalid image file.')]]
+                    ),
                     $e instanceof ThrottleRequestsException => $this->renderException(
                         HttpStatus::message(HttpStatus::TOO_MANY_REQUESTS),
                         HttpStatus::TOO_MANY_REQUESTS
@@ -101,10 +117,13 @@ class Handler extends ExceptionHandler
             } elseif ($this->isHttpException($e) && $e->getStatusCode() !== 401) {
                 $this->registerErrorViewPaths();
 
-                return response()->view('errors.generic', [
-                    'message' => $e->getMessage(),
-                    'code' => $e->getStatusCode(),
-                ], $e->getStatusCode()
+                return response()->view(
+                    'errors.generic',
+                    [
+                        'message' => $e->getMessage() ? $e->getMessage() : HttpStatus::message($e->getStatusCode()),
+                        'code' => $e->getStatusCode(),
+                    ],
+                    $e->getStatusCode()
                 );
             }
         }
@@ -125,17 +144,5 @@ class Handler extends ExceptionHandler
                 'message' => $msg ? $msg : HttpStatus::message($code),
             ])->merge($misc));
         }
-    }
-
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
     }
 }
