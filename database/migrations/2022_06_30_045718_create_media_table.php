@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('model')->nullable();
             $table->string('file');
-            $table->json('meta')->nullable()->default(new Expression('{}'));
+            $table->json('meta')->nullable()->default('{}');
             $table->timestamps();
         });
     }
