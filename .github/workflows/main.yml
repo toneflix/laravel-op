@@ -30,3 +30,6 @@ jobs:
 
       - name: Tests
         run: composer test
+        env:
+          DB_CONNECTION: "sqlite"
+          DB_DATABASE: ":memory:"
