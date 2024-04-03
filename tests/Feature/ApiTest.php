@@ -14,7 +14,7 @@ class ApiTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_get_user(): void
+    public function testGetUser(): void
     {
         Sanctum::actingAs(
             User::factory()->create(),
@@ -28,7 +28,7 @@ class ApiTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_requests_can_be_rate_limited(): void
+    public function testRequestsCanBeRateLimited(): void
     {
         for ($i = 0; $i < 100; $i++) {
             $response = $this->get('/api/');

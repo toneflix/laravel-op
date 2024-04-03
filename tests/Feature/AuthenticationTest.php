@@ -16,7 +16,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_unknown_user_will_not_be_found(): void
+    public function testUnknownUserWillNotBeFound(): void
     {
         $response = $this->withCredentials()
             ->post(
@@ -37,7 +37,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_user_can_register(): void
+    public function testUserCanRegister(): void
     {
         $response = $this->withCredentials()
             ->post(
@@ -61,7 +61,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_user_can_login(): void
+    public function testUserCanLogin(): void
     {
         $user = User::factory()->create();
 
@@ -84,7 +84,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_user_can_logout(): void
+    public function testUserCanLogout(): void
     {
         Sanctum::actingAs(
             User::factory()->create(),
@@ -98,7 +98,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_user_can_request_password_reset_code(): void
+    public function testUserCanRequestPasswordResetCode(): void
     {
         \Artisan::call('db:seed ConfigurationSeeder');
         $user = User::factory()->create();
@@ -120,7 +120,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_user_can_confirm_password_reset_code(): void
+    public function testUserCanConfirmPasswordResetCode(): void
     {
         \Artisan::call('db:seed ConfigurationSeeder');
         $user = User::factory()->create();
@@ -156,7 +156,7 @@ class AuthenticationTest extends TestCase
 
     /**
      */
-    public function test_user_can_reset_password(): void
+    public function testUserCanResetPassword(): void
     {
         \Artisan::call('db:seed ConfigurationSeeder');
         $user = User::factory()->create();
