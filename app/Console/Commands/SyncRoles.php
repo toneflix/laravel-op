@@ -14,15 +14,17 @@ class SyncRoles extends Command
      *
      * @var string
      */
-    protected $signature = 'app:sync-roles
-                            {users?* : The ID(s) of the user(s) to assign the roles and permissions to}
-                            {--x|remove : Remove the roles and permissions from the user(s)}
-                            {--r|roles=* : The roles to assign to the user(s)}
-                            {--p|permissions=* : The permissions to assign to the user(s)}
-                            {--f|force : Force the operation to run when in production (Not Implemented)}
-                            {--s|supes : Force grant the super-admin role}
-                            {--t|reset : Resets the permissions and roles, when makin (Use with caution)}
-                            {--m|make : Create the roles and permissions (Runs by default if user(s) are not specified)}';
+    protected $signature = '
+        app:sync-roles
+            {users?* : The ID(s) of the user(s) to assign the roles and permissions to}
+            {--x|remove : Remove the roles and permissions from the user(s)}
+            {--r|roles=* : The roles to assign to the user(s)}
+            {--p|permissions=* : The permissions to assign to the user(s)}
+            {--f|force : Force the operation to run when in production (Not Implemented)}
+            {--s|supes : Force grant the super admin role role}
+            {--t|reset : Resets the permissions and roles, when makin (Use with caution)}
+            {--m|make : Create the roles and permissions (Runs by default if user(s) are not specified)}
+    ';
 
     /**
      * The console command description.
@@ -58,20 +60,27 @@ class SyncRoles extends Command
         $supes = $this->option('supes');
         $permissions = $this->option('permissions');
 
-        $users = \App\Models\User::findMany($users);
+        /** @var \Illuminate\Database\Eloquent\Collection<TKey,\App\Models\User> */
+        $users = app(config('permission-defs.user-model', []))->findMany($users);
 
         $conf = str_ireplace(
             ["\n", "\t", '  '],
             ["\n ", '', ''],
             'You have not specified any roles or permissions.
             Do you want to remove all roles from the user(s) ' .
-            (!$supes ? '(This excludes the "super-admin role)?' : '')
+            (!$supes
+                ? '(This excludes the "' . config('permission-defs.super-admin-role', 'super-admin') . ' role)?'
+                : ''
+            )
         );
 
         if (empty($permissions) && empty($roles)) {
             // Check if the command is running in console then prompt the user to confirm.
             if (app()->runningInConsole() && $this->confirm($conf)) {
-                $roles = Role::whereNotIn('name', !$supes ? ['super-admin'] : [])->pluck('name');
+                $roles = Role::whereNotIn(
+                    'name',
+                    !$supes ? [config('permission-defs.super-admin-role', 'super-admin')] : []
+                )->pluck('name');
             } else {
                 $this->error('No roles or permissions were specified. Exiting...');
 
@@ -126,20 +135,27 @@ class SyncRoles extends Command
         $supes = $this->option('supes');
         $permissions = $this->option('permissions');
 
-        $users = \App\Models\User::findMany($users);
+        /** @var \Illuminate\Database\Eloquent\Collection<TKey,\App\Models\User> */
+        $users = app(config('permission-defs.user-model', []))->findMany($users);
 
         $conf = str_ireplace(
             ["\n", "\t", '  '],
             ["\n ", '', ''],
             'You have not specified any roles or permissions.
             Do you want to assign all roles to the user(s) ' .
-            (!$supes ? '(This excludes the "super-admin role)?' : '')
+            (!$supes
+                ? '(This excludes the "' . config('permission-defs.super-admin-role', 'super-admin') . ' role)?'
+                : ''
+            )
         );
 
         if (empty($permissions) && empty($roles)) {
             // Check if the command is running in console then prompt the user to confirm.
             if (app()->runningInConsole() && $this->confirm($conf)) {
-                $roles = Role::whereNotIn('name', !$supes ? ['super-admin'] : [])->pluck('name');
+                $roles = Role::whereNotIn(
+                    'name',
+                    !$supes ? [config('permission-defs.super-admin-role', 'super-admin')] : []
+                )->pluck('name');
             } else {
                 $this->error('No roles or permissions were specified. Exiting...');
 
@@ -211,9 +227,10 @@ class SyncRoles extends Command
 
         $roles->each(function ($role) use ($permissionsArray) {
             if (is_array($exclusions = config('permission-defs.exclusions', []))) {
+                /** @var array<int, string/> $exclude */
                 foreach ($exclusions as $name => $exclude) {
                     if ($role->name === $name) {
-                        $role->syncPermissions($permissionsArray->except(['manage-admins']));
+                        $role->syncPermissions($permissionsArray->except($exclude));
                     }
                 }
             }

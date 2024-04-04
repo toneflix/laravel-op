@@ -3,6 +3,24 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | User Model
+    |--------------------------------------------------------------------------
+    |
+    | When syncing roles and permissions using the app:sync-roles command, this
+    | model will be considered as the user model and used to associte roles and
+    | permissions to the indicated users.
+    */
+    'user-model' => \App\Models\User::class,
+    /*
+    |--------------------------------------------------------------------------
+    | Super Admin Role
+    |--------------------------------------------------------------------------
+    |
+    | This is the role that would be considered as the super admin role.
+    */
+    'super-admin-role' => 'super-admin',
+    /*
+    |--------------------------------------------------------------------------
     | Role List
     |--------------------------------------------------------------------------
     |
