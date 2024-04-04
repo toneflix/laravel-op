@@ -21,3 +21,7 @@ Route::get('/', function (Request $request) {
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::get('/admin', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');

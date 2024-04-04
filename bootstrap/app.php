@@ -52,8 +52,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-            // 'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-            // 'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
