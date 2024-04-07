@@ -9,7 +9,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ["8.3", "8.2"]
+        container:
+          image:
+            [
+              kirschbaumdevelopment/laravel-test-runner:8.3,
+              kirschbaumdevelopment/laravel-test-runner:8.2,
+            ]
+
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout
@@ -30,14 +46,9 @@ jobs:
 
       - name: "Create env file"
         run: |
-          touch .env
-          echo DB_CONNECTION="sqlite" >> .env
-          echo DB_DATABASE=":memory:" >> .env
+          cp .env.ci .env
           echo PAYSTACK_PUBLIC_KEY=${{ secrets.PAYSTACK_PUBLIC_KEY }} >> .env
           echo PAYSTACK_SECRET_KEY=${{ secrets.PAYSTACK_SECRET_KEY }} >> .env
-          echo APP_ENV=local >> .env
-          echo APP_DEBUG=true >> .env
-          echo APP_KEY= >> .env
           cat .env
 
       - name: Run Migrations
