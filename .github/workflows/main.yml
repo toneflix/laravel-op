@@ -28,10 +28,21 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: "Create env file"
+        run: |
+          touch .env
+          echo DB_CONNECTION="sqlite" >> .env
+          echo DB_DATABASE=":memory:" >> .env
+          echo PAYSTACK_PUBLIC_KEY=${{ secrets.PAYSTACK_PUBLIC_KEY }} >> .env
+          echo PAYSTACK_SECRET_KEY=${{ secrets.PAYSTACK_SECRET_KEY }} >> .env
+          cat .env
+
+      - name: Run Migrations
+        run: |
+          php artisan migrate
+          php artisan db:seed
+          php artisan db:seed ConfigurationSeeder
+          php artisan app:sync-roles
+
       - name: Tests
         run: composer test
-        env:
-          DB_CONNECTION: "sqlite"
-          DB_DATABASE: ":memory:"
-          PAYSTACK_PUBLIC_KEY: ${{ secrets.PAYSTACK_PUBLIC_KEY }}
-          PAYSTACK_SECRET_KEY: ${{ secrets.PAYSTACK_SECRET_KEY }}
