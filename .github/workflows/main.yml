@@ -35,10 +35,13 @@ jobs:
           echo DB_DATABASE=":memory:" >> .env
           echo PAYSTACK_PUBLIC_KEY=${{ secrets.PAYSTACK_PUBLIC_KEY }} >> .env
           echo PAYSTACK_SECRET_KEY=${{ secrets.PAYSTACK_SECRET_KEY }} >> .env
+          echo APP_ENV=local
+          echo APP_DEBUG=true
           cat .env
 
       - name: Run Migrations
         run: |
+          php artisan key:generate
           php artisan migrate
           php artisan db:seed
           php artisan db:seed ConfigurationSeeder
