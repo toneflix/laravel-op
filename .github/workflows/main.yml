@@ -35,8 +35,9 @@ jobs:
           echo DB_DATABASE=":memory:" >> .env
           echo PAYSTACK_PUBLIC_KEY=${{ secrets.PAYSTACK_PUBLIC_KEY }} >> .env
           echo PAYSTACK_SECRET_KEY=${{ secrets.PAYSTACK_SECRET_KEY }} >> .env
-          echo APP_ENV=local
-          echo APP_DEBUG=true
+          echo APP_ENV=local >> .env
+          echo APP_DEBUG=true >> .env
+          echo APP_KEY= >> .env
           cat .env
 
       - name: Run Migrations
