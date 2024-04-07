@@ -12,7 +12,7 @@ jobs:
         container: ["8.3", "8.2"]
 
     container:
-      image: "kirschbaumdevelopment/laravel-test-runner:${{ matrix.version }}"
+      image: kirschbaumdevelopment/laravel-test-runner:${{ matrix.container }}
 
     services:
       postgres:
