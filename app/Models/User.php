@@ -49,6 +49,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        // 'data',
         'password',
         'remember_token',
         'access_data',
@@ -64,6 +65,15 @@ class User extends Authenticatable
     protected $attributes = [
         'data' => '{}',
         'access_data' => '{}',
+    ];
+
+    /**
+     * The attributes to be appended
+     *
+     * @var array
+     */
+    protected $appends = [
+        'user_data',
     ];
 
     /**
@@ -188,5 +198,20 @@ class User extends Authenticatable
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Get the user's fullname.
+     *
+     * @return string
+     */
+    protected function userData(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->data,
+            set: fn ($value) => is_array($value)
+                ? json_encode($value, JSON_FORCE_OBJECT)
+                : $value,
+        );
     }
 }

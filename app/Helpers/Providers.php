@@ -90,7 +90,7 @@ class Providers
      * Prepare the response for the buildResponseMacros().
      */
     public static function jsonResource(
-        array|Collection|AbstractPaginator|JsonResource $data,
+        array|Collection|AbstractPaginator|JsonResource|Model $data,
         string $type,
         int|HttpStatus $code = 200,
         array|Collection $extra = []
@@ -112,12 +112,20 @@ class Providers
         }
 
         // Return  the data wrapped in an "information" array and set the status to informational.
-        return Response::make([
-            ...$data,
+        $response = [
+            'data' => is_array($data) ? ($data['data'] ?? $data) : $data,
             'status_code' => $status,
-            'message' => $extra['message'] ?? $data['message'] ?? HttpStatus::from($status)->name,
+            'message' => HttpStatus::from($status)->name,
             'status' => $type,
-        ], $status);
+            ...$data,
+            ...$extra,
+        ];
+
+        if (isset($data['errors'])) {
+            $response['errors'] = $data['errors'];
+        }
+
+        return Response::make($response, $status);
     }
 
     /**
@@ -144,7 +152,7 @@ class Providers
 
             $dateAdd = $datetime?->addSeconds(config('settings.token_lifespan', 30));
 
-            return (! $datetime || $dateAdd->isPast())
+            return (!$datetime || $dateAdd->isPast())
                 ? Limit::none()
                 : response()->info([
                     'message' => __("We already sent a message to help you {$action}, you can try again :0.", [
@@ -167,7 +175,7 @@ class Providers
             return [
                 'data' => count(static::$responseKeys)
                     ? collect($data->items())
-                        ->map(fn ($e) => collect($e)->filter(fn ($k, $v) => in_array($v, static::$responseKeys)))
+                    ->map(fn ($e) => collect($e)->filter(fn ($k, $v) => in_array($v, static::$responseKeys)))
                     : $data->items(),
                 'meta' => [
                     'current_page' => $data->currentPage(),
