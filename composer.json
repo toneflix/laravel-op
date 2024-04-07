@@ -15,6 +15,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "cartalyst/stripe-laravel": "^16.0",
         "laravel-notification-channels/twilio": "^3.4",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
@@ -23,7 +24,8 @@
         "spatie/laravel-permission": "^6.4",
         "toneflix-code/kudisms-notification": "^1.0",
         "toneflix-code/laravel-fileable": "^2.0",
-        "valorin/random": "^0.5.0"
+        "valorin/random": "^0.5.0",
+        "yabacon/paystack-php": "^2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -62,7 +64,8 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
-        "test": "@php artisan test"
+        "test": "@php artisan test",
+        "pint": "./vendor/bin/pint"
     },
     "extra": {
         "laravel": {

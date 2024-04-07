@@ -27,9 +27,12 @@ class Providers
      */
     protected static $responseKeys = [];
 
-    public static function config($key = null, $default = null): Collection|string|int|float|array
-    {
-        $config = Configuration::build();
+    public static function config(
+        $key = null,
+        $default = null,
+        $loadSecret = false
+    ): Collection|string|int|float|array|null {
+        $config = Configuration::build($loadSecret);
 
         if (is_null($key)) {
             return $config;
@@ -213,7 +216,7 @@ class Providers
      */
     public static function money($number, $abbrev = false)
     {
-        return static::config('currency_symbol').(
+        return static::config('currency_symbol') . (
             $abbrev === false
             ? number_format($number, 2)
             : static::numberAbbr($number)
@@ -257,11 +260,11 @@ class Providers
         // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
         // Intentionally does not affect partials, eg "1.50" -> "1.50"
         if ($precision > 0) {
-            $dotzero = '.'.str_repeat('0', $precision);
+            $dotzero = '.' . str_repeat('0', $precision);
             $n_format = str_replace($dotzero, '', $n_format);
         }
 
-        return $n_format.$suffix;
+        return $n_format . $suffix;
     }
 
     /**

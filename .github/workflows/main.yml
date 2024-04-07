@@ -33,3 +33,5 @@ jobs:
         env:
           DB_CONNECTION: "sqlite"
           DB_DATABASE: ":memory:"
+          PAYSTACK_PUBLIC_KEY: ${{ secrets.PAYSTACK_PUBLIC_KEY }}
+          PAYSTACK_SECRET_KEY: ${{ secrets.PAYSTACK_SECRET_KEY }}

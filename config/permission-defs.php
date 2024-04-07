@@ -30,7 +30,19 @@ return [
     'roles' => [
         'admin',
         'manager',
-        'super-admin'
+        'super-admin',
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Elevated Role List
+    |--------------------------------------------------------------------------
+    |
+    | Users with any of the roles listed here are considered to have elevated access
+    | Listed roles should already be defined in [roles] above.
+    */
+    'elevated-roles' => [
+        'admin',
+        'super-admin',
     ],
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +67,7 @@ return [
     | you can add them here using the role name as key.
     */
     'exclusions' => [
-        'admin' =>  ['manage-admins'],
-        'manager' =>  ['manage-admins'],
-    ]
+        'admin' => ['manage-admins'],
+        'manager' => ['manage-admins'],
+    ],
 ];

@@ -11,11 +11,9 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use WithFaker;
     use RefreshDatabase;
+    use WithFaker;
 
-    /**
-     */
     public function testUnknownUserWillNotBeFound(): void
     {
         $response = $this->withCredentials()
@@ -23,7 +21,7 @@ class AuthenticationTest extends TestCase
                 '/api/auth/login/',
                 [
                     'email' => $this->faker('En-NG')->freeEmail,
-                    'password' => 'password'
+                    'password' => 'password',
                 ],
                 [
                     'X-Requested-With' => 'XMLHttpRequest',
@@ -35,8 +33,6 @@ class AuthenticationTest extends TestCase
         $this->assertArrayHasKey('email', $response->collect('errors'));
     }
 
-    /**
-     */
     public function testUserCanRegister(): void
     {
         $response = $this->withCredentials()
@@ -47,7 +43,7 @@ class AuthenticationTest extends TestCase
                     'lastname' => $this->faker('en-NG')->lastName,
                     'firstname' => $this->faker('en-NG')->firstName,
                     'password' => 'password',
-                    'password_confirmation' => 'password'
+                    'password_confirmation' => 'password',
                 ],
                 [
                     'X-Requested-With' => 'XMLHttpRequest',
@@ -59,8 +55,6 @@ class AuthenticationTest extends TestCase
         $this->assertArrayHasKey('id', $response->collect());
     }
 
-    /**
-     */
     public function testUserCanLogin(): void
     {
         $user = User::factory()->create();
@@ -70,7 +64,7 @@ class AuthenticationTest extends TestCase
                 '/api/auth/login/',
                 [
                     'email' => $user->email,
-                    'password' => 'password'
+                    'password' => 'password',
                 ],
                 [
                     'X-Requested-With' => 'XMLHttpRequest',
@@ -82,8 +76,6 @@ class AuthenticationTest extends TestCase
         $this->assertArrayHasKey('id', $response->collect());
     }
 
-    /**
-     */
     public function testUserCanLogout(): void
     {
         Sanctum::actingAs(
@@ -96,8 +88,6 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /**
-     */
     public function testUserCanRequestPasswordResetCode(): void
     {
         \Artisan::call('db:seed ConfigurationSeeder');
@@ -118,8 +108,6 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /**
-     */
     public function testUserCanConfirmPasswordResetCode(): void
     {
         \Artisan::call('db:seed ConfigurationSeeder');
@@ -154,8 +142,6 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(202);
     }
 
-    /**
-     */
     public function testUserCanResetPassword(): void
     {
         \Artisan::call('db:seed ConfigurationSeeder');

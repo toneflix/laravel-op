@@ -127,7 +127,7 @@ class SendCode extends Notification implements ShouldQueue
         ];
 
         if (isset($message[$this->type])) {
-            $message = __('Hi :0, ', [$n->firstname]) . $message[$this->type];
+            $message = __('Hi :0, ', [$n->firstname]).$message[$this->type];
 
             return SmsProvider::getMessage($message);
         }

@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Throwable;
 
-class ExceptionHandler// extends Handler
+class ExceptionHandler // extends Handler
 {
     protected static $request;
 
@@ -29,9 +29,9 @@ class ExceptionHandler// extends Handler
         static::$request = $request;
 
         if ($request->isXmlHttpRequest() || request()->is('api/*')) {
-            $line = method_exists($e, 'getFile') ? ' in ' . $e->getFile() : '';
-            $line .= method_exists($e, 'getLine') ? ' on line ' . $e->getLine() : '';
-            $msg = method_exists($e, 'getMessage') ? $e->getMessage() . $line : 'An error occured' . $line;
+            $line = method_exists($e, 'getFile') ? ' in '.$e->getFile() : '';
+            $line .= method_exists($e, 'getLine') ? ' on line '.$e->getLine() : '';
+            $msg = method_exists($e, 'getMessage') ? $e->getMessage().$line : 'An error occured'.$line;
             $plainMessage = method_exists($e, 'getMessage') ? $e->getMessage() : null;
 
             if ((bool) collect($e?->getTrace())->firstWhere('function', 'abort')) {
@@ -104,7 +104,6 @@ class ExceptionHandler// extends Handler
     /**
      * Determine if the given exception is an HTTP exception.
      *
-     * @param  \Throwable  $e
      * @return bool
      */
     protected static function isHttpException(Throwable $e)

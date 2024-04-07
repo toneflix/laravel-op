@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('col')->nullable()->default(12);
             $table->string('hint')->nullable();
             $table->boolean('autogrow')->default(false);
+            $table->boolean('secret')->default(false);
             $table->timestamps();
         });
     }

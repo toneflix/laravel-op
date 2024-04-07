@@ -24,8 +24,8 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 return $request->expectsJson()
                     ? Providers::response()->error([
-                            'message' => 'You are already logged in as ' . $request->user()->fullname,
-                        ], HttpStatus::FORBIDDEN)
+                        'message' => 'You are already logged in as '.$request->user()->fullname,
+                    ], HttpStatus::FORBIDDEN)
                     : redirect('/');
             }
         }

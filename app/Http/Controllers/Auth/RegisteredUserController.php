@@ -76,7 +76,7 @@ class RegisteredUserController extends Controller
         $dev = new DeviceDetector($request->userAgent());
 
         $device = $dev->getBrandName()
-            ? ($dev->getBrandName() . $dev->getDeviceName())
+            ? ($dev->getBrandName().$dev->getDeviceName())
             : $request->userAgent();
 
         $user->save();
