@@ -9,12 +9,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container:
-          image:
-            [
-              kirschbaumdevelopment/laravel-test-runner:8.3,
-              kirschbaumdevelopment/laravel-test-runner:8.2,
-            ]
+        container: ["8.3", "8.2"]
+
+    container:
+      with:
+        image: kirschbaumdevelopment/laravel-test-runner:${{ matrix.version }}
 
     services:
       postgres:
@@ -30,13 +29,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          tools: composer:v2
-          coverage: none
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
