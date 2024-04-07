@@ -22,7 +22,7 @@ final class StripeProcessor implements PaymentInterface
     {
         // Stripe instance
         $this->request = $request;
-        $this->stripe = Stripe::make(Providers::config('stripe_secret_key', 'TRX-'));
+        $this->stripe = Stripe::make(Providers::config('stripe_secret_key', env('STRIPE_SECRET_KEY'), true));
         $this->user = $user;
     }
 
