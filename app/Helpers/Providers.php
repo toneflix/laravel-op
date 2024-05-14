@@ -14,6 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Response;
 
 class Providers
@@ -126,6 +127,46 @@ class Providers
         }
 
         return Response::make($response, $status);
+    }
+
+    /**
+     * Parses a message in the messages config and returns
+     * It in the required format
+     *
+     * @param string $config
+     * @return \stdClass
+     */
+    public static function messageParser(string $config, ...$params)
+    {
+        $params =  collect($params)->map(fn ($val) => $val instanceof Model ? $val->toArray() : $val)
+            ->filter(fn ($item) => is_array($item))
+            ->collapse()
+            ->filter(fn ($item) => is_scalar($item))
+            ->all();
+
+
+        $output = new \stdClass();
+
+        $lines = collect(config("messages.$config.lines", []));
+        // Parse the message lines
+        $output->lines = $lines->map(function ($line) use ($params) {
+            // If the line is an array (a button) parse it the content also
+            if (is_array($line)) {
+                return collect($line)->mapWithKeys(function ($val, $key) use ($params) {
+                    return [$key => __($val, $params)];
+                })->all();
+            }
+
+            // The line should now be return safe
+            return is_string($line)
+                ? __($line, $params)
+                : $line;
+        })->merge([config("messages.signature")])->all();
+
+        // Parse the message subject
+        $output->subject = __(config("messages.$config.subject", ''), $params);
+
+        return $output;
     }
 
     /**
@@ -273,38 +314,5 @@ class Providers
         }
 
         return $n_format . $suffix;
-    }
-
-    /**
-     * Revenue Conversion
-     *
-     * Revenue pool = 50% of Total income (App Stream Income)
-     *
-     * ORIGINAL FORMULAR (Doesn's seem to work)
-     * User Sreams / Total streams x Revenue Pool
-     * ===========================================================
-     *
-     * LEGACY'S TOUCH
-     * (Track Streams * Stream Worth) / (1 + Revenue Pool Percentage)
-     * E.g: (100 * 1) / (1 + 50%)
-     */
-    public static function revenue(int|float $totalStreams): int|float
-    {
-        $streamWorth = static::config('stream_worth', 1);
-        $revenuePoolPercentage = (float) static::config('revenue_pool_percentage', 50);
-        if ($revenuePoolPercentage > 1) {
-            $revenuePoolPercentage /= 100;
-        }
-
-        // Ensure revenue pool percentage is between 0 and 1
-        $revenuePoolPercentage = min(max($revenuePoolPercentage, 0), 1);
-
-        // Calculate total stream value
-        $totalStreamValue = $totalStreams * $streamWorth;
-
-        // Calculate creator earnings
-        $creatorEarnings = $totalStreamValue / (1 + $revenuePoolPercentage);
-
-        return round($creatorEarnings, 2);
     }
 }
