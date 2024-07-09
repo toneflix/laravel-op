@@ -8,6 +8,7 @@ use App\Notifications\SendCode;
 use App\Traits\ModelCanExtend;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -213,5 +214,15 @@ class User extends Authenticatable
                 ? json_encode($value, JSON_FORCE_OBJECT)
                 : $value,
         );
+    }
+
+    /**
+     * Get temporary User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function temp(): BelongsTo
+    {
+        return $this->belongsTo(TempUser::class, 'email', 'email');
     }
 }
