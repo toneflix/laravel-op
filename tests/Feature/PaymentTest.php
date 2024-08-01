@@ -12,7 +12,6 @@ use Tests\TestCase;
 
 class PaymentTest extends TestCase
 {
-    use RefreshDatabase;
     use ControllerCanExtend;
 
     protected function setUp(): void

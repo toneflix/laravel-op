@@ -14,6 +14,10 @@ class Strings
      */
     public static function jsonValidate($json, $depth = 512, $flags = 0)
     {
+        if (function_exists('json_validate')) {
+            return json_validate($json, $depth, $flags);
+        }
+
         if (!is_string($json)) {
             return false;
         }

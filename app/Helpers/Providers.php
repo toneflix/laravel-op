@@ -20,20 +20,25 @@ use Illuminate\Support\Facades\Response;
 class Providers
 {
     /**
-     * Build response
+     * Get / set the specified configuration value.
      *
-     * @var array<int, string>
+     * If an array is passed as the key, we will assume you want to set an array of values.
      *
-     * @return Collection|string|int|float|array
+     * @param array<string, mixed>|string|null  $key
+     * @param mixed $default
+     * @param boolean $loadSecret
+     * @return ($key is null ? Collection : ($key is string ? mixed : null))
      */
-    protected static $responseKeys = [];
-
     public static function config(
-        $key = null,
-        $default = null,
-        $loadSecret = false
+        string|array|null $key = null,
+        mixed $default = null,
+        bool $loadSecret = false
     ): Collection|string|int|float|array|null {
         $config = Configuration::build($loadSecret);
+
+        if (is_array($key)) {
+            return Configuration::set($key);
+        }
 
         if (is_null($key)) {
             return $config;

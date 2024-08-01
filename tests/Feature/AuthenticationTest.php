@@ -11,7 +11,6 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
     use WithFaker;
 
     public function testUnknownUserWillNotBeFound(): void

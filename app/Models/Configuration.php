@@ -58,6 +58,34 @@ class Configuration extends Model
         });
     }
 
+    /**
+     * Set the specified configuration value.
+     *
+     * If an array is passed as the key, we will assume you want to set an array of values.
+     *
+     * @param array<string, mixed>|string|null  $key
+     * @param mixed $value
+     * @param boolean $loadSecret
+     * @return  \Illuminate\Support\Collection
+     */
+    public static function set(
+        string|array|null $key = null,
+        mixed $value = null,
+        bool $loadSecret = false
+    ) {
+        if (is_array($key)) {
+            foreach ($key as $k => $value) {
+                Configuration::where('key', $k)->update(['value' => $value]);
+            }
+        } else {
+            Configuration::where('key', $key)->update(['value' => $value]);
+        }
+
+        Cache::forget('configuration::build');
+
+        return Configuration::build($loadSecret);
+    }
+
     public static function build($loadSecret = false)
     {
         if ($loadSecret) {

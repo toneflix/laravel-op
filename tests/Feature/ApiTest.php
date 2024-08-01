@@ -9,8 +9,6 @@ use Tests\TestCase;
 
 class ApiTest extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * A basic feature test example.
      */
