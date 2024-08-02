@@ -65,7 +65,7 @@ jobs:
           php artisan migrate
 
       - name: Execute tests
-        run: composer test
+        run: composer run-test
         env:
           XDEBUG_MODE: coverage
 
