@@ -1,7 +1,11 @@
 # Laravel OP
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/toneflix-code/laravel-op.svg?style=flat-round)](https://packagist.org/packages/toneflix-code/laravel-op)
-[![Total Downloads](https://img.shields.io/packagist/dt/toneflix-code/laravel-op.svg?style=flat-round)](https://packagist.org/packages/toneflix-code/laravel-op)
+[![Test & Lint](https://github.com/toneflix/laravel-op/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/toneflix/laravel-op/actions/workflows/run-tests.yml)
+[![Latest Stable Version](https://img.shields.io/packagist/v/toneflix-code/laravel-op.svg)](https://packagist.org/packages/toneflix-code/laravel-op)
+[![Total Downloads](https://img.shields.io/packagist/dt/toneflix-code/laravel-op.svg)](https://packagist.org/packages/toneflix-code/laravel-op)
+[![License](https://img.shields.io/packagist/l/toneflix-code/laravel-op.svg)](https://packagist.org/packages/toneflix-code/laravel-op)
+[![PHP Version Require](https://img.shields.io/packagist/dependency-v/toneflix-code/laravel-op/php)](https://packagist.org/packages/toneflix-code/laravel-op)
+[![codecov](https://codecov.io/gh/toneflix/laravel-op/graph/badge.svg?token=2O7aFulQ9P)](https://codecov.io/gh/toneflix/laravel-op)
 
 <!-- ![GitHub Actions](https://github.com/toneflix/laravel-op/actions/workflows/main.yml/badge.svg) -->
 
