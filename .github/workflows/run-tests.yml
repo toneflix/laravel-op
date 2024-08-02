@@ -63,9 +63,6 @@ jobs:
         run: |
           php artisan key:generate
           php artisan migrate
-          php artisan db:seed
-          php artisan db:seed ConfigurationSeeder
-          php artisan app:sync-roles
 
       - name: Execute tests
         run: ./vendor/bin/pest --coverage --ci
