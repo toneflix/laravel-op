@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
 use App\Helpers\Providers as PV;
+use App\Helpers\Url;
 use App\Http\Controllers\Controller;
 use App\Models\PasswordCodeResets;
 use App\Models\User;
@@ -27,18 +28,26 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $code = Url::base64urlDecode($request->code);
+
+        if (str($code)->contains('|')) {
+            $code = str($code)->explode('|')->first();
+            $error = 'The link you followed has expired, please request a new reset link.';
+        } else {
+            $code = $request->code;
+            $error = 'The code you provided has expired or does not exist.';
+        }
+
         // find the code
-        $code = PasswordCodeResets::firstWhere('code', $request->code);
+        $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
-        if (! $code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
+        if (!$code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
             $code && $code->delete();
 
             return PV::response()->error([
                 'message' => 'An error occured.',
-                'errors' => [
-                    'code' => __('The code you provided has expired or does not exist.'),
-                ],
+                'errors' => ['code' => __($error)],
             ], HttpStatus::ACCEPTED);
         }
 
@@ -76,18 +85,26 @@ class NewPasswordController extends Controller
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
 
+        $code = Url::base64urlDecode($request->code);
+
+        if (str($code)->contains('|')) {
+            $code = str($code)->explode('|')->first();
+            $error = 'The link you followed has expired, please request a new reset link.';
+        } else {
+            $code = $request->code;
+            $error = 'The code you provided has expired or does not exist.';
+        }
+
         // find the code
-        $code = PasswordCodeResets::firstWhere('code', $request->code);
+        $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
-        if (! $code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
+        if (!$code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
             $code && $code->delete();
 
             return PV::response()->error([
                 'message' => 'An error occured.',
-                'errors' => [
-                    'code' => __('The code you provided has expired or does not exist.'),
-                ],
+                'errors' => ['code' => __($error)],
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
 

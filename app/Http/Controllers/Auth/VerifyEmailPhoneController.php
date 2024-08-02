@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\HttpStatus;
 use App\Events\Verified;
 use App\Helpers\Providers as PV;
+use App\Helpers\Url;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -116,16 +117,24 @@ class VerifyEmailPhoneController extends Controller
                 : null
             );
 
+        $requestCode = Url::base64urlDecode($request->code);
+
+        if (str($requestCode)->contains('|')) {
+            $requestCode = str($requestCode)->explode('|')->first();
+            $error = 'The link you followed has expired, please request a new verification link.';
+        } else {
+            $requestCode = $request->code;
+            $error = 'The code you provided has expired or does not exist.';
+        }
+
         // check if it has not expired: the time is 30 minutes and that the code is valid
         $last_attempt = ($user->hasVerifiedPhone() && $user->last_attempt === null)
             ? $user->phone_verified_at
             : $user->last_attempt;
 
-        if ($request->code !== $code || $last_attempt->diffInMinutes(now()) >= PV::config('token_lifespan', 30)) {
+        if ($requestCode !== $code || $last_attempt->diffInMinutes(now()) >= PV::config('token_lifespan', 30)) {
             return PV::response()->error([
-                'errors' => [
-                    'code' => __('The code you provided has expired or does not exist.'),
-                ],
+                'errors' => ['code' => __($error)],
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
 

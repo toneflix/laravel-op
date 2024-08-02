@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Events\Verified;
+use App\Helpers\Url;
 use App\Models\User;
 use App\Notifications\AccountVerified;
 use App\Notifications\SendCode;
@@ -65,6 +66,24 @@ class NotificationsTest extends TestCase
         $this->actingAs($user)->put(
             'api/verify/with-code/email',
             ['code' => $user->email_verify_code]
+        );
+
+        Event::assertDispatched(function (Verified $event) use ($user) {
+            return $event->user->is($user);
+        });
+    }
+
+    public function testDispatchesVerifiedEventFromToken(): void
+    {
+        Event::fake();
+
+        $user = User::factory()->unverified()->create();
+
+        $user->sendEmailVerificationNotification();
+
+        $this->actingAs($user)->put(
+            'api/verify/with-code/email',
+            ['code' => Url::base64urlEncode($user->email_verify_code . '|' . MD5(time()))]
         );
 
         Event::assertDispatched(function (Verified $event) use ($user) {
