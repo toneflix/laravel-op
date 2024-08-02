@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Enums\SmsProvider;
 use App\Helpers\Providers;
+use App\Helpers\Url;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -13,22 +14,16 @@ class SendCode extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected string $type;
-
-    protected ?string $code;
-
-    protected ?string $token;
-
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(?string $code = null, string $type = 'reset', ?string $token = null)
-    {
-        $this->type = $type;
-        $this->code = $code;
-        $this->token = $token;
+    public function __construct(
+        public ?string $code = null,
+        public string $type = 'reset',
+        public ?string $token = null
+    ) {
         $this->afterCommit();
     }
 
@@ -59,7 +54,7 @@ class SendCode extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $this->code ??= $notifiable->code;
-        $this->token ??= $notifiable->token;
+        $this->token ??= $notifiable->token ?? Url::base64urlEncode($this->code . '|' . MD5(time()));
         $notifiable = $notifiable->user ?? $notifiable;
 
         /** @var \Carbon\Carbon */

@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Enums\HttpStatus;
 use App\Models\Configuration;
 use App\Models\PasswordCodeResets;
+use App\Services\MessageParser;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -138,40 +139,14 @@ class Providers
      * Parses a message in the messages config and returns
      * It in the required format
      *
-     * @param string $config
-     * @return \stdClass
+     * @param string $configKey — The corresponding message key from the [messages] config
+     * @param mixed[] ...$params — Exra parameters to pass to the config $name
+     *
+     * @return MessageParser
      */
-    public static function messageParser(string $config, ...$params)
+    public static function messageParser(string $configKey, ...$params): MessageParser
     {
-        $params =  collect($params)->map(fn ($val) => $val instanceof Model ? $val->toArray() : $val)
-            ->filter(fn ($item) => is_array($item))
-            ->collapse()
-            ->filter(fn ($item) => is_scalar($item))
-            ->all();
-
-
-        $output = new \stdClass();
-
-        $lines = collect(config("messages.$config.lines", []));
-        // Parse the message lines
-        $output->lines = $lines->map(function ($line) use ($params) {
-            // If the line is an array (a button) parse it the content also
-            if (is_array($line)) {
-                return collect($line)->mapWithKeys(function ($val, $key) use ($params) {
-                    return [$key => __($val, $params)];
-                })->all();
-            }
-
-            // The line should now be return safe
-            return is_string($line)
-                ? __($line, $params)
-                : $line;
-        })->merge([config("messages.signature")])->all();
-
-        // Parse the message subject
-        $output->subject = __(config("messages.$config.subject", ''), $params);
-
-        return $output;
+        return (new MessageParser($configKey, $params))->parse();
     }
 
     /**

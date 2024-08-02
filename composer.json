@@ -65,7 +65,7 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
-        "test": "@php artisan test",
+        "test": "XDEBUG_MODE=coverage php artisan test",
         "pint": "./vendor/bin/pint"
     },
     "extra": {

@@ -18,6 +18,7 @@ yarn-error.log
 /.idea
 /.DS_Store
 /.vscode
+/coverage
 composer.lock
 package.lock.json
 yarn.lock
