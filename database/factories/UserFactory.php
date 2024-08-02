@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'firstname' => fake()->firstName,
             'remember_token' => Str::random(10),
             'email_verified_at' => now(),
+            'username' => fake()->userName(),
         ];
     }
 

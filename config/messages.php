@@ -83,11 +83,18 @@ return [
         "subject" => "Welcome to the :app_name community.",
         "lines" => [
             "Hello :firstname,",
-            "Your :app_name account has been verified sucessfully and we want to use this opportunity to welcome you to our community.",
+            "Your :app_name account :label has been verified sucessfully and we want to use this opportunity to welcome you to our community.",
             [
                 'link' => ":app_url/login",
                 'title' => 'Get Started'
             ],
+        ],
+    ],
+    'send_verified:sms' => [
+        "subject" => "Welcome to the :app_name community.",
+        "lines" => [
+            "Hello :firstname,",
+            "Your :app_name account :label has been verified sucessfully, welcome to our community.",
         ],
     ],
 

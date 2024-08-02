@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
-use App\Events\PhoneVerified;
+use App\Events\Verified;
 use App\Helpers\Providers as PV;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -131,11 +130,11 @@ class VerifyEmailPhoneController extends Controller
         }
 
         if ($type == 'email' && $user->markEmailAsVerified()) {
-            event(new Verified($user));
+            event(new Verified($user, $type));
         }
 
         if ($type == 'phone' && $request->user()->markPhoneAsVerified()) {
-            event(new PhoneVerified($user));
+            event(new Verified($user, $type));
         }
 
         return PV::response()->success(new UserResource($user), HttpStatus::OK, [
