@@ -36,11 +36,11 @@ return [
         "subject" => "Reset your :app_name password.",
         "lines" => [
             "Hello :firstname,",
-            "You are receiving this email because we received a password reset request for your account on Niconpay.",
+            "You are receiving this email because we received a password reset request for your account on :app_name.",
             "Use the code or link below to recover your account.",
             "<h3 style=\"text-align: center;\">:code</h3>",
             [
-                'link' => 'https://niconpay.com/reset/password?token=:token',
+                'link' => ':app_url/reset/password?token=:token',
                 'title' => 'Reset Password'
             ],
             "This password reset code will expire in :duration.",
@@ -51,10 +51,10 @@ return [
         "subject" => "Verify your account on :app_name.",
         "lines" => [
             "Hello :firstname,",
-            "You are receiving this email because you created an account on <b>:app_name</b> and we needed to verify that you own this email addrress. <br />Use the code or link below to verify your email address.",
+            "You are receiving this email because you created an account on <b>:app_name</b> and we needed to verify that you own this :label. <br />Use the code or link below to verify your :label.",
             "<h3 style=\"text-align: center;\">:code</h3>",
             [
-                'link' => "https://niconpay.com/account/verify/:type?token=:token",
+                'link' => ":app_url/account/verify/:type?token=:token",
                 'title' => 'Verify Account'
             ],
             "This verification code will expire in :duration.",
@@ -80,12 +80,12 @@ return [
     |
     */
     'send_verified' => [
-        "subject" => "Welcome to the Niconpay community.",
+        "subject" => "Welcome to the :app_name community.",
         "lines" => [
             "Hello :firstname,",
             "Your :app_name account has been verified sucessfully and we want to use this opportunity to welcome you to our community.",
             [
-                'link' => "https://niconpay.com/login",
+                'link' => ":app_url/login",
                 'title' => 'Get Started'
             ],
         ],
@@ -99,7 +99,7 @@ return [
     |
     */
     'email_verification' => [
-        'subject' => 'Please verify your email.',
+        'subject' => 'Please verify your :label.',
         'lines' => [
             'Hello :fullname,',
             'You initiated an account opening proccess at :app_name, please use the code below to complete your request',
