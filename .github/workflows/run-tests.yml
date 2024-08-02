@@ -55,6 +55,8 @@ jobs:
           cp .env.example .env
           echo PAYSTACK_PUBLIC_KEY=${{ secrets.PAYSTACK_PUBLIC_KEY }} >> .env
           echo PAYSTACK_SECRET_KEY=${{ secrets.PAYSTACK_SECRET_KEY }} >> .env
+          echo DB_CONNECTION=sqlite
+          echo DB_DATABASE=:memory:
           cat .env
 
       - name: Run Migrations
