@@ -63,10 +63,9 @@ jobs:
         run: |
           php artisan key:generate
           php artisan migrate
-          php artisan app:sync-roles
 
       - name: Execute tests
-        run: ./vendor/bin/pest --coverage --ci
+        run: composer test
         env:
           XDEBUG_MODE: coverage
 
