@@ -70,4 +70,18 @@ return [
         'admin' => ['manage-admins'],
         'manager' => ['manage-admins'],
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Roles
+    |--------------------------------------------------------------------------
+    |
+    | Users with any of the following roles are considered admins in general contexts.
+    */
+    'admin_roles' => [
+        'super-admin',
+        'admin',
+        'manager',
+        'support',
+        'user'
+    ],
 ];
