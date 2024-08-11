@@ -32,6 +32,7 @@ class ConfigValue implements CastsAttributes
         $canBeSaved = $value instanceof UploadedFile || (is_array($value) && isset($value[0]) && $value[0] instanceof UploadedFile);
 
         return match (true) {
+            $model->secret && $value === '***********' => $model->value ?: '',
             $canBeSaved => $this->doUpload($value, $model),
             is_array($value) => json_encode($value, JSON_FORCE_OBJECT),
             is_bool($value) => $value ? 0 : 1,
@@ -85,6 +86,7 @@ class ConfigValue implements CastsAttributes
     protected function build(mixed $value, string $type, Model $model): mixed
     {
         return match (true) {
+            $model->secret && request()->boolean('hide-secret') => '***********',
             $type === 'file' => $model->files[0]?->file_url ?? (new Media())->getDefaultMedia('default'),
             $type === 'files' => $model->files,
             in_array(mb_strtolower($type), ['bool', 'boolean']) => filter_var($value, FILTER_VALIDATE_BOOLEAN),
