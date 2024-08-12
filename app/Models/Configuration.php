@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use App\Casts\ConfigValue;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @method static Model<Configuration> notSecret()
+ */
 class Configuration extends Model
 {
     use HasFactory;
@@ -75,10 +79,14 @@ class Configuration extends Model
     ) {
         if (is_array($key)) {
             foreach ($key as $k => $value) {
-                Configuration::where('key', $k)->update(['value' => $value]);
+                if ($value !== '***********') {
+                    Configuration::where('key', $k)->update(['value' => $value]);
+                }
             }
         } else {
-            Configuration::where('key', $key)->update(['value' => $value]);
+            if ($value !== '***********') {
+                Configuration::where('key', $key)->update(['value' => $value]);
+            }
         }
 
         Cache::forget('configuration::build');
@@ -96,7 +104,7 @@ class Configuration extends Model
 
         /** @var \Illuminate\Support\Collection<TMapWithKeysKey, TMapWithKeysValue> $config */
         $config = Cache::remember('configuration::build', null, function () {
-            return Configuration::all()->filter(fn ($conf) => !$conf->secret)->mapWithKeys(function ($item) {
+            return Configuration::all()->filter(fn($conf) => !$conf->secret)->mapWithKeys(function ($item) {
                 return [$item->key => $item->value];
             });
         });
@@ -107,5 +115,10 @@ class Configuration extends Model
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function scopeNotSecret(Builder $query, $secret = false): void
+    {
+        $query->whereSecret($secret);
     }
 }
