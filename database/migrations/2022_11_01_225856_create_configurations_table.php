@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('key')->unique()->index();
             $table->string('title')->nullable();
             $table->string('type')->default('string');
+            $table->string('group')->default('main');
             $table->string('value')->nullable();
             $table->integer('count')->nullable();
             $table->integer('max')->nullable();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('hint')->nullable();
             $table->boolean('autogrow')->default(false);
             $table->boolean('secret')->default(false);
+            $table->json('choices')->nullable();
             $table->timestamps();
         });
     }

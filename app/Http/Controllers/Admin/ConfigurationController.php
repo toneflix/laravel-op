@@ -51,6 +51,6 @@ class ConfigurationController extends Controller
                 ->when($request->boolean('group'), fn($model) => $model->groupBy('group')),
             'config' => $config,
             'message' => 'Configuration Saved!'
-        ]);
+        ], HttpStatus::ACCEPTED);
     }
 }

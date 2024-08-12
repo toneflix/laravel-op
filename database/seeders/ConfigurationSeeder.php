@@ -29,6 +29,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => '',
                 'secret' => false,
+                'group' => 'main',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'app_email',
@@ -41,6 +43,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => '',
                 'secret' => false,
+                'group' => 'main',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'app_currency',
@@ -53,6 +57,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => '',
                 'secret' => false,
+                'group' => 'main',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'allow_default_images',
@@ -65,6 +71,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'Determines wether default images or null should be used in place of missing images',
                 'secret' => false,
+                'group' => 'main',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'prefered_sms_channel',
@@ -77,6 +85,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'Which channel should be prefered when sending SMS',
                 'secret' => false,
+                'group' => 'access',
+                'choices' => json_encode(['KUDISMS', 'TWILLIO']),
             ],
             [
                 'key' => 'prefered_notification_channels',
@@ -86,9 +96,11 @@ class ConfigurationSeeder extends Seeder
                 'count' => null,
                 'max' => null,
                 'col' => 6,
-                'autogrow' => false,
+                'autogrow' => true,
                 'hint' => 'Which channel should be prefered when sending out notifications',
                 'secret' => false,
+                'group' => 'access',
+                'choices' => json_encode(['sms', 'mail', 'database']),
             ],
             [
                 'key' => 'verify_email',
@@ -101,6 +113,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'Whether to enforce user email verification',
                 'secret' => false,
+                'group' => 'access',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'verify_phone',
@@ -113,6 +127,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'Whether to enforce user phone number verification',
                 'secret' => false,
+                'group' => 'access',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'token_lifespan',
@@ -125,6 +141,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'How long tokens should live (secs.)',
                 'secret' => false,
+                'group' => 'access',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'stripe_secret_key',
@@ -137,6 +155,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => null,
                 'secret' => true,
+                'group' => 'misc',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'paystack_secret_key',
@@ -149,6 +169,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => null,
                 'secret' => true,
+                'group' => 'misc',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'paystack_public_key',
@@ -161,6 +183,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => null,
                 'secret' => false,
+                'group' => 'misc',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'payment_verify_url',
@@ -173,6 +197,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'User will be redirected here once payment is successfull',
                 'secret' => false,
+                'group' => 'misc',
+                'choices' => json_encode([]),
             ],
             [
                 'key' => 'reference_prefix',
@@ -185,6 +211,8 @@ class ConfigurationSeeder extends Seeder
                 'autogrow' => false,
                 'hint' => 'Will be prepend to every reference string.',
                 'secret' => false,
+                'group' => 'misc',
+                'choices' => json_encode([]),
             ],
         ]);
     }

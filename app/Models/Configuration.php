@@ -25,18 +25,13 @@ class Configuration extends Model
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes to be appended
      *
-     * @return array<string, string>
+     * @var array
      */
-    protected function casts(): array
-    {
-        return [
-            'type' => \App\Casts\ConfigType::class,
-            'value' => \App\Casts\ConfigValue::class,
-            'secret' => 'boolean',
-        ];
-    }
+    protected $appends = [
+        'multiple',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -54,14 +49,32 @@ class Configuration extends Model
      * @var array
      */
     protected $attributes = [
+        'col' => 12,
+        'max' => null,
+        'hint' => '',
         'type' => 'string',
         'count' => null,
-        'max' => null,
-        'col' => 12,
-        'autogrow' => false,
-        'hint' => '',
+        'group' => 'main',
         'secret' => false,
+        'choices' => "[]",
+        'autogrow' => false,
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type' => \App\Casts\ConfigType::class,
+            'value' => \App\Casts\ConfigValue::class,
+            'secret' => 'boolean',
+            'autogrow' => 'boolean',
+            'choices' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
+        ];
+    }
 
     public static function boot(): void
     {
@@ -130,5 +143,15 @@ class Configuration extends Model
     public function scopeNotSecret(Builder $query, $secret = false): void
     {
         $query->whereSecret($secret);
+    }
+
+    public function multiple(): Attribute
+    {
+        return new Attribute(
+            get: fn() => count($this->choices) && $this->autogrow,
+            set: fn($value) => [
+                'autogrow' => $value
+            ],
+        );
     }
 }
