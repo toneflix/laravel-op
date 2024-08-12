@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('password');
             $table->timestamp('last_attempt')->nullable();
             $table->json('data')->nullable();
-            $table->json('access_data')->default('{}')->nullable();
+            $table->json('access_data')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
