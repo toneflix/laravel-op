@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\ConfigValue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +22,8 @@ class Configuration extends Model
     protected function casts(): array
     {
         return [
-            'value' => ConfigValue::class,
+            'type' => \App\Casts\ConfigType::class,
+            'value' => \App\Casts\ConfigValue::class,
             'secret' => 'boolean',
         ];
     }

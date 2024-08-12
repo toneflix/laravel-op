@@ -90,4 +90,30 @@ class NotificationsTest extends TestCase
             return $event->user->is($user);
         });
     }
+
+    public function testCanLoadDatabaseNotifications(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->unverified()->create();
+
+        $user->notify(new \Tests\Notifications\TestNotifications());
+
+        $response = $this->actingAs($user)->get('api/account/notifications');
+
+        $response->assertOk();
+        Notification::assertSentTo($user, \Tests\Notifications\TestNotifications::class);
+    }
+
+    public function testCanDeleteDatabaseNotifications(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $user->notify(new \Tests\Notifications\TestNotifications());
+
+        $id = $user->notifications()->first()->id;
+        $response = $this->actingAs($user)->delete('api/account/notifications/' . $id);
+
+        $response->assertAccepted();
+    }
 }

@@ -30,9 +30,8 @@ class ConfigValue implements CastsAttributes
     {
         $type = $attributes['type'];
         $canBeSaved = $value instanceof UploadedFile || (is_array($value) && isset($value[0]) && $value[0] instanceof UploadedFile);
-
         return match (true) {
-            $model->secret && $value === '***********' => $model->value ?: '',
+            ($model->secret ?? false) && $value === '***********' => $model->value ?: '',
             $canBeSaved => $this->doUpload($value, $model),
             is_array($value) => json_encode($value, JSON_FORCE_OBJECT),
             is_bool($value) => $value ? 0 : 1,
