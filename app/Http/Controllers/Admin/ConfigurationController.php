@@ -47,9 +47,10 @@ class ConfigurationController extends Controller
         $config = Providers::config($valid);
 
         return Providers::response()->success([
-            'data' => Configuration::notSecret()->get()
+            'data' => Configuration::notSecret()->orderBy('id')->get()
                 ->when($request->boolean('group'), fn($model) => $model->groupBy('group')),
-            'config' => $config
-        ], HttpStatus::ACCEPTED);
+            'config' => $config,
+            'message' => 'Configuration Saved!'
+        ]);
     }
 }
