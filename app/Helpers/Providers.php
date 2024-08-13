@@ -45,7 +45,7 @@ class Providers
             return $config;
         }
 
-        return Arr::get($config, $key, $default);
+        return Arr::get($config, $key, $default) ?? $default;
     }
 
     /**
