@@ -2,10 +2,6 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
-## 2.0.6 - 2024-08-18
-
-**Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.5...2.0.6
-
 ## v2.0.5 - 2024-08-02
 
 1. Add ability to verify account and reset password with token.
