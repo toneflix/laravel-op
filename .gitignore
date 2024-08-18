@@ -16,7 +16,7 @@ npm-debug.log
 yarn-error.log
 /.fleet
 /.idea
-/.DS_Store
+.DS_Store
 /.vscode
 /coverage
 composer.lock
