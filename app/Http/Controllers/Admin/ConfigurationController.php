@@ -26,10 +26,12 @@ class ConfigurationController extends Controller
      */
     public function show(string|int $id)
     {
+        $data = Configuration::where('key', $id)
+            ->when(filter_var($id, FILTER_VALIDATE_INT), fn($q) => $q->orWhere('id', $id))
+            ->first();
+
         return Providers::response()->success([
-            'data' => Configuration::where('key', $id)
-                ->when(filter_var($id, FILTER_VALIDATE_INT), fn($q) => $q->orWhere('id', $id))
-                ->first()
+            'data' => $data
         ]);
     }
 
