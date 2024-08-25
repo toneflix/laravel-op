@@ -29,4 +29,29 @@ class Strings
             return false;
         }
     }
+
+    /**
+     * Format bytes to kilobytes, megabytes, gigabytes
+     *
+     * @param integer $bytes
+     * @param integer $precision
+     * @param bool    $bin
+     * @return string
+     */
+    public static function formatBytes(int $bytes, int $precision = 2, bool $bin = false): string
+    {
+        $units = $bin
+            ? array('B', 'KiB', 'MiB', 'GiB', 'TiB')
+            : array('B', 'KB', 'MB', 'GB', 'TB');
+
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log($bin ? 1024 : 1000));
+        $pow = min($pow, count($units) - 1);
+
+        // Uncomment one of the following alternatives
+        $bytes /= pow(1024, $pow);
+        // $bytes /= (1 << (10 * $pow));
+
+        return round($bytes, $precision) . $units[$pow];
+    }
 }
