@@ -106,7 +106,7 @@ class SyncRoles extends Command
             ['ID', 'Name', 'Gaurds', 'Roles'],
             $users->map(fn($user) => [
                 $user->id,
-                $user->first_name,
+                $user->firstname,
                 $user->roles->pluck('guard_name')->implode(', '),
                 $user->roles->pluck('name')->implode(', '),
             ])
@@ -118,7 +118,7 @@ class SyncRoles extends Command
             ['ID', 'Name', 'Gaurds', 'Permissions'],
             $users->map(fn($user) => [
                 $user->id,
-                $user->first_name,
+                $user->firstname,
                 $user->roles->pluck('guard_name')->implode(', '),
                 $user->roles->pluck('permissions')->implode(', '),
             ])
@@ -179,7 +179,7 @@ class SyncRoles extends Command
             ['ID', 'Name', 'Gaurds', 'Roles'],
             $users->map(fn($user) => [
                 $user->id,
-                $user->first_name,
+                $user->firstname,
                 $user->roles->pluck('guard_name')->implode(', '),
                 $user->roles->pluck('name')->implode(', '),
             ])
@@ -191,7 +191,7 @@ class SyncRoles extends Command
             ['ID', 'Name', 'Gaurds', 'Permissions'],
             $users->map(fn($user) => [
                 $user->id,
-                $user->first_name,
+                $user->firstname,
                 $user->roles->pluck('guard_name')->implode(', '),
                 $user->roles->pluck('permissions')->implode(', '),
             ])
