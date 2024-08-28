@@ -51,7 +51,7 @@ class AuthenticationTest extends TestCase
             );
 
         $response->assertStatus(201);
-        $this->assertArrayHasKey('id', $response->collect());
+        $this->assertArrayHasKey('id', $response->collect('data'));
     }
 
     public function testUserCanLogin(): void
@@ -72,7 +72,7 @@ class AuthenticationTest extends TestCase
             );
 
         $response->assertStatus(200);
-        $this->assertArrayHasKey('id', $response->collect());
+        $this->assertArrayHasKey('id', $response->collect('data'));
     }
 
     public function testUserCanLogout(): void
