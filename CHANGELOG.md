@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 2.0.7 - 2024-08-28
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.5...2.0.7
+
 ## 2.0.6 - 2024-08-18
 
 * [Feat: Add a command to generate model policies for all models.](https://github.com/toneflix/laravel-op/commit/646e6d794dddee9698cf1de08a1e4b5c0a0233f2)
