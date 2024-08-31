@@ -14,6 +14,18 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $iam_admin = $request?->user()?->hasAnyRole(config('permission-defs.admin_roles', [])) ||
+            $this->hasAnyPermission(['manage-users', 'manage-admins']) ||
+            false;
+
+        $previleged = auth()?->id() === $this->id || $iam_admin;
+
+        $permissions = [];
+        if ($previleged) {
+            $permQuery = $this->getPermissionsViaRoles()->pluck('name')->unique();
+            $permissions = $permQuery->count() ? $permQuery->values() : $this->getPermissionNames();
+        }
+
         return [
             'id' => $this->id,
             'username' => $this->username,
@@ -30,6 +42,10 @@ class UserResource extends JsonResource
             'phone_verified_at' => $this->phone_verified_at,
             'password' => $this->password,
             'last_attempt' => $this->last_attempt,
+            $this->mergeWhen($previleged, fn() => [
+                'roles' => $this->getRoleNames(),
+                'permissions' => $permissions,
+            ]),
             'user_data' => $this->data,
             'access_data' => $this->access_data,
         ];
