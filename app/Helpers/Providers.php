@@ -191,12 +191,12 @@ class Providers
     public static function paginator(LengthAwarePaginator $data): array
     {
         if ($data instanceof LengthAwarePaginator) {
-            $links = $data->linkCollection()->filter(fn ($link) => is_numeric($link['label']));
+            $links = $data->linkCollection()->filter(fn($link) => is_numeric($link['label']));
 
             return [
                 'data' => count(static::$responseKeys)
                     ? collect($data->items())
-                    ->map(fn ($e) => collect($e)->filter(fn ($k, $v) => in_array($v, static::$responseKeys)))
+                    ->map(fn($e) => collect($e)->filter(fn($k, $v) => in_array($v, static::$responseKeys)))
                     : $data->items(),
                 'meta' => [
                     'current_page' => $data->currentPage(),
