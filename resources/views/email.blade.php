@@ -237,162 +237,13 @@
                                                                         style="vertical-align:top;" width="100%">
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td align="center"
-                                                                                    style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                                                                    <table align="center"
-                                                                                        border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        style="float:none;display:inline-table;">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td
-                                                                                                    style="padding:4px;">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        style="border-radius:3px;width:32px;">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td
-                                                                                                                    style="font-size:0;height:32px;vertical-align:middle;width:32px;">
-                                                                                                                    <a href="https://twitter.com/greyhobb"
-                                                                                                                        target="_blank"
-                                                                                                                        style="color: #2e58ff; text-decoration: none;">
-                                                                                                                        <img alt="twitter-logo"
-                                                                                                                            height="32"
-                                                                                                                            src="https://codedmails.com/images/social/color/twitter-logo-transparent.png"
-                                                                                                                            style="border-radius:3px;display:block;"
-                                                                                                                            width="32" />
-                                                                                                                    </a>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                    <table align="center"
-                                                                                        border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        style="float:none;display:inline-table;">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td
-                                                                                                    style="padding:4px;">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        style="border-radius:3px;width:32px;">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td
-                                                                                                                    style="font-size:0;height:32px;vertical-align:middle;width:32px;">
-                                                                                                                    <a href="https://web.facebook.com/greysoftng"
-                                                                                                                        target="_blank"
-                                                                                                                        style="color: #2e58ff; text-decoration: none;">
-                                                                                                                        <img alt="facebook-logo"
-                                                                                                                            height="32"
-                                                                                                                            src="https://codedmails.com/images/social/color/facebook-logo-transparent.png"
-                                                                                                                            style="border-radius:3px;display:block;"
-                                                                                                                            width="32" />
-                                                                                                                    </a>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                    <table align="center"
-                                                                                        border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        style="float:none;display:inline-table;">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td
-                                                                                                    style="padding:4px;">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        style="border-radius:3px;width:32px;">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td
-                                                                                                                    style="font-size:0;height:32px;vertical-align:middle;width:32px;">
-                                                                                                                    <a href="https://www.instagram.com/greyhobb/"
-                                                                                                                        target="_blank"
-                                                                                                                        style="color: #2e58ff; text-decoration: none;">
-                                                                                                                        <img alt="instagram-logo"
-                                                                                                                            height="32"
-                                                                                                                            src="https://codedmails.com/images/social/color/insta-logo-transparent.png"
-                                                                                                                            style="border-radius:3px;display:block;"
-                                                                                                                            width="32" />
-                                                                                                                    </a>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                    <table align="center"
-                                                                                        border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        role="presentation"
-                                                                                        style="float:none;display:inline-table;">
-                                                                                        <tbody>
-                                                                                            <tr>
-                                                                                                <td
-                                                                                                    style="padding:4px;">
-                                                                                                    <table
-                                                                                                        border="0"
-                                                                                                        cellpadding="0"
-                                                                                                        cellspacing="0"
-                                                                                                        role="presentation"
-                                                                                                        style="border-radius:3px;width:32px;">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td
-                                                                                                                    style="font-size:0;height:32px;vertical-align:middle;width:32px;">
-                                                                                                                    <a href="https://youtube.com/@greysoftTechnologies"
-                                                                                                                        target="_blank"
-                                                                                                                        style="color: #2e58ff; text-decoration: none;">
-                                                                                                                        <img alt="youtube-logo"
-                                                                                                                            height="32"
-                                                                                                                            src="https://codedmails.com/images/social/color/youtube-logo-transparent.png"
-                                                                                                                            style="border-radius:3px;display:block;"
-                                                                                                                            width="32" />
-                                                                                                                    </a>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
                                                                                 <td align="left"
                                                                                     style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                                                                     <div
                                                                                         style="font-family:Lato,'Helvetica Neue ',Helvetica,Arial,sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:center;color:#434245;">
                                                                                         You are recieving this message
                                                                                         because you are registered on
-                                                                                        {{ Providers::config('site_name') }}.
+                                                                                        {{ Providers::config('app_name') }}.
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>
@@ -401,10 +252,10 @@
                                                                                     style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                                                                     <div
                                                                                         style="font-family:Lato,'Helvetica Neue ',Helvetica,Arial,sans-serif;font-size:15px;font-weight:400;line-height:20px;text-align:center;color:#bfbfbf;">
-                                                                                        ©{{ now()->format('Y') }}
-                                                                                        Greysoft Technologies
-                                                                                        Limited., All Rights
-                                                                                        Reserved.</div>
+                                                                                        &copy;{{ now()->format('Y') }}
+                                                                                        {{ Providers::config('app_name') }}.,
+                                                                                        All Rights Reserved.
+                                                                                    </div>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>

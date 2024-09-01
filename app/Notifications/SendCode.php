@@ -43,7 +43,7 @@ class SendCode extends Notification implements ShouldQueue
             );
 
 
-        return collect($channels)->map(fn ($ch) => $ch == 'sms' ? SmsProvider::getChannel() : $ch)->toArray();
+        return collect($channels)->map(fn($ch) => $ch == 'sms' ? SmsProvider::getChannel() : $ch)->toArray();
     }
 
     /**
@@ -102,12 +102,12 @@ class SendCode extends Notification implements ShouldQueue
         $message = [
             'reset' => __('Use this code :0 to reset your :1 password, It expires in :2.', [
                 $this->code,
-                Providers::config('site_name'),
+                Providers::config('app_name'),
                 $dateAdd->longAbsoluteDiffForHumans(),
             ]),
             'verify-phone' => __('use this code :0 to verify your :1 phone number, It expires in :2.', [
                 $this->code,
-                Providers::config('site_name'),
+                Providers::config('app_name'),
                 $dateAdd->longAbsoluteDiffForHumans(),
             ]),
         ];
