@@ -16,10 +16,11 @@ class ConfigType implements CastsAttributes
     {
         if (request()->isMethod('POST') || request()->isMethod('PUT')) {
             return match (true) {
+                $value === 'textarea' => 'string',
                 $value === 'text' => 'string',
                 $value === 'bool' => 'boolean',
-                $value === 'files' => 'file',
                 $value === 'json' => 'array',
+                $value === 'files' => 'file',
                 in_array($value, ['number', 'integer', 'int']) => 'numeric',
                 default => $value,
             };
