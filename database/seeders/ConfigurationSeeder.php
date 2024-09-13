@@ -19,6 +19,20 @@ class ConfigurationSeeder extends Seeder
         Configuration::truncate();
         Configuration::insert([
             [
+                'key' => 'app_logo',
+                'title' => 'App Logo',
+                'value' => null,
+                'type' => 'file',
+                'count' => null,
+                'max' => null,
+                'col' => 6,
+                'autogrow' => false,
+                'hint' => '',
+                'secret' => false,
+                'group' => 'main',
+                'choices' => json_encode([]),
+            ],
+            [
                 'key' => 'app_name',
                 'title' => 'App Name',
                 'value' => config('app.name'),

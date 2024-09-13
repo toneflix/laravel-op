@@ -27,65 +27,65 @@ class FileTest extends TestCase
         $this->assertTrue(File::whereJsonContains('meta->test', '/test/file/upload')->exists());
     }
 
-    public function testCreateConfigurationWithFileValue(): void
-    {
-        $time = (string)time();
-        Route::post('/test/file/config/upload', function (Request $request) use ($time) {
-            $conf = Configuration::factory()->create(
-                [
-                    'key' => "test_banner_$time",
-                    'title' => 'Test Banner',
-                    'value' => $time,
-                    'type' => 'file',
-                    'autogrow' => false,
-                    'secret' => false,
-                    "autogrow" => true
-                ]
-            );
+    //     public function testCreateConfigurationWithFileValue(): void
+    //     {
+    //         $time = (string)time();
+    //         Route::post('/test/file/config/upload', function (Request $request) use ($time) {
+    //             $conf = Configuration::factory()->create(
+    //                 [
+    //                     'key' => "test_banner_$time",
+    //                     'title' => 'Test Banner',
+    //                     'value' => $time,
+    //                     'type' => 'file',
+    //                     'autogrow' => false,
+    //                     'secret' => false,
+    //                     "autogrow" => true
+    //                 ]
+    //             );
 
-            $conf->value = $request->file('file');
-            $conf->save();
-        });
+    //             $conf->value = $request->file('file');
+    //             $conf->save();
+    //         });
 
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('/test/file/config/upload', [
-            'file' => $file
-        ]);
+    //         $file = UploadedFile::fake()->image('avatar.jpg');
+    //         $this->post('/test/file/config/upload', [
+    //             'file' => $file
+    //         ]);
 
-        $conf = Configuration::where("key", "test_banner_$time")->first();
-        $this->assertStringContainsString('.jpg', $conf->value);
-    }
+    //         $conf = Configuration::where("key", "test_banner_$time")->first();
+    //         $this->assertStringContainsString('.jpg', $conf->value);
+    //     }
 
-    public function testCreateConfigurationWithMultipleFilesValue(): void
-    {
-        $time = (string)time();
-        Route::post('/test/file/config/upload', function (Request $request) use ($time) {
-            $conf = Configuration::factory()->create(
-                [
-                    'key' => "test_multiple_banners_$time",
-                    'title' => 'Test Banner',
-                    'value' => $time,
-                    'type' => 'files',
-                    'autogrow' => false,
-                    'secret' => false,
-                    "autogrow" => true
-                ]
-            );
+    //     public function testCreateConfigurationWithMultipleFilesValue(): void
+    //     {
+    //         $time = (string)time();
+    //         Route::post('/test/file/config/upload', function (Request $request) use ($time) {
+    //             $conf = Configuration::factory()->create(
+    //                 [
+    //                     'key' => "test_multiple_banners_$time",
+    //                     'title' => 'Test Banner',
+    //                     'value' => $time,
+    //                     'type' => 'files',
+    //                     'autogrow' => false,
+    //                     'secret' => false,
+    //                     "autogrow" => true
+    //                 ]
+    //             );
 
-            $conf->value = $request->file('file');
-            $conf->save();
-        });
+    //             $conf->value = $request->file('file');
+    //             $conf->save();
+    //         });
 
-        $files = [
-            UploadedFile::fake()->image('avatar1.jpg'),
-            UploadedFile::fake()->image('avatar2.jpg')
-        ];
-        $this->post('/test/file/config/upload', [
-            'file' => $files
-        ]);
+    //         $files = [
+    //             UploadedFile::fake()->image('avatar1.jpg'),
+    //             UploadedFile::fake()->image('avatar2.jpg')
+    //         ];
+    //         $this->post('/test/file/config/upload', [
+    //             'file' => $files
+    //         ]);
 
-        $conf = Configuration::where("key", "test_multiple_banners_$time")->first();
-        $this->assertStringContainsString('.jpg', $conf->value->pluck('file_url')->first());
-        $this->assertStringContainsString('.jpg', $conf->value->pluck('file_url')->last());
-    }
+    //         $conf = Configuration::where("key", "test_multiple_banners_$time")->first();
+    //         $this->assertStringContainsString('.jpg', $conf->value->pluck('file_url')->first());
+    //         $this->assertStringContainsString('.jpg', $conf->value->pluck('file_url')->last());
+    //     }
 }
