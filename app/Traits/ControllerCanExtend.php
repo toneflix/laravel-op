@@ -70,12 +70,12 @@ trait ControllerCanExtend
         // Create transaction
         /** @var \App\Models\Transaction */
         $transaction = $user->transactions()->make([
+            'request_data' => $request->all(),
             'reference' => $paymentIntent['reference'] ?? $paymentIntent['id'],
             'discount' => $discount,
             'status' => 'pending',
             'method' => $this->paymentProcessor,
             'amount' => $amount,
-            'data' => $request->all(),
             'fees' => $fees,
             'due' => ($amount - $discount) + $fees,
         ]);
@@ -83,8 +83,9 @@ trait ControllerCanExtend
         if ($transactable) {
             $transaction->transactable_type = $transactable->getMorphClass();
             $transaction->transactable_id = $transactable->id;
-            $transaction->save();
         }
+
+        $transaction->save();
 
         return collect($paymentIntent->toArray());
     }

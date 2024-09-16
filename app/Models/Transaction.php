@@ -18,6 +18,7 @@ class Transaction extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'request_data',
         'reference',
         'discount',
         'user_id',
@@ -49,8 +50,9 @@ class Transaction extends Model
             'due' => 'float',
             'fees' => 'float',
             'amount' => 'float',
-            'webhook' => 'collection',
+            'webhook' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
             'discount' => 'float',
+            'request_data' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
         ];
     }
 
@@ -65,14 +67,14 @@ class Transaction extends Model
     public function content(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->transactable()->get(),
+            get: fn() => $this->transactable()->get(),
         );
     }
 
     public function type(): Attribute
     {
         return new Attribute(
-            get: fn () => str($this->transactable_type)->afterLast('\\'),
+            get: fn() => str($this->transactable_type)->afterLast('\\'),
         );
     }
 

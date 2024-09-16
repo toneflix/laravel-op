@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('temp_user_id')->nullable()->constrained('temp_users')->onUpdate('cascade')->onDelete('cascade');
-            $table->morphs('transactable');
+            $table->nullableMorphs('transactable');
             $table->string('reference')->nullable();
             $table->string('method')->nullable();
             $table->decimal('amount')->default(0.00);
@@ -26,6 +26,7 @@ return new class () extends Migration {
             $table->decimal('fees')->default(0.00);
             $table->enum('status', ['pending', 'complete', 'rejected'])->default('complete');
             $table->json('webhook')->nullable();
+            $table->json('request_data')->nullable();
             $table->timestamps();
         });
     }
