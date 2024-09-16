@@ -172,6 +172,9 @@ class PaystackProcessor implements PaymentInterface
                 ]);
 
                 $tranx->payment_approved = $tranx->data->status === 'success';
+                if (!$tranx->payment_approved) {
+                    throw new \ErrorException("Payment could not be verified, status is {$tranx->data->status}");
+                }
 
                 $code = HttpStatus::OK;
                 $msg = 'Transaction verified';

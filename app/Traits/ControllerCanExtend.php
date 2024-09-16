@@ -39,21 +39,23 @@ trait ControllerCanExtend
      * @param User|TempUser $user
      * @param integer|float $amount
      * @param Model|null $transactable
+     * @param integer|float $discount
      * @throws ValidationException
      * @return \Illuminate\Support\Collection
      */
     public function makePayment(
         Request $request,
         User|TempUser $user,
-        int|float $amount,
-        ?Model $transactable = null
+        int $amount,
+        ?Model $transactable = null,
+        int $discount = 0,
     ): \Illuminate\Support\Collection {
         $fees = 0;
 
         if ($this->paymentProcessor === 'paystack') {
-            $paymentIntent = (new PaystackProcessor($request, $user))->intent($amount);
+            $paymentIntent = (new PaystackProcessor($request, $user))->intent($amount - $discount);
         } elseif ($this->paymentProcessor === 'paystack') {
-            $paymentIntent = (new StripeProcessor($request, $user))->intent($amount);
+            $paymentIntent = (new StripeProcessor($request, $user))->intent($amount - $discount);
         } else {
             throw ValidationException::withMessages([
                 'payment_method' => "Unknown Payment Method Selected.",
@@ -69,12 +71,13 @@ trait ControllerCanExtend
         /** @var \App\Models\Transaction */
         $transaction = $user->transactions()->make([
             'reference' => $paymentIntent['reference'] ?? $paymentIntent['id'],
-            'discount' => 0,
+            'discount' => $discount,
             'status' => 'pending',
-            'method' => 'paystack',
+            'method' => $this->paymentProcessor,
             'amount' => $amount,
+            'data' => $request->all(),
             'fees' => $fees,
-            'due' => $amount + $fees,
+            'due' => ($amount - $discount) + $fees,
         ]);
 
         if ($transactable) {
