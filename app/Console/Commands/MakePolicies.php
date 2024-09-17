@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
@@ -30,14 +31,36 @@ class MakePolicies extends Command
     public function handle()
     {
         $exclude = (array)$this->argument('exclude');
-        $files = collect(File::files(app_path('Models')));
+        $files = collect(array_merge(
+            glob(app_path('Models/*.php')),
+            glob(app_path('Models/**/*.php'))
+        ));
 
         $fileList = $files
-            ->filter(fn($file) => $file->getExtension() === 'php')
-            ->map(fn($file) => str($file->getFilename())->remove('.php')->toString());
+            ->map(fn($path) => str($path)
+                ->afterLast('app')
+                ->prepend("App")
+                ->replace('/', "\\")
+                ->remove('.php')
+                ->toString())
+            ->filter(fn($name) => new $name() instanceof Model)
+            ->map(
+                fn($path) => str($path)
+                    ->afterLast("Models\\")
+                    ->replace('\\', "/")
+                    ->toString()
+            );
 
-        $defaultExcludes = ['Configuration', 'User', 'File', 'PasswordCodeResets', 'TempUser', 'Transaction'];
-
+        $defaultExcludes = [
+            'User',
+            'File',
+            'TempUser',
+            'Category',
+            'Transaction',
+            'Configuration',
+            'NotableAction',
+            'PasswordCodeResets',
+        ];
 
         if (!count($exclude) && app()->runningInConsole()) {
             $defModels = $fileList->where(fn($name) => in_array($name, $defaultExcludes))->keys()->join(', ');
