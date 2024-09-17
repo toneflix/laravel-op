@@ -36,6 +36,23 @@ return [
         'trace' => env('LOG_DEPRECATIONS_TRACE', false),
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Enable Query Logging
+    |--------------------------------------------------------------------------
+    |
+    | This option controls wether sql queries should be logged.
+    | Set mode to "all" to log all sql queries or set "long" to
+    | log queries running fo longer than usual.
+    |
+    */
+    'query_logger' => [
+        'mode' => env('QUERY_LOGGER_MODE', 'all'),
+        'enabled' => in_array(env('QUERY_LOGGER_ENABLED', 'off'), ['on', true]),
+        'threshold' => env('QUERY_LOGGER_THRESHOLD', 500),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Log Channels
@@ -89,7 +106,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],

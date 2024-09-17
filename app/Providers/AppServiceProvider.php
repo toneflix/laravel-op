@@ -35,5 +35,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \App\Helpers\Providers::rateLimitCodeRequests();
+        \App\Helpers\Providers::startLogger();
     }
 }

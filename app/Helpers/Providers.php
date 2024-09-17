@@ -17,6 +17,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Events\QueryExecuted;
 
 class Providers
 {
@@ -294,5 +298,42 @@ class Providers
         }
 
         return $n_format . $suffix;
+    }
+
+    /**
+     * Start recording logs for important actions
+     *
+     * @param bool|string|int $enable
+     * @return void
+     */
+    public static function startLogger(): void
+    {
+        if (config('logging.query_logger.enabled')) {
+            if (in_array(config('logging.query_logger.mode'), ['all', 'log'])) {
+                DB::listen(function (QueryExecuted $query) {
+                    // $query->sql;
+                    // $query->bindings;
+                    Log::build([
+                        'driver' => 'single',
+                        'path' => storage_path('logs/sql.queries.log'),
+                    ])->info(__("SQL :1ms>[ :0 ]\n",  [(string)$query->toRawSql(), $query->time]));
+                });
+            }
+
+            if (
+                in_array(config('logging.query_logger.mode'), ['all', 'long']) &&
+                intval(config('logging.query_logger.threshold')) > 0
+            ) {
+                DB::whenQueryingForLongerThan(
+                    config('logging.query_logger.threshold'),
+                    function (Connection $connection, QueryExecuted $event) {
+                        Log::build([
+                            'driver' => 'single',
+                            'path' => storage_path('logs/sql.long.queries.log'),
+                        ])->info(__("LONG QUERY :1ms>[ :0 ]\n",  [(string)$event->sql, $event->time]));
+                    }
+                );
+            }
+        }
     }
 }
