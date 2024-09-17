@@ -42,6 +42,7 @@ class MakePolicies extends Command
         if (!count($exclude) && app()->runningInConsole()) {
             $defModels = $fileList->where(fn($name) => in_array($name, $defaultExcludes))->keys()->join(', ');
             $exclude = $this->choice('Choose models to exclude', $fileList->toArray(), $defModels, null, true);
+            $exclude = array_merge($exclude, $defaultExcludes);
         } else {
             $exclude = $defaultExcludes;
         }
