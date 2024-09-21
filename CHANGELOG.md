@@ -2,6 +2,24 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 2.0.8 - 2024-09-21
+
+- [Rename first_name to firstname in sync roles](https://github.com/toneflix/laravel-op/commit/1f9c28fa6e1281cbb283fa18744225f4cdfd728a)
+- [Feat: Use ToneflixCode ResourceModifier for creating Api resources.](https://github.com/toneflix/laravel-op/commit/2072c0d82e2c816a01541cb462522f86ee2b071c)
+- [Add roles and permissions to UserResource](https://github.com/toneflix/laravel-op/commit/832bce2446f3f5c0a834f6d1b115fe4e11371c53)
+- [Add roles and permissions to UserResource](https://github.com/toneflix/laravel-op/commit/832bce2446f3f5c0a834f6d1b115fe4e11371c53)
+- [Feat: Make it possible to overwrite message parser signature for each…](https://github.com/toneflix/laravel-op/commit/51c63c6679c93bc6bf03b429991b78c5f5f8819e)
+- [Feat: Simplify route loading from the routes/* folders.](https://github.com/toneflix/laravel-op/commit/9a6a730eb55d51bbd7ceb2e3beefc061aa002e9d)
+- [Refactor Configuration handling of file configs.](https://github.com/toneflix/laravel-op/commit/155cc084865795dcdc721cc5c7b8b0d6f99c799b)
+- [Add textarea to ConfigType cast](https://github.com/toneflix/laravel-op/commit/50d6256f6f39e5575cb394b14ac7387773cb473b)
+- [Add query logger to records SQL queries.](https://github.com/toneflix/laravel-op/commit/db258aca066c8ef2abef1d9646eae9e9465a8d03)
+- [When genrating model policies, merge the exclude list with the default exclude list.](https://github.com/toneflix/laravel-op/commit/ce2bd8bf093e042ece93f8db0a4b60f3561dfa37)
+- [Feat: MakePolicies command now discovers and makes policies for Models in sub dirs](https://github.com/toneflix/laravel-op/commit/d9ac395a58600a86228c449d39c52b4443a574c3)
+- [Feat: Add $separator and $additional params to generateUsername ModelCanExtend trait method.
+  ](https://github.com/toneflix/laravel-op/commit/57d9d8f1ad244336c68fc2cd1a63d831ce91497c)
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.7...2.0.8
+
 ## 2.0.7 - 2024-08-28
 
 **Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.5...2.0.7
