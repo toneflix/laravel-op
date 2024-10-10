@@ -29,34 +29,37 @@ class ExceptionHandler // extends Handler
         static::$request = $request;
 
         if ($request->isXmlHttpRequest() || request()->is('api/*')) {
-            $line = method_exists($e, 'getFile') ? ' in '.$e->getFile() : '';
-            $line .= method_exists($e, 'getLine') ? ' on line '.$e->getLine() : '';
-            $msg = method_exists($e, 'getMessage') ? $e->getMessage().$line : 'An error occured'.$line;
+            $line = method_exists($e, 'getFile') ? ' in ' . $e->getFile() : '';
+            $line .= method_exists($e, 'getLine') ? ' on line ' . $e->getLine() : '';
+            $msg = method_exists($e, 'getMessage') ? $e->getMessage() . $line : 'An error occured' . $line;
             $plainMessage = method_exists($e, 'getMessage') ? $e->getMessage() : null;
 
             if ((bool) collect($e?->getTrace())->firstWhere('function', 'abort')) {
                 static::$message = $e->getMessage();
             }
 
-            $prefix = $e instanceof ModelNotFoundException ? str($e->getModel())->afterLast('\\')->lower() : '';
+            $exception = $e->getPrevious() ?: $e;
+            $prefix = $exception instanceof ModelNotFoundException
+                ? str($exception->getModel())->afterLast('\\')->lower()
+                : '';
 
             return match (true) {
                 $e instanceof NotFoundHttpException ||
-                $e instanceof ModelNotFoundException => static::renderException(
+                    $e instanceof ModelNotFoundException => static::renderException(
                     str(str($msg)->contains('The route')
                         ? str($msg)->before('.')->append('.')
                         : HttpStatus::message(HttpStatus::NOT_FOUND))->replace('resource', $prefix ?: 'resource'),
                     HttpStatus::NOT_FOUND
                 ),
                 $e instanceof \Spatie\Permission\Exceptions\UnauthorizedException ||
-                $e instanceof AuthorizationException ||
-                $e instanceof AccessDeniedHttpException ||
-                $e->getCode() === HttpStatus::FORBIDDEN => static::renderException(
+                    $e instanceof AuthorizationException ||
+                    $e instanceof AccessDeniedHttpException ||
+                    $e->getCode() === HttpStatus::FORBIDDEN => static::renderException(
                     $plainMessage ? $plainMessage : HttpStatus::message(HttpStatus::FORBIDDEN),
                     HttpStatus::FORBIDDEN
                 ),
                 $e instanceof AuthenticationException ||
-                $e instanceof UnauthorizedHttpException => static::renderException(
+                    $e instanceof UnauthorizedHttpException => static::renderException(
                     HttpStatus::message(HttpStatus::UNAUTHORIZED),
                     HttpStatus::UNAUTHORIZED
                 ),
