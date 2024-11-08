@@ -49,7 +49,6 @@ class PaystackProcessor implements PaymentInterface
         $msg = 'Transaction Failed';
 
         $reference = Providers::config('reference_prefix', 'TRX-') . Random::string(20, ! 1, ! 0, ! 0, ! 1);
-        $real_due = round($due * 100, 2);
 
         $response = new \stdClass();
 
@@ -77,8 +76,8 @@ class PaystackProcessor implements PaymentInterface
                     ]);
                 }
 
-                $tranx = $paystack->transaction->initialize([
-                    'amount' => $real_due,       // in kobo
+                $payload = [
+                    'amount' => $amount,       // in kobo
                     'email' => $user->email,     // unique to customers
                     'reference' => $reference,   // unique to transactions
                     'metadata' => $builder->build(),
@@ -86,7 +85,13 @@ class PaystackProcessor implements PaymentInterface
                         'redirect',
                         Providers::config('payment_verify_url')
                     ),
-                ]);
+                ];
+
+                if ($this->request->has('subaccount')) {
+                    $payload['subaccount'] = $this->request->input('subaccount');
+                }
+
+                $tranx = $paystack->transaction->initialize($payload);
             }
 
             $code = HttpStatus::OK;
@@ -95,7 +100,7 @@ class PaystackProcessor implements PaymentInterface
             // Call the callback function
             if ($callback) {
                 $tranx = new \App\Services\CustomObject($tranx);
-                $response = $callback($reference, $tranx, $real_due, $msg, $code);
+                $response = $callback($reference, $tranx, $amount, $msg, $code);
                 if ($respond) {
                     return $response;
                 }
