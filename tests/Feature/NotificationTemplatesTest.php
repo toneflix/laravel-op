@@ -2,17 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Events\Verified;
 use App\Helpers\Providers;
-use App\Helpers\Url;
 use App\Models\User;
-use App\Notifications\AccountVerified;
-use App\Notifications\SendCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class NotificationTemplatesTest extends TestCase
