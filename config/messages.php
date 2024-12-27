@@ -60,6 +60,14 @@ return [
             "This verification code will expire in :duration.",
             "If you do not recognize this activity, no further action is required as the associated account will be deleted in few days if left unverified.",
         ],
+        "allowed" => ['html']
+    ],
+    'send_code::verify_phone' => [
+        "subject" => "Verify your phone number on :app_name.",
+        "lines" => [
+            "use this code :code to verify your :app_name phone number, It expires in :duration.",
+        ],
+        "allowed" => ['plain'],
     ],
     'send_code::otp' => [
         "subject" => "Your One Time Password.",

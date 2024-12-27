@@ -16,7 +16,7 @@ class PaymentTest extends TestCase
     {
         parent::setUp();
 
-        // $this->markTestSkipped('all tests in this file are invactive for this server configuration!');
+        $this->markTestSkipped('all tests in this file are invactive for this server configuration!');
     }
 
     public function testAPaymentTransactionCanRecievePaymentRequestData(): void

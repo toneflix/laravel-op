@@ -47,12 +47,7 @@ class AccountVerified extends Notification
             ]
         );
 
-        return (new MailMessage())
-            ->subject($message->subject)
-            ->view(['email', 'email-plain'], [
-                'subject' => $message->subject,
-                'lines' => $message->lines
-            ]);
+        return $message->toMail();
     }
 
     /**
@@ -75,7 +70,7 @@ class AccountVerified extends Notification
 
         return [
             'title' => $message->subject,
-            'message' => $message->plainBody,
+            'message' => $message->toPlain(),
             'important' => false,
         ];
     }
@@ -100,7 +95,7 @@ class AccountVerified extends Notification
             ]
         );
 
-        return SmsProvider::getMessage($message->plainBody);
+        return SmsProvider::getMessage($message->toPlain());
     }
 
     public function toTwilio($n): \NotificationChannels\Twilio\TwilioSmsMessage

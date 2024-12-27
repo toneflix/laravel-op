@@ -131,7 +131,7 @@ class ConfigurationSeeder extends Seeder
                 'choices' => json_encode([]),
             ],
             [
-                'key' => 'verify_phone',
+                'key' => 'verify-phone',
                 'title' => 'Verify Phone',
                 'value' => false,
                 'type' => 'boolean',

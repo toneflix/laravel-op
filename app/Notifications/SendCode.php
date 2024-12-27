@@ -76,12 +76,7 @@ class SendCode extends Notification implements ShouldQueue
             ]
         );
 
-        return (new MailMessage())
-            ->subject($message->subject)
-            ->view(['email', 'email-plain'], [
-                'subject' => $message->subject,
-                'lines' => $message->lines
-            ]);
+        return $message->toMail();
     }
 
     /**
@@ -99,24 +94,21 @@ class SendCode extends Notification implements ShouldQueue
         $datetime = $n->last_attempt;
         $dateAdd = $datetime?->addSeconds(Providers::config('token_lifespan', 30));
 
-        $message = [
-            'reset' => __('Use this code :0 to reset your :1 password, It expires in :2.', [
-                $this->code,
-                Providers::config('app_name'),
-                $dateAdd->longAbsoluteDiffForHumans(),
-            ]),
-            'verify-phone' => __('use this code :0 to verify your :1 phone number, It expires in :2.', [
-                $this->code,
-                Providers::config('app_name'),
-                $dateAdd->longAbsoluteDiffForHumans(),
-            ]),
-        ];
+        $message = Providers::messageParser(
+            "send_code::$this->type",
+            $n,
+            [
+                'type' => $this->type,
+                'code' => $this->code,
+                'token' => $this->token,
+                'label' => 'email address',
+                'app_url' => config('app.frontend_url', config('app.url')),
+                'app_name' => Providers::config('app_name'),
+                'duration' => $dateAdd->longAbsoluteDiffForHumans(),
+            ]
+        );
 
-        if (isset($message[$this->type])) {
-            $message = __('Hi :0, ', [$n->firstname]) . $message[$this->type];
-
-            return SmsProvider::getMessage($message);
-        }
+        return SmsProvider::getMessage($message->toPlain());
     }
 
     public function toTwilio($n): \NotificationChannels\Twilio\TwilioSmsMessage
