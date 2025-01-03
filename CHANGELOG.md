@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 2.0.9 - 2024-11-13
+
+- Disable Payment feature tests.
+- Remove extra redundant validateCsrfTokens middleware.
+- Update Dependencies.
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.8...2.0.9
+
 ## 2.0.8 - 2024-09-21
 
 - [Rename first_name to firstname in sync roles](https://github.com/toneflix/laravel-op/commit/1f9c28fa6e1281cbb283fa18744225f4cdfd728a)
