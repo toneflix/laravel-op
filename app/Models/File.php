@@ -5,16 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use ToneflixCode\LaravelFileable\Media;
+use ToneflixCode\LaravelFileable\Traits\Fileable;
 
 class File extends Model
 {
+    use Fileable;
+
     protected $fillable = [
         'model',
         'meta',
         'file',
+        'fileable_collection',
     ];
 
     /**
@@ -54,33 +56,17 @@ class File extends Model
      *
      * @example $mediaPaths [User::class => 'avatar', Configuration::class => 'default']
      */
-    public $mediaPaths = [];
+    public $mediaPaths = [
+        Article::class => 'posts',
+    ];
 
-    protected static function booted()
+    public function registerFileable()
     {
-        static::saving(function (File $file) {
-            $meta_type = isset($file->meta['type']) ? ".{$file->meta['type']}" : '';
-
-            $mediaPath = $file->mediaPaths[$file->fileable_type . $meta_type] ?? 'default';
-
-            $file->file = (new Media())->save($mediaPath, 'file', $file->file, $file->fileIndex);
-
-            if (!$file->file) {
-                unset($file->file);
-            }
-
-            if (!$file->meta) {
-                unset($file->meta);
-            }
-        });
-
-        static::deleted(function (File $file) {
-            $meta_type = isset($file->meta['type']) ? ".{$file->meta['type']}" : '';
-
-            $mediaPath = $file->mediaPaths[$file->fileable_type . $meta_type] ?? 'default';
-
-            $file->file = (new Media())->delete($mediaPath, $file->file);
-        });
+        $this->fileableLoader(
+            file_field: 'file',
+            collection: $this->fileable_collection ?? $this->mediaPaths[$this->fileable_type] ?? 'default',
+            applyDefault: false,
+        );
     }
 
     /**
@@ -89,43 +75,6 @@ class File extends Model
     public function fileable(): MorphTo
     {
         return $this->morphTo();
-    }
-
-    /**
-     * Get posibly protected URL of the image.
-     */
-    protected function fileUrl(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $meta_type = isset($this->meta['type']) ? ".{$this->meta['type']}" : '';
-
-                $mediaPath = $this->mediaPaths[$this->fileable_type . $meta_type] ?? 'default';
-
-                if (!str($mediaPath)->exactly('default')) {
-                    $wt = '?preload=true';
-
-                    $superLoad = Auth::user()->hasRole(config('permission-defs.elevated-roles', []));
-                    $uid = Auth::id() ?: 0;
-
-                    // Check if the user has elevated access and append some random query you
-                    // Can use later
-                    if ($superLoad) {
-                        $wt = '?preload=true&wt=' . (Auth::user()->window_token ?? rand());
-                    } elseif ($this->fileable && $this->fileable->user->id === $uid) {
-                        $wt = '?preload=true&wt=' . ($this->fileable->user->window_token ?? rand());
-                    }
-
-                    // Append more queries you can use later
-                    $wt .= '&ctx=' . rand();
-                    $wt .= '&build=' . AppInfo::basic()['version'] ?? '1.0.0';
-                    $wt .= '&mode=' . config('app.env');
-                    $wt .= '&pov=' . md5($this->file);
-                }
-
-                return (new Media())->getMedia($mediaPath, $this->file);
-            },
-        );
     }
 
     public function progress(): Attribute
@@ -158,7 +107,7 @@ class File extends Model
     public function progressComplete(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->progress >= 100 ? '100% completed!' : "{$this->progress}% processing...",
+            get: fn() => $this->progress >= 100 ? '100% completed!' : "{$this->progress}% processing...",
         );
     }
 
@@ -169,25 +118,10 @@ class File extends Model
      */
     protected function sharedUrl(): Attribute
     {
-        return Attribute::make(
-            get: function () {
-                $meta_type = isset($this->meta['type']) ? ".{$this->meta['type']}" : '';
-
-                $mediaPath = $this->mediaPaths[$this->fileable_type . $meta_type] ?? 'default';
-
-                if (!str($mediaPath)->exactly('default')) {
-                    $window_token = Auth::user() ? Auth::user()->window_token : 0;
-
-                    // Append some query params you can use later
-                    $wt = '?preload=true&shared&wt=' . $window_token;
-                    $wt .= '&ctx=' . rand();
-                    $wt .= '&build=' . AppInfo::basic()['version'] ?? '1.0.0';
-                    $wt .= '&mode=' . config('app.env');
-                    $wt .= '&pov=' . md5($this->file);
-                }
-
-                return (new Media())->getMedia($mediaPath, $this->file);
-            },
-        );
+        $link = $this->get_files['file']['secureLink'];
+        if (($this->mediaPaths[$this->fileable_type] ?? 'default') === 'default') {
+            $link = $this->get_files['file']['dynamicLink'];
+        }
+        return Attribute::make(get: fn() => $link);
     }
 }

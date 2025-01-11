@@ -19,6 +19,7 @@ return new class() extends Migration
             $table->text('description')->nullable();
             $table->string('model')->nullable();
             $table->string('file');
+            $table->string('fileable_collection')->nullable();
             $table->json('meta')->nullable();
             $table->timestamps();
         });
