@@ -42,7 +42,7 @@ class UserResource extends JsonResource
             'phone_verified_at' => $this->phone_verified_at,
             'password' => $this->password,
             'last_attempt' => $this->last_attempt,
-            $this->mergeWhen($previleged, fn() => [
+            $this->mergeWhen($previleged, fn () => [
                 'roles' => $this->getRoleNames(),
                 'permissions' => $permissions,
             ]),

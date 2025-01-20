@@ -22,32 +22,27 @@ trait ControllerCanExtend
 
     /**
      * Set the prefered payment processor
-     *
-     * @param string $paymentProcessor
-     * @return static
      */
     public function payWith(string $paymentProcessor = 'paystack'): static
     {
         $this->paymentProcessor = $paymentProcessor;
+
         return $this;
     }
 
     /**
      * Initiate a payment
      *
-     * @param Request $request
-     * @param User|TempUser $user
-     * @param integer|float $amount
-     * @param Model|null $transactable
-     * @param integer|float $discount
+     * @param  int|float  $amount
+     * @param  int|float  $discount
+     *
      * @throws ValidationException
-     * @return \Illuminate\Support\Collection
      */
     public function makePayment(
         Request $request,
         User|TempUser $user,
         int $amount,
-        ?Model $transactable = null,
+        Model $transactable = null,
         int $discount = 0,
     ): \Illuminate\Support\Collection {
         $fees = 0;
@@ -58,12 +53,12 @@ trait ControllerCanExtend
             $paymentIntent = (new StripeProcessor($request, $user))->intent($amount - $discount);
         } else {
             throw ValidationException::withMessages([
-                'payment_method' => "Unknown Payment Method Selected.",
+                'payment_method' => 'Unknown Payment Method Selected.',
             ]);
         }
 
         if (isset($paymentIntent['error'])) {
-            $user instanceof  TempUser && $user->delete();
+            $user instanceof TempUser && $user->delete();
             abort($paymentIntent['error'], $paymentIntent['message']);
         }
 
@@ -93,11 +88,7 @@ trait ControllerCanExtend
     /**
      * Verify a payment
      *
-     * @param Request $request
-     * @param User|TempUser $user
-     * @param string $reference
      * @throws ValidationException
-     * @return \Illuminate\Support\Collection
      */
     public function verifyPayment(
         Request $request,
@@ -111,7 +102,7 @@ trait ControllerCanExtend
             $paymentIntent = (new StripeProcessor($request, $user))->verify($reference);
         } else {
             throw ValidationException::withMessages([
-                'payment_method' => "Unknown Payment Method Selected.",
+                'payment_method' => 'Unknown Payment Method Selected.',
             ]);
         }
 

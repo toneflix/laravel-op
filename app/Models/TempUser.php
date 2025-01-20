@@ -49,11 +49,11 @@ class TempUser extends Model
         });
     }
 
-    public static function createUser(array | Collection $data): self
+    public static function createUser(array|Collection $data): self
     {
         if (empty($data['email'])) {
             throw ValidationException::withMessages([
-                'email' => "Email is required.",
+                'email' => 'Email is required.',
             ]);
         }
 
@@ -63,7 +63,7 @@ class TempUser extends Model
         /** @var \App\Models\TempUser $user */
         return static::updateOrCreate(
             [
-                'email' =>  $data['email'],
+                'email' => $data['email'],
             ],
             [
                 'email' => $data['email'],
@@ -79,10 +79,10 @@ class TempUser extends Model
     }
 
     /**
-    * Get the user's fullname .
-    *
-    * @return string
-    */
+     * Get the user's fullname .
+     *
+     * @return string
+     */
     protected function fullname(): Attribute
     {
         return Attribute::make(
@@ -92,8 +92,6 @@ class TempUser extends Model
 
     /**
      * Get all of the transactions for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions(): HasMany
     {

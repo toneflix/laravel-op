@@ -30,24 +30,24 @@ class MakePolicies extends Command
      */
     public function handle()
     {
-        $exclude = (array)$this->argument('exclude');
+        $exclude = (array) $this->argument('exclude');
         $files = collect(array_merge(
             glob(app_path('Models/*.php')),
             glob(app_path('Models/**/*.php'))
         ));
 
         $fileList = $files
-            ->map(fn($path) => str($path)
+            ->map(fn ($path) => str($path)
                 ->afterLast('app')
-                ->prepend("App")
-                ->replace('/', "\\")
+                ->prepend('App')
+                ->replace('/', '\\')
                 ->remove('.php')
                 ->toString())
-            ->filter(fn($name) => new $name() instanceof Model)
+            ->filter(fn ($name) => new $name() instanceof Model)
             ->map(
-                fn($path) => str($path)
-                    ->afterLast("Models\\")
-                    ->replace('\\', "/")
+                fn ($path) => str($path)
+                    ->afterLast('Models\\')
+                    ->replace('\\', '/')
                     ->toString()
             );
 
@@ -62,8 +62,8 @@ class MakePolicies extends Command
             'PasswordCodeResets',
         ];
 
-        if (!count($exclude) && app()->runningInConsole()) {
-            $defModels = $fileList->where(fn($name) => in_array($name, $defaultExcludes))->keys()->join(', ');
+        if (! count($exclude) && app()->runningInConsole()) {
+            $defModels = $fileList->where(fn ($name) => in_array($name, $defaultExcludes))->keys()->join(', ');
             $exclude = $this->choice('Choose models to exclude', $fileList->toArray(), $defModels, null, true);
             $exclude = array_merge($exclude, $defaultExcludes);
         } else {

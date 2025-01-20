@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use ToneflixCode\ResourceModifier\Services\Json\ResourceCollection;
 use Illuminate\Http\Request;
+use ToneflixCode\ResourceModifier\Services\Json\ResourceCollection;
 
 class NotificationCollection extends ResourceCollection
 {

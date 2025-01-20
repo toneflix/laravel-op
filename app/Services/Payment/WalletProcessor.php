@@ -40,7 +40,7 @@ final class WalletProcessor implements PaymentInterface
     ) {
         // Try to create the payment intent
         try {
-            $reference = Providers::config('reference_prefix', 'TRX-') . Random::string(20, ! 1, ! 0, ! 0, ! 1);
+            $reference = Providers::config('reference_prefix', 'TRX-').Random::string(20, ! 1, ! 0, ! 0, ! 1);
 
             $this->user->pay($amount, ['main_wallet'], 'Payment for service/order.');
             $tranx = $this->user->walletLog()->latest()->first();
@@ -159,18 +159,17 @@ final class WalletProcessor implements PaymentInterface
     /**
      * Do transfter to the specified user
      *
-     * @param int|float $amount
-     * @param ?string $reason
-     * @param ?callable $successCallback
-     * @param ?callable $errorCallback   The callback function to call when an error occurs
-     * @param bool $respond     Wether to return a response or not.
+     * @param  ?string  $reason
+     * @param  ?callable  $successCallback
+     * @param  ?callable  $errorCallback   The callback function to call when an error occurs
+     * @param  bool  $respond     Wether to return a response or not.
      * @return array|object|\App\Services\CustomObject
      */
     public function transfer(
         int|float $amount,
-        ?string $reason = null,
-        ?callable $successCallback = null,
-        ?callable $errorCallback = null,
+        string $reason = null,
+        callable $successCallback = null,
+        callable $errorCallback = null,
         ?bool $respond = true
     ) {
     }

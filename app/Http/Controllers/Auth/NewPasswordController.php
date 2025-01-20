@@ -42,7 +42,7 @@ class NewPasswordController extends Controller
         $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
-        if (!$code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
+        if (! $code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
             $code && $code->delete();
 
             return PV::response()->error([
@@ -99,7 +99,7 @@ class NewPasswordController extends Controller
         $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
-        if (!$code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
+        if (! $code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
             $code && $code->delete();
 
             return PV::response()->error([

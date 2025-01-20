@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ConfigurationController;
 use App\Http\Controllers\Admin\NotificationTemplateController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-$permissionMiddlewares = 'role:' . join("|", config('permission-defs.roles', []));
+$permissionMiddlewares = 'role:'.implode('|', config('permission-defs.roles', []));
 
 Route::middleware(['auth:sanctum', $permissionMiddlewares])->prefix('admin')->group(function () {
     Route::apiResource('users', UserController::class);

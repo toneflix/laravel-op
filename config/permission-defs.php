@@ -82,6 +82,6 @@ return [
         'admin',
         'manager',
         'support',
-        'user'
+        'user',
     ],
 ];

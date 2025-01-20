@@ -7,9 +7,9 @@ class Strings
     /**
      * Validates a JSON string.
      *
-     * @param string $json The JSON string to validate.
-     * @param int $depth Maximum depth. Must be greater than zero.
-     * @param int $flags Bitmask of JSON decode options.
+     * @param  string  $json The JSON string to validate.
+     * @param  int  $depth Maximum depth. Must be greater than zero.
+     * @param  int  $flags Bitmask of JSON decode options.
      * @return bool Returns true if the string is a valid JSON, otherwise false.
      */
     public static function jsonValidate($json, $depth = 512, $flags = 0)
@@ -18,12 +18,13 @@ class Strings
             return json_validate($json, $depth, $flags);
         }
 
-        if (!is_string($json)) {
+        if (! is_string($json)) {
             return false;
         }
 
         try {
             json_decode($json, false, $depth, $flags | JSON_THROW_ON_ERROR);
+
             return true;
         } catch (\JsonException $e) {
             return false;
@@ -32,17 +33,12 @@ class Strings
 
     /**
      * Format bytes to kilobytes, megabytes, gigabytes
-     *
-     * @param integer $bytes
-     * @param integer $precision
-     * @param bool    $bin
-     * @return string
      */
     public static function formatBytes(int $bytes, int $precision = 2, bool $bin = false): string
     {
         $units = $bin
-            ? array('B', 'KiB', 'MiB', 'GiB', 'TiB')
-            : array('B', 'KB', 'MB', 'GB', 'TB');
+            ? ['B', 'KiB', 'MiB', 'GiB', 'TiB']
+            : ['B', 'KB', 'MB', 'GB', 'TB'];
 
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log($bin ? 1024 : 1000));
@@ -52,6 +48,6 @@ class Strings
         $bytes /= pow(1024, $pow);
         // $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, $precision) . $units[$pow];
+        return round($bytes, $precision).$units[$pow];
     }
 }

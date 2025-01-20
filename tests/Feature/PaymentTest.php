@@ -7,7 +7,6 @@ use App\Models\TempUser;
 use App\Models\User;
 use App\Traits\ControllerCanExtend;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PaymentTest extends TestCase

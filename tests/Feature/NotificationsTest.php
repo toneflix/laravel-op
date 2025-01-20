@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Notifications\AccountVerified;
 use App\Notifications\SendCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -83,7 +82,7 @@ class NotificationsTest extends TestCase
 
         $this->actingAs($user)->put(
             'api/verify/with-code/email',
-            ['code' => Url::base64urlEncode($user->email_verify_code . '|' . MD5(time()))]
+            ['code' => Url::base64urlEncode($user->email_verify_code.'|'.md5(time()))]
         );
 
         Event::assertDispatched(function (Verified $event) use ($user) {
@@ -112,7 +111,7 @@ class NotificationsTest extends TestCase
         $user->notify(new \Tests\Notifications\TestNotifications());
 
         $id = $user->notifications()->first()->id;
-        $response = $this->actingAs($user)->delete('api/account/notifications/' . $id);
+        $response = $this->actingAs($user)->delete('api/account/notifications/'.$id);
 
         $response->assertAccepted();
     }

@@ -33,49 +33,49 @@ return [
     |
     */
     'send_code::reset' => [
-        "subject" => "Reset your :app_name password.",
-        "lines" => [
-            "Hello :firstname,",
-            "You are receiving this email because we received a password reset request for your account on :app_name.",
-            "Use the code or link below to recover your account.",
-            "<h3 style=\"text-align: center;\">:code</h3>",
+        'subject' => 'Reset your :app_name password.',
+        'lines' => [
+            'Hello :firstname,',
+            'You are receiving this email because we received a password reset request for your account on :app_name.',
+            'Use the code or link below to recover your account.',
+            '<h3 style="text-align: center;">:code</h3>',
             [
                 'link' => ':app_url/reset/password?token=:token',
-                'title' => 'Reset Password'
+                'title' => 'Reset Password',
             ],
-            "This password reset code will expire in :duration.",
-            "If you did not request a password reset, no further action is required.",
+            'This password reset code will expire in :duration.',
+            'If you did not request a password reset, no further action is required.',
         ],
     ],
     'send_code::verify' => [
-        "subject" => "Verify your account on :app_name.",
-        "lines" => [
-            "Hello :firstname,",
-            "You are receiving this email because you created an account on <b>:app_name</b> and we needed to verify that you own this :label. <br />Use the code or link below to verify your :label.",
-            "<h3 style=\"text-align: center;\">:code</h3>",
+        'subject' => 'Verify your account on :app_name.',
+        'lines' => [
+            'Hello :firstname,',
+            'You are receiving this email because you created an account on <b>:app_name</b> and we needed to verify that you own this :label. <br />Use the code or link below to verify your :label.',
+            '<h3 style="text-align: center;">:code</h3>',
             [
-                'link' => ":app_url/account/verify/:type?token=:token",
-                'title' => 'Verify Account'
+                'link' => ':app_url/account/verify/:type?token=:token',
+                'title' => 'Verify Account',
             ],
-            "This verification code will expire in :duration.",
-            "If you do not recognize this activity, no further action is required as the associated account will be deleted in few days if left unverified.",
+            'This verification code will expire in :duration.',
+            'If you do not recognize this activity, no further action is required as the associated account will be deleted in few days if left unverified.',
         ],
-        "allowed" => ['html']
+        'allowed' => ['html'],
     ],
     'send_code::verify_phone' => [
-        "subject" => "Verify your phone number on :app_name.",
-        "lines" => [
-            "use this code :code to verify your :app_name phone number, It expires in :duration.",
+        'subject' => 'Verify your phone number on :app_name.',
+        'lines' => [
+            'use this code :code to verify your :app_name phone number, It expires in :duration.',
         ],
-        "allowed" => ['plain'],
+        'allowed' => ['plain'],
     ],
     'send_code::otp' => [
-        "subject" => "Your One Time Password.",
-        "lines" => [
-            "Use the code below to verify your request.",
-            "<h3 style=\"text-align: center;\">:code</h3>",
-            "This OTP will expire in :duration.",
-            "If you do not recognize this request no further action is required or you can take steps to secure your account.",
+        'subject' => 'Your One Time Password.',
+        'lines' => [
+            'Use the code below to verify your request.',
+            '<h3 style="text-align: center;">:code</h3>',
+            'This OTP will expire in :duration.',
+            'If you do not recognize this request no further action is required or you can take steps to secure your account.',
         ],
     ],
 
@@ -88,21 +88,21 @@ return [
     |
     */
     'send_verified' => [
-        "subject" => "Welcome to the :app_name community.",
-        "lines" => [
-            "Hello :firstname,",
-            "Your :app_name account :label has been verified sucessfully and we want to use this opportunity to welcome you to our community.",
+        'subject' => 'Welcome to the :app_name community.',
+        'lines' => [
+            'Hello :firstname,',
+            'Your :app_name account :label has been verified sucessfully and we want to use this opportunity to welcome you to our community.',
             [
-                'link' => ":app_url/login",
-                'title' => 'Get Started'
+                'link' => ':app_url/login',
+                'title' => 'Get Started',
             ],
         ],
     ],
     'send_verified:sms' => [
-        "subject" => "Welcome to the :app_name community.",
-        "lines" => [
-            "Hello :firstname,",
-            "Your :app_name account :label has been verified sucessfully, welcome to our community.",
+        'subject' => 'Welcome to the :app_name community.',
+        'lines' => [
+            'Hello :firstname,',
+            'Your :app_name account :label has been verified sucessfully, welcome to our community.',
         ],
     ],
 

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\HttpStatus;
 use App\Helpers\Providers;
 use App\Http\Controllers\Controller;
-use App\Models\Configuration;
 use Illuminate\Http\Request;
+use ToneflixCode\DbConfig\Models\Configuration;
 
 class ConfigurationController extends Controller
 {
@@ -17,7 +17,7 @@ class ConfigurationController extends Controller
     {
         return Providers::response()->success([
             'data' => Configuration::notSecret()->get()
-                ->when($request->boolean('group'), fn($model) => $model->groupBy('group'))
+                ->when($request->boolean('group'), fn ($model) => $model->groupBy('group')),
         ]);
     }
 
@@ -27,11 +27,11 @@ class ConfigurationController extends Controller
     public function show(string|int $id)
     {
         $data = Configuration::where('key', $id)
-            ->when(filter_var($id, FILTER_VALIDATE_INT), fn($q) => $q->orWhere('id', $id))
+            ->when(filter_var($id, FILTER_VALIDATE_INT), fn ($q) => $q->orWhere('id', $id))
             ->first();
 
         return Providers::response()->success([
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -50,9 +50,9 @@ class ConfigurationController extends Controller
 
         return Providers::response()->success([
             'data' => Configuration::notSecret()->orderBy('id')->get()
-                ->when($request->boolean('group'), fn($model) => $model->groupBy('group')),
+                ->when($request->boolean('group'), fn ($model) => $model->groupBy('group')),
             'config' => $config,
-            'message' => 'Configuration Saved!'
+            'message' => 'Configuration Saved!',
         ], HttpStatus::ACCEPTED);
     }
 }

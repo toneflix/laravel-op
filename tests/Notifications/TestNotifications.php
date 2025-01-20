@@ -2,7 +2,6 @@
 
 namespace Tests\Notifications;
 
-use App\Helpers\Providers;
 use Illuminate\Notifications\Notification;
 
 class TestNotifications extends Notification
@@ -10,7 +9,9 @@ class TestNotifications extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * Get the notification's delivery channels.

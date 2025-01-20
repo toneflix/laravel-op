@@ -48,7 +48,7 @@ class PaystackProcessor implements PaymentInterface
         $due = $amount;
         $msg = 'Transaction Failed';
 
-        $reference = Providers::config('reference_prefix', 'TRX-') . Random::string(20, ! 1, ! 0, ! 0, ! 1);
+        $reference = Providers::config('reference_prefix', 'TRX-').Random::string(20, ! 1, ! 0, ! 0, ! 1);
 
         $response = new \stdClass();
 
@@ -105,7 +105,7 @@ class PaystackProcessor implements PaymentInterface
                     return $response;
                 }
             }
-        } catch (ApiException | \InvalidArgumentException | \ErrorException $e) {
+        } catch (ApiException|\InvalidArgumentException|\ErrorException $e) {
             $msg = $e->getMessage();
             $code = $e instanceof ApiException ? HttpStatus::BAD_REQUEST : HttpStatus::SERVER_ERROR;
             $response->error = $code->value;
@@ -177,7 +177,7 @@ class PaystackProcessor implements PaymentInterface
                 ]);
 
                 $tranx->payment_approved = $tranx->data->status === 'success';
-                if (!$tranx->payment_approved && !app()->runningUnitTests()) {
+                if (! $tranx->payment_approved && ! app()->runningUnitTests()) {
                     throw new \ErrorException("Payment could not be verified, status is {$tranx->data->status}");
                 }
 
@@ -192,7 +192,7 @@ class PaystackProcessor implements PaymentInterface
                         return $response;
                     }
                 }
-            } catch (ApiException | \InvalidArgumentException | \ErrorException | \Exception $e) {
+            } catch (ApiException|\InvalidArgumentException|\ErrorException|\Exception $e) {
                 $tranx = $e instanceof ApiException ? $e->getResponseObject() : new \stdClass();
                 $code = HttpStatus::UNPROCESSABLE_ENTITY;
                 $msg = $e->getMessage();
@@ -249,7 +249,7 @@ class PaystackProcessor implements PaymentInterface
                 $tranx = $paystack->deauth->deactivateAuthorization([
                     'authorization_code' => $authorization_code,
                 ]);
-            } catch (ApiException | \InvalidArgumentException | \ErrorException $e) {
+            } catch (ApiException|\InvalidArgumentException|\ErrorException $e) {
                 $tranx = $e instanceof ApiException ? $e->getResponseObject() : new \stdClass();
                 $code = HttpStatus::UNPROCESSABLE_ENTITY;
                 $msg = $e->getMessage();
@@ -277,18 +277,17 @@ class PaystackProcessor implements PaymentInterface
     /**
      * Do transfter to the specified user
      *
-     * @param int|float $amount
-     * @param ?string $reason
-     * @param ?callable $successCallback
-     * @param ?callable $errorCallback   The callback function to call when an error occurs
-     * @param bool $respond     Wether to return a response or not.
+     * @param  ?string  $reason
+     * @param  ?callable  $successCallback
+     * @param  ?callable  $errorCallback   The callback function to call when an error occurs
+     * @param  bool  $respond     Wether to return a response or not.
      * @return array|object|\App\Services\CustomObject
      */
     public function transfer(
         int|float $amount,
-        ?string $reason = null,
-        ?callable $successCallback = null,
-        ?callable $errorCallback = null,
+        string $reason = null,
+        callable $successCallback = null,
+        callable $errorCallback = null,
         ?bool $respond = true
     ) {
         $response = new \stdClass();
@@ -301,25 +300,25 @@ class PaystackProcessor implements PaymentInterface
 
         try {
             $recipient_code = $user->data['bank']['recipient_code'] ?? null;
-            if (!$recipient_code) {
+            if (! $recipient_code) {
                 $recipient = $paystack->transferrecipient->create([
                     'type' => 'nuban',
                     'name' => $user->data['bank']['account_name'] ?? $user->fullname,
                     'account_number' => $user->data['bank']['nuban'],
-                    "bank_code" => $user->data['bank']['bank_code'],
-                    "currency" => "NGN"
+                    'bank_code' => $user->data['bank']['bank_code'],
+                    'currency' => 'NGN',
                 ]);
 
                 $recipient_code = $recipient->data->recipient_code;
 
                 $user->data = $user->data->merge([
-                    'bank' => [...$user->data['bank'], 'recipient_code' => $recipient_code]
+                    'bank' => [...$user->data['bank'], 'recipient_code' => $recipient_code],
                 ]);
 
                 $user->save();
             }
 
-            $reference = Providers::config('reference_prefix', 'TRX-') . Random::string(20, ! 1, ! 0, ! 0, ! 1);
+            $reference = Providers::config('reference_prefix', 'TRX-').Random::string(20, ! 1, ! 0, ! 0, ! 1);
 
             $tranx = $paystack->transfer->initiate([
                 'source' => 'balance',

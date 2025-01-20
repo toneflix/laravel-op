@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Configuration;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -22,7 +21,7 @@ class FileTest extends TestCase
 
         $file = UploadedFile::fake()->image('avatar.jpg');
         $this->post('/test/file/upload', [
-            'file' => $file
+            'file' => $file,
         ]);
         $this->assertTrue(File::whereJsonContains('meta->test', '/test/file/upload')->exists());
     }

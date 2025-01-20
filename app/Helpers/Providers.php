@@ -3,24 +3,24 @@
 namespace App\Helpers;
 
 use App\Enums\HttpStatus;
-use App\Models\Configuration;
 use App\Models\PasswordCodeResets;
 use App\Services\MessageParser;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Connection;
-use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Response;
+use ToneflixCode\DbConfig\Helpers\Configure;
+use ToneflixCode\DbConfig\Models\Configuration;
 
 class Providers
 {
@@ -29,27 +29,15 @@ class Providers
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
      *
-     * @param array<string, mixed>|string|null  $key
-     * @param mixed $default
-     * @param boolean $loadSecret
+     * @param  array<string, mixed>|string|null  $key
      * @return ($key is null ? Collection : ($key is string ? mixed : null))
      */
     public static function config(
-        string|array|null $key = null,
+        string|array $key = null,
         mixed $default = null,
         bool $loadSecret = false
     ): Collection|string|int|float|array|null {
-        $config = Configuration::build($loadSecret);
-
-        if (is_array($key)) {
-            return Configuration::setConfig($key);
-        }
-
-        if (is_null($key)) {
-            return $config;
-        }
-
-        return Arr::get($config, $key, $default) ?? $default;
+        return Configure::config($key, $default, $loadSecret);
     }
 
     /**
@@ -143,10 +131,8 @@ class Providers
      * Parses a message in the messages config and returns
      * It in the required format
      *
-     * @param string $configKey — The corresponding message key from the [messages] config
-     * @param mixed[] ...$params — Exra parameters to pass to the config $name
-     *
-     * @return MessageParser
+     * @param  string  $configKey — The corresponding message key from the [messages] config
+     * @param  mixed[]  ...$params — Exra parameters to pass to the config $name
      */
     public static function messageParser(string $configKey, ...$params): MessageParser
     {
@@ -177,7 +163,7 @@ class Providers
 
             $dateAdd = $datetime?->addSeconds(config('settings.token_lifespan', 30));
 
-            return (!$datetime || $dateAdd->isPast())
+            return (! $datetime || $dateAdd->isPast())
                 ? Limit::none()
                 : response()->info([
                     'message' => __("We already sent a message to help you {$action}, you can try again :0.", [
@@ -195,12 +181,12 @@ class Providers
     public static function paginator(LengthAwarePaginator $data): array
     {
         if ($data instanceof LengthAwarePaginator) {
-            $links = $data->linkCollection()->filter(fn($link) => is_numeric($link['label']));
+            $links = $data->linkCollection()->filter(fn ($link) => is_numeric($link['label']));
 
             return [
                 'data' => count(static::$responseKeys)
                     ? collect($data->items())
-                    ->map(fn($e) => collect($e)->filter(fn($k, $v) => in_array($v, static::$responseKeys)))
+                        ->map(fn ($e) => collect($e)->filter(fn ($k, $v) => in_array($v, static::$responseKeys)))
                     : $data->items(),
                 'meta' => [
                     'current_page' => $data->currentPage(),
@@ -249,7 +235,7 @@ class Providers
      */
     public static function money($number, $abbrev = false)
     {
-        return static::config('currency_symbol') . (
+        return static::config('currency_symbol').(
             $abbrev === false
             ? number_format($number, 2)
             : static::numberAbbr($number)
@@ -293,18 +279,17 @@ class Providers
         // Remove unecessary zeroes after decimal. "1.0" -> "1"; "1.00" -> "1"
         // Intentionally does not affect partials, eg "1.50" -> "1.50"
         if ($precision > 0) {
-            $dotzero = '.' . str_repeat('0', $precision);
+            $dotzero = '.'.str_repeat('0', $precision);
             $n_format = str_replace($dotzero, '', $n_format);
         }
 
-        return $n_format . $suffix;
+        return $n_format.$suffix;
     }
 
     /**
      * Start recording logs for important actions
      *
-     * @param bool|string|int $enable
-     * @return void
+     * @param  bool|string|int  $enable
      */
     public static function startLogger(): void
     {
@@ -316,7 +301,7 @@ class Providers
                     Log::build([
                         'driver' => 'single',
                         'path' => storage_path('logs/sql.queries.log'),
-                    ])->info(__("SQL :1ms>[ :0 ]\n",  [(string)$query->toRawSql(), $query->time]));
+                    ])->info(__("SQL :1ms>[ :0 ]\n", [(string) $query->toRawSql(), $query->time]));
                 });
             }
 
@@ -330,7 +315,7 @@ class Providers
                         Log::build([
                             'driver' => 'single',
                             'path' => storage_path('logs/sql.long.queries.log'),
-                        ])->info(__("LONG QUERY :1ms>[ :0 ]\n",  [(string)$event->sql, $event->time]));
+                        ])->info(__("LONG QUERY :1ms>[ :0 ]\n", [(string) $event->sql, $event->time]));
                     }
                 );
             }

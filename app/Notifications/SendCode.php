@@ -7,7 +7,6 @@ use App\Helpers\Providers;
 use App\Helpers\Url;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class SendCode extends Notification implements ShouldQueue
@@ -42,8 +41,7 @@ class SendCode extends Notification implements ShouldQueue
                 : Providers::config('prefered_notification_channels', ['mail', 'sms'])
             );
 
-
-        return collect($channels)->map(fn($ch) => $ch == 'sms' ? SmsProvider::getChannel() : $ch)->toArray();
+        return collect($channels)->map(fn ($ch) => $ch == 'sms' ? SmsProvider::getChannel() : $ch)->toArray();
     }
 
     /**
@@ -54,7 +52,7 @@ class SendCode extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $this->code ??= $notifiable->code;
-        $this->token ??= $notifiable->token ?? Url::base64urlEncode($this->code . '|' . MD5(time()));
+        $this->token ??= $notifiable->token ?? Url::base64urlEncode($this->code.'|'.md5(time()));
         $notifiable = $notifiable->user ?? $notifiable;
 
         /** @var \Carbon\Carbon */

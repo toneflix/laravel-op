@@ -47,7 +47,7 @@ class NotificationTemplate extends Model
     protected $attributes = [
         'args' => '[]',
         'allowed' => '[]',
-        'active' => true
+        'active' => true,
     ];
 
     /**
@@ -60,7 +60,7 @@ class NotificationTemplate extends Model
         return [
             'args' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
             'allowed' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
-            'active' => 'boolean'
+            'active' => 'boolean',
         ];
     }
 
@@ -89,8 +89,8 @@ class NotificationTemplate extends Model
     public static function loadDefaults(): Collection
     {
         return new Collection(collect(config('messages'))->map(
-            fn($_, $key) => self::buildDefault($key)
-        )->filter(fn($_, $key) => $key !== 'signature')->values());
+            fn ($_, $key) => self::buildDefault($key)
+        )->filter(fn ($_, $key) => $key !== 'signature')->values());
     }
 
     /**
@@ -104,7 +104,7 @@ class NotificationTemplate extends Model
         $allowed = config("messages.$key.allowed", ['html', 'plain']);
 
         if ($parsed->notFound && $strict) {
-            throw (new ModelNotFoundException("Error Processing Request", 1))->setModel(new static());
+            throw (new ModelNotFoundException('Error Processing Request', 1))->setModel(new static());
         }
 
         preg_match_all('/:(\w+)/', $parsed->plainBody, $args);
@@ -128,10 +128,10 @@ class NotificationTemplate extends Model
                 'email',
                 'phone',
                 'app_name',
-                'app_url'
+                'app_url',
             ])->merge($args[1])->unique(),
             'active' => true,
-            "allowed" => $allowed,
+            'allowed' => $allowed,
         ]);
 
         $template->id = -1;

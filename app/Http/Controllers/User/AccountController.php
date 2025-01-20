@@ -89,7 +89,7 @@ class AccountController extends Controller
                 $field = current(explode(':image', $field));
             }
 
-            $vals = !in_array($field, ['city', 'state']) ? ['required'] : ['nullable'];
+            $vals = ! in_array($field, ['city', 'state']) ? ['required'] : ['nullable'];
 
             $vals[] = $field == 'image' ? 'mimes:png,jpg' : (
                 is_array($filled[$field])
@@ -122,7 +122,7 @@ class AccountController extends Controller
             }
 
             if (is_array($filled[$field])) {
-                return [$field . '.*' => ['required']];
+                return [$field.'.*' => ['required']];
             }
 
             return [$field => $vals];
@@ -147,20 +147,20 @@ class AccountController extends Controller
         $this->validate($request, $valid, [], $fields->filter(function ($k) use ($filled) {
             return is_array($filled[$k]);
         })->mapWithKeys(function ($field, $value) use ($filled) {
-            return collect(array_keys((array) $filled[$field]))->mapWithKeys(fn($k) => ["$field.$k" => "$field $k"]);
+            return collect(array_keys((array) $filled[$field]))->mapWithKeys(fn ($k) => ["$field.$k" => "$field $k"]);
         })->all());
 
         $fields = $fields->filter(function ($k) {
-            return !str($k)->contains('_confirmation');
+            return ! str($k)->contains('_confirmation');
         });
 
-        if (!$request->hasFile('image')) {
+        if (! $request->hasFile('image')) {
             foreach ($fields as $_field) {
                 if (str($_field)->contains(':image')) {
                     $_field = current(explode(':image', (string) $_field));
                 }
 
-                if (!in_array($_field, [
+                if (! in_array($_field, [
                     'otp',
                     'password',
                     'new_password',
@@ -208,7 +208,7 @@ class AccountController extends Controller
         }
 
         $fields = collect($request->keys())->filter(
-            fn($k) => !in_array($k, [
+            fn ($k) => ! in_array($k, [
                 'otp',
                 '_method',
                 'password',
@@ -273,7 +273,7 @@ class AccountController extends Controller
     {
         $user = auth()->user();
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return Providers::response()->error([
                 'message' => 'Your input has a few errors',
                 'status' => 'error',

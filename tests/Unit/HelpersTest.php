@@ -17,25 +17,17 @@ class HelpersTest extends TestCase
         $this->assertTrue(Strings::jsonValidate('{"name": "Doe"}'));
     }
 
-    public function testConfigurationCommand(): void
-    {
-        $this->artisan("app:set-config")
-            ->expectsQuestion('What do you want to configure?', 'app_name')
-            ->expectsQuestion('What do you want to set as the value for app_name?', 'Test Site')
-            ->assertSuccessful();
-    }
-
     public function testMessageParserWorks(): void
     {
         $user = User::factory()->create();
 
         $message = Providers::messageParser(
-            "send_code::verify",
+            'send_code::verify',
             $user,
             [
                 'type' => 'email',
                 'code' => '111111',
-                'token' => MD5(time()),
+                'token' => md5(time()),
                 'label' => 'email address',
                 'app_url' => config('app.frontend_url', config('app.url')),
                 'app_name' => Providers::config('app_name'),

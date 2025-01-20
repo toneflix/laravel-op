@@ -15,7 +15,7 @@ class PaystackDeauth implements RouteInterface
     {
         return [
             RouteInterface::METHOD_KEY => RouteInterface::POST_METHOD,
-            RouteInterface::ENDPOINT_KEY => PaystackDeauth::root() . '/deactivate_authorization',
+            RouteInterface::ENDPOINT_KEY => PaystackDeauth::root().'/deactivate_authorization',
             RouteInterface::PARAMS_KEY => [
                 'authorization_code',
             ],

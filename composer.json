@@ -23,7 +23,8 @@
         "matomo/device-detector": "^6.3",
         "spatie/laravel-permission": "^6.4",
         "toneflix-code/kudisms-notification": "^1.0.1",
-        "toneflix-code/laravel-fileable": "^2.0.8",
+        "toneflix-code/laravel-dbconfig": "^1.0",
+        "toneflix-code/laravel-fileable": "^2.1",
         "toneflix-code/laravel-resource-modifier": "^1.0.0",
         "valorin/random": "^0.5.0",
         "yabacon/paystack-php": "^2.2"
@@ -67,7 +68,7 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "run-test": "php artisan test",
-        "test": "XDEBUG_MODE=coverage php artisan test",
+        "test": "XDEBUG_MODE=coverage php artisan test --coverage",
         "pint": "./vendor/bin/pint"
     },
     "extra": {

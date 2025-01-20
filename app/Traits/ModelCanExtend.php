@@ -9,10 +9,7 @@ trait ModelCanExtend
     /**
      * Generate a Username for the user.
      *
-     * @param string $string
-     * @param string $field
-     * @param string $separator
-     * @param array{class-string, string} $additional
+     * @param  array{class-string, string}  $additional
      * @return string
      */
     protected static function generateUsername(

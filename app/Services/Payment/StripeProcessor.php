@@ -64,7 +64,7 @@ final class StripeProcessor implements PaymentInterface
             }
 
             return $intent;
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException | NotFoundException $th) {
+        } catch (\Cartalyst\Stripe\Exception\MissingParameterException|NotFoundException $th) {
             if ($errorCallback) {
                 $errorCallback([
                     'code' => $th->getCode(),
@@ -107,7 +107,7 @@ final class StripeProcessor implements PaymentInterface
             }
 
             return $ref;
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException | NotFoundException $th) {
+        } catch (\Cartalyst\Stripe\Exception\MissingParameterException|NotFoundException $th) {
             $error = new \App\Services\CustomObject([
                 'code' => $th->getCode(),
                 'error' => $th->getCode(),
@@ -140,18 +140,17 @@ final class StripeProcessor implements PaymentInterface
     /**
      * Do transfter to the specified user
      *
-     * @param int|float $amount
-     * @param ?string $reason
-     * @param ?callable $successCallback
-     * @param ?callable $errorCallback   The callback function to call when an error occurs
-     * @param bool $respond     Wether to return a response or not.
+     * @param  ?string  $reason
+     * @param  ?callable  $successCallback
+     * @param  ?callable  $errorCallback   The callback function to call when an error occurs
+     * @param  bool  $respond     Wether to return a response or not.
      * @return array|object|\App\Services\CustomObject
      */
     public function transfer(
         int|float $amount,
-        ?string $reason = null,
-        ?callable $successCallback = null,
-        ?callable $errorCallback = null,
+        string $reason = null,
+        callable $successCallback = null,
+        callable $errorCallback = null,
         ?bool $respond = true
     ) {
     }

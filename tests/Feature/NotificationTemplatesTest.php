@@ -35,7 +35,7 @@ class NotificationTemplatesTest extends TestCase
         $admin->syncPermissions(config('permission-defs.permissions', []));
 
         $key = array_keys(config('messages'))[0];
-        $response = $this->actingAs($admin)->get('api/admin/configurations/notifications/templates/' . $key);
+        $response = $this->actingAs($admin)->get('api/admin/configurations/notifications/templates/'.$key);
         $response->assertOk();
     }
 

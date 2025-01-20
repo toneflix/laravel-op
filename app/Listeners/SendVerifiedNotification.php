@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\Verified;
 use App\Notifications\AccountVerified;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class SendVerifiedNotification
 {

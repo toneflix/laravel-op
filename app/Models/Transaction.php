@@ -67,21 +67,19 @@ class Transaction extends Model
     public function content(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->transactable()->get(),
+            get: fn () => $this->transactable()->get(),
         );
     }
 
     public function type(): Attribute
     {
         return new Attribute(
-            get: fn() => str($this->transactable_type)->afterLast('\\'),
+            get: fn () => str($this->transactable_type)->afterLast('\\'),
         );
     }
 
     /**
      * Get the user that owns the Transaction
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -90,8 +88,6 @@ class Transaction extends Model
 
     /**
      * Get the temporary user that owns the Transaction
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function tempUser(): BelongsTo
     {

@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Helpers\Providers;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -37,7 +36,7 @@ class AccountVerified extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $message = Providers::messageParser(
-            "send_verified",
+            'send_verified',
             $notifiable,
             [
                 'type' => $this->type,
@@ -58,7 +57,7 @@ class AccountVerified extends Notification
     public function toArray(object $notifiable): array
     {
         $message = Providers::messageParser(
-            "send_verified:sms",
+            'send_verified:sms',
             $notifiable,
             [
                 'type' => $this->type,
@@ -85,7 +84,7 @@ class AccountVerified extends Notification
         $n ??= $n->user ?? $n;
 
         $message = Providers::messageParser(
-            "send_verified:sms",
+            'send_verified:sms',
             $n,
             [
                 'type' => $this->type,

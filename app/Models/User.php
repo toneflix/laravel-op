@@ -193,8 +193,6 @@ class User extends Authenticatable
 
     /**
      * Get all of the transactions for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions(): HasMany
     {
@@ -218,8 +216,6 @@ class User extends Authenticatable
 
     /**
      * Get temporary User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function temp(): BelongsTo
     {

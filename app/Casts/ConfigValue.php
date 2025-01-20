@@ -2,7 +2,6 @@
 
 namespace App\Casts;
 
-use App\Models\File;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use ToneflixCode\LaravelFileable\Facades\Media;
@@ -27,6 +26,7 @@ class ConfigValue implements CastsAttributes
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         $type = $attributes['type'];
+
         return match (true) {
             ($model->secret ?? false) && $value === '***********' => $model->value ?: '',
             is_array($value) => json_encode($value, JSON_FORCE_OBJECT),
