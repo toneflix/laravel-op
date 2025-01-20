@@ -124,12 +124,12 @@ class Providers
 
         // Return  the data wrapped in an "information" array and set the status to informational.
         $response = [
-            'data' => is_array($data) ? ($data['data'] ?? $data) : $data,
             'status_code' => $status,
-            'message' => HttpStatus::from($status)->name,
             'status' => $type,
             ...$data,
             ...$extra,
+            'data' => is_array($data) ? ($data['data'] ?? $data) : $data,
+            'message' => HttpStatus::from($status)->name,
         ];
 
         if (isset($data['errors'])) {
