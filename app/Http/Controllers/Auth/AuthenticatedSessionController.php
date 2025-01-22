@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
     {
         $device = $request->userAgent();
         $user->tokens()->where('name', $device)->delete();
-        $token = $user->createToken($device, ['user:access']);
+        $token = $user->createToken($device, ['user:access'], now()->addHours($request->boolean('remember') ? 8766 : 4));
 
         $user->save();
 
