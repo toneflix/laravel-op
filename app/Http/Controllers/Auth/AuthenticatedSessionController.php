@@ -22,8 +22,8 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         try {
-            $request->authenticate();
-            $user = $request->user();
+            $user = $request->authenticate();
+            $user ??= $request->user();
 
             return $this->setUserData($request, $user);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
 
         $user->save();
 
-        return PV::response()->success(new UserResource($user), HttpStatus::OK, [
+        return PV::response()->success(new UserResource($user), HttpStatus::ACCEPTED, [
             'message' => 'Login was successfull',
             'token' => $token->plainTextToken,
             'abilities' => $token->accessToken->abilities,
@@ -113,7 +113,7 @@ class AuthenticatedSessionController extends Controller
 
         return PV::response()->success([
             'message' => 'You have been successfully logged out',
-        ], HttpStatus::OK);
+        ], HttpStatus::ACCEPTED);
     }
 
     /**
@@ -157,7 +157,7 @@ class AuthenticatedSessionController extends Controller
 
         return PV::response()->success([
             'message' => __('You have been successfully logged out of :0', [$names]),
-        ], HttpStatus::OK);
+        ], HttpStatus::ACCEPTED);
     }
 
     /**

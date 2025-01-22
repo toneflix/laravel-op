@@ -24,20 +24,20 @@ abstract class TestCase extends BaseTestCase
      *
      * @return void
      */
-    public function refreshDatabase()
-    {
-        if (config('database.default')) {
-            $this->beforeRefreshingDatabase();
+    // public function refreshDatabase()
+    // {
+    //     if (config('database.default')) {
+    //         $this->beforeRefreshingDatabase();
 
-            if ($this->usingInMemoryDatabase()) {
-                $this->restoreInMemoryDatabase();
-            }
+    //         if ($this->usingInMemoryDatabase()) {
+    //             $this->restoreInMemoryDatabase();
+    //         }
 
-            $this->refreshTestDatabase();
+    //         $this->refreshTestDatabase();
 
-            $this->afterRefreshingDatabase();
-        }
-    }
+    //         $this->afterRefreshingDatabase();
+    //     }
+    // }
 
     /**
      * Perform any work that should take place once the database has finished refreshing.

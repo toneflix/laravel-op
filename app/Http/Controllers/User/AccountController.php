@@ -122,7 +122,7 @@ class AccountController extends Controller
             }
 
             if (is_array($filled[$field])) {
-                return [$field.'.*' => ['required']];
+                return [$field . '.*' => ['required']];
             }
 
             return [$field => $vals];
@@ -147,7 +147,7 @@ class AccountController extends Controller
         $this->validate($request, $valid, [], $fields->filter(function ($k) use ($filled) {
             return is_array($filled[$k]);
         })->mapWithKeys(function ($field, $value) use ($filled) {
-            return collect(array_keys((array) $filled[$field]))->mapWithKeys(fn ($k) => ["$field.$k" => "$field $k"]);
+            return collect(array_keys((array) $filled[$field]))->mapWithKeys(fn($k) => ["$field.$k" => "$field $k"]);
         })->all());
 
         $fields = $fields->filter(function ($k) {
@@ -208,7 +208,7 @@ class AccountController extends Controller
         }
 
         $fields = collect($request->keys())->filter(
-            fn ($k) => ! in_array($k, [
+            fn($k) => ! in_array($k, [
                 'otp',
                 '_method',
                 'password',
@@ -296,5 +296,38 @@ class AccountController extends Controller
             'status' => 'success',
             'status_code' => HttpStatus::ACCEPTED,
         ])->response()->setStatusCode(HttpStatus::ACCEPTED->value);
+    }
+
+    /**
+     * Mark the user for deletion.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
+    {
+        $this->validate($request, [
+            'reason' => ['required', 'string', 'min:15'],
+        ], [
+            'reason.required' => 'We would really love to know why you are leaving.',
+        ]);
+
+        /** @var \App\Models\User */
+        $user = $request->user('sanctum');
+        $user->deleting_at = now();
+        $user->save();
+
+        $request->user('sanctum')->currentAccessToken()->delete();
+
+        if (!$request->isXmlHttpRequest()) {
+            session()->flush();
+
+            return response()->redirectToRoute('web.login');
+        }
+
+        return Providers::response()->success([
+            'message' => 'Your account has now been deleted successfully.',
+            'status' => 'success',
+            'status_code' => HttpStatus::ACCEPTED,
+        ], HttpStatus::ACCEPTED);
     }
 }

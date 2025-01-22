@@ -70,7 +70,7 @@ class AuthenticationTest extends TestCase
                 ]
             );
 
-        $response->assertStatus(200);
+        $response->assertStatus(202);
         $this->assertArrayHasKey('id', $response->collect('data'));
     }
 
@@ -83,7 +83,7 @@ class AuthenticationTest extends TestCase
         $response = $this->withHeader('X-Requested-With', 'XMLHttpRequest')->withCredentials()
             ->post('/api/account/logout/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(202);
     }
 
     public function testUserCanRequestPasswordResetCode(): void

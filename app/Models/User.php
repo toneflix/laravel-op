@@ -4,8 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Scopes\NotDeletingUserScope;
 use App\Notifications\SendCode;
 use App\Traits\ModelCanExtend;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
 use ToneflixCode\LaravelFileable\Traits\Fileable;
 use Valorin\Random\Random;
 
+#[ScopedBy([NotDeletingUserScope::class])]
 class User extends Authenticatable
 {
     use Fileable;
@@ -89,6 +92,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'data' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
             'access_data' => \Illuminate\Database\Eloquent\Casts\AsCollection::class,
+            'deleting_at' => 'datetime',
             'last_attempt' => 'datetime',
             'email_verified_at' => 'datetime',
             'phone_verified_at' => 'datetime',
@@ -130,7 +134,7 @@ class User extends Authenticatable
     protected function fullname(): Attribute
     {
         return Attribute::make(
-            get: fn () => collect([$this->firstname, $this->lastname])->join(' '),
+            get: fn() => collect([$this->firstname, $this->lastname])->join(' '),
         );
     }
 
@@ -207,8 +211,8 @@ class User extends Authenticatable
     protected function userData(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->data,
-            set: fn ($value) => is_array($value)
+            get: fn() => $this->data,
+            set: fn($value) => is_array($value)
                 ? json_encode($value, JSON_FORCE_OBJECT)
                 : $value,
         );
