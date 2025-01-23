@@ -119,6 +119,10 @@ class Providers
             'message' => HttpStatus::from($status)->name,
         ];
 
+        if (isset($response['data']['message'])) {
+            unset($response['data']['message']);
+        }
+
         if (isset($data['errors'])) {
             $response['errors'] = $data['errors'];
         }
