@@ -109,14 +109,18 @@ class Providers
             $data = self::paginator($data);
         }
 
+        if (!isset($data['data'])) {
+            $data['data'] = [];
+        }
+
         // Return  the data wrapped in an "information" array and set the status to informational.
         $response = [
             'status_code' => $status,
             'status' => $type,
-            ...$data,
-            ...$extra,
             'data' => is_array($data) ? ($data['data'] ?? $data) : $data,
             'message' => HttpStatus::from($status)->name,
+            ...$data,
+            ...$extra,
         ];
 
         if (isset($response['data']['message'])) {
