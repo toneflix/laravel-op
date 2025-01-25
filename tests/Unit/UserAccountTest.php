@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Enums\HttpStatus;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -24,7 +23,7 @@ class UserAccountTest extends TestCase
         $response = $this->delete('/api/account/delete', [
             'reason' => fake('En-NG')->sentence,
         ], [
-            'X-Requested-With' => 'XMLHttpRequest'
+            'X-Requested-With' => 'XMLHttpRequest',
         ]);
 
         $response->assertAccepted();

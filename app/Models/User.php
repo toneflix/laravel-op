@@ -134,7 +134,7 @@ class User extends Authenticatable
     protected function fullname(): Attribute
     {
         return Attribute::make(
-            get: fn() => collect([$this->firstname, $this->lastname])->join(' '),
+            get: fn () => collect([$this->firstname, $this->lastname])->join(' '),
         );
     }
 
@@ -211,8 +211,8 @@ class User extends Authenticatable
     protected function userData(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->data,
-            set: fn($value) => is_array($value)
+            get: fn () => $this->data,
+            set: fn ($value) => is_array($value)
                 ? json_encode($value, JSON_FORCE_OBJECT)
                 : $value,
         );

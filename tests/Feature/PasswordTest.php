@@ -77,7 +77,7 @@ class PasswordTest extends TestCase
         $response = $this->post(
             'api/auth/reset-password/check-code',
             [
-                'code' => Url::base64urlEncode($code->code . '|' . md5(time())),
+                'code' => Url::base64urlEncode($code->code.'|'.md5(time())),
                 'password' => 'password',
                 'password_confirmation' => 'password',
             ]
