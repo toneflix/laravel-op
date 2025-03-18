@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 1.1.0 - 2025-03-18
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.9...1.1.0
+
 ## 2.0.9 - 2024-11-13
 
 - Disable Payment feature tests.
