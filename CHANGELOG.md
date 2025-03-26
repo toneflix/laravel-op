@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.0 - 2025-03-26
+
+- Update dependencies to support laravel 12
+- Update laravel/framework to ^12
+
 ## 2.1.0 - 2025-03-18
 
 **Full Changelog**: https://github.com/toneflix/laravel-op/compare/2.0.9...2.1.0
