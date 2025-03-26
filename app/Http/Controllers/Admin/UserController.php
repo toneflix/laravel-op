@@ -18,17 +18,19 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        \App\Enums\Permission::USERS_LIST->authorize();
+
         $query = User::query();
 
         $query->when($request->has('type'), function (Builder $query) use ($request) {
             $query->where('type', $request->input('type'));
         });
         $query->when($request->has('search'), function (Builder $query) use ($request) {
-            $query->where('firstname', 'like', '%'.$request->input('search').'%');
-            $query->orWhere('lastname', 'like', '%'.$request->input('search').'%');
+            $query->where('firstname', 'like', '%' . $request->input('search') . '%');
+            $query->orWhere('lastname', 'like', '%' . $request->input('search') . '%');
             $query->orWhereRaw(
                 "LOWER(CONCAT_WS(' ', firstname, lastname)) like ?",
-                ['%'.mb_strtolower($request->input('search')).'%']
+                ['%' . mb_strtolower($request->input('search')) . '%']
             );
         });
 
@@ -46,6 +48,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        \App\Enums\Permission::USERS_CREATE->authorize();
+
         /** @var \App\Models\User $user */
         $user = $request->user();
 
@@ -66,7 +70,7 @@ class UserController extends Controller
         ]);
 
         $valid['firstname'] = str($request->get('name'))->explode(' ')->first(null, $request->firstname);
-        $valid['lastname'] = str($request->get('name'))->explode(' ')->last(fn ($n) => $n !== $valid['firstname'], $request->lastname);
+        $valid['lastname'] = str($request->get('name'))->explode(' ')->last(fn($n) => $n !== $valid['firstname'], $request->lastname);
 
         /** @var \App\Models\User $user */
         $user = User::create($valid);
@@ -91,6 +95,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        \App\Enums\Permission::USERS_USER->authorize();
+
         return (new UserResource($user))->additional([
             'message' => HttpStatus::message(HttpStatus::OK),
             'status' => 'success',
@@ -103,17 +109,19 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        \App\Enums\Permission::USERS_UPDATE->authorize();
+
         $valid = $this->validate($request, [
             'image' => ['nullable', 'image'],
             'name' => ['required_without:firstname', 'string', 'max:255'],
-            'email' => ['required_without:phone', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'phone' => 'required_without:email|string|max:255|unique:users,phone,'.$user->id,
+            'email' => ['required_without:phone', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'phone' => 'required_without:email|string|max:255|unique:users,phone,' . $user->id,
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'firstname' => ['nullable', 'string', 'max:255'],
             'laststname' => ['nullable', 'string', 'max:255'],
             'type' => ['nullable', 'string', 'in:user,admin,...'],
-            'roles' => ['array', 'in:'.implode(',', config('permission-defs.admin_roles', []))],
-            'permissions' => ['array', 'in:'.implode(',', config('permission-defs.permissions', []))],
+            'roles' => ['array', 'in:' . implode(',', config('permission-defs.admin_roles', []))],
+            'permissions' => ['array', 'in:' . implode(',', config('permission-defs.permissions', []))],
         ], [
             'name.required_without' => 'Please enter the user\'s fullname.',
         ], [
@@ -122,7 +130,7 @@ class UserController extends Controller
         ]);
 
         $valid['firstname'] = str($request->name)->explode(' ')->first(null, $request->firstname);
-        $valid['lastname'] = str($request->name)->explode(' ')->last(fn ($n) => $n !== $valid['firstname'], $request->lastname);
+        $valid['lastname'] = str($request->name)->explode(' ')->last(fn($n) => $n !== $valid['firstname'], $request->lastname);
 
         $user->update($valid);
 
@@ -142,6 +150,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        \App\Enums\Permission::USERS_DELETE->authorize();
+
         $user->delete();
 
         return (new UserCollection([]))->additional([

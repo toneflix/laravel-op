@@ -15,6 +15,8 @@ class ConfigurationController extends Controller
      */
     public function index(Request $request)
     {
+        \App\Enums\Permission::CONFIGURATION->authorize();
+
         return Provider::response()->success([
             'data' => Configuration::notSecret()->get()
                 ->when($request->boolean('group'), fn($model) => $model->groupBy('group')),
@@ -26,6 +28,8 @@ class ConfigurationController extends Controller
      */
     public function show(string|int $id)
     {
+        \App\Enums\Permission::CONFIGURATION->authorize();
+
         $data = Configuration::where('key', $id)
             ->when(filter_var($id, FILTER_VALIDATE_INT), fn($q) => $q->orWhere('id', $id))
             ->first();
@@ -40,6 +44,8 @@ class ConfigurationController extends Controller
      */
     public function store(Request $request)
     {
+        \App\Enums\Permission::MANAGE_CONFIGURATION->authorize();
+
         $rules = Configuration::all()->mapWithKeys(function ($conf) {
             return [$conf->key => ['nullable', $conf->type]];
         })->toArray();
