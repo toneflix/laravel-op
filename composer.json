@@ -20,6 +20,7 @@
         "laravel/framework": "^12",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10",
+        "maatwebsite/excel": "^3.1",
         "matomo/device-detector": "^6.4",
         "spatie/laravel-permission": "^6.16",
         "toneflix-code/kudisms-notification": "^1.1",

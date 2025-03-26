@@ -1,5 +1,5 @@
 @php
-    use App\Helpers\Providers;
+    use App\Helpers\Provider;
 @endphp
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
