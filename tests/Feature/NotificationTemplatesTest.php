@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -35,7 +35,7 @@ class NotificationTemplatesTest extends TestCase
         $admin->syncPermissions(config('permission-defs.permissions', []));
 
         $key = array_keys(config('messages'))[0];
-        $response = $this->actingAs($admin)->get('api/admin/configurations/notifications/templates/'.$key);
+        $response = $this->actingAs($admin)->get('api/admin/configurations/notifications/templates/' . $key);
         $response->assertOk();
     }
 
@@ -49,7 +49,7 @@ class NotificationTemplatesTest extends TestCase
 
         $key = array_keys(config('messages'))[1];
 
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             $key,
             $admin,
             [
@@ -57,7 +57,7 @@ class NotificationTemplatesTest extends TestCase
                 'token' => '0000-0000-0000-0000',
                 'label' => 'email address',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name') ?: config('app.name'),
+                'app_name' => Provider::config('app_name') ?: config('app.name'),
                 'duration' => now()->addMinute()->longAbsoluteDiffForHumans(),
             ]
         );

@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Response;
 use ToneflixCode\DbConfig\Helpers\Configure;
 
-class Providers
+class Provider
 {
     protected static array $responseKeys = [];
 

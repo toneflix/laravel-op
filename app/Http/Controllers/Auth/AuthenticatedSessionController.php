@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers as PV;
+use App\Helpers\Provider;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
@@ -27,7 +27,7 @@ class AuthenticatedSessionController extends Controller
 
             return $this->setUserData($request, $user);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return PV::response()->error([
+            return Provider::response()->error([
                 'message' => $e->getMessage(),
                 'errors' => [
                     'email' => $e->getMessage(),
@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
 
         $user->save();
 
-        return PV::response()->success(new UserResource($user), HttpStatus::ACCEPTED, [
+        return Provider::response()->success(new UserResource($user), HttpStatus::ACCEPTED, [
             'message' => 'Login was successfull',
             'token' => $token->plainTextToken,
             'abilities' => $token->accessToken->abilities,
@@ -86,7 +86,7 @@ class AuthenticatedSessionController extends Controller
             ];
         });
 
-        return PV::response()->success([
+        return Provider::response()->success([
             'message' => 'Tokens retrieved successfully',
             'data' => $data,
         ], HttpStatus::OK);
@@ -111,7 +111,7 @@ class AuthenticatedSessionController extends Controller
             return response()->redirectToRoute('web.login');
         }
 
-        return PV::response()->success([
+        return Provider::response()->success([
             'message' => 'You have been successfully logged out',
         ], HttpStatus::ACCEPTED);
     }
@@ -150,12 +150,12 @@ class AuthenticatedSessionController extends Controller
 
             $tokens->each->delete();
         } else {
-            return PV::response()->error([
+            return Provider::response()->error([
                 'message' => __('You are no longer logged in on any of the selected devices'),
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
 
-        return PV::response()->success([
+        return Provider::response()->success([
             'message' => __('You have been successfully logged out of :0', [$names]),
         ], HttpStatus::ACCEPTED);
     }

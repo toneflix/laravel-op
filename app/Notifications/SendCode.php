@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Enums\SmsProvider;
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use App\Helpers\Url;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,10 +38,10 @@ class SendCode extends Notification implements ShouldQueue
             : (
                 str($this->type)->is('verify')
                 ? ['mail']
-                : Providers::config('prefered_notification_channels', ['mail', 'sms'])
+                : Provider::config('prefered_notification_channels', ['mail', 'sms'])
             );
 
-        return collect($channels)->map(fn ($ch) => $ch == 'sms' ? SmsProvider::getChannel() : $ch)->toArray();
+        return collect($channels)->map(fn($ch) => $ch == 'sms' ? SmsProvider::getChannel() : $ch)->toArray();
     }
 
     /**
@@ -52,15 +52,15 @@ class SendCode extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $this->code ??= $notifiable->code;
-        $this->token ??= $notifiable->token ?? Url::base64urlEncode($this->code.'|'.md5(time()));
+        $this->token ??= $notifiable->token ?? Url::base64urlEncode($this->code . '|' . md5(time()));
         $notifiable = $notifiable->user ?? $notifiable;
 
         /** @var \Carbon\Carbon */
         $datetime = $notifiable->last_attempt;
 
-        $dateAdd = $datetime?->addSeconds(Providers::config('token_lifespan', 30));
+        $dateAdd = $datetime?->addSeconds(Provider::config('token_lifespan', 30));
 
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             "send_code::$this->type",
             $notifiable,
             [
@@ -69,7 +69,7 @@ class SendCode extends Notification implements ShouldQueue
                 'token' => $this->token,
                 'label' => 'email address',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name'),
+                'app_name' => Provider::config('app_name'),
                 'duration' => $dateAdd->longAbsoluteDiffForHumans(),
             ]
         );
@@ -90,9 +90,9 @@ class SendCode extends Notification implements ShouldQueue
 
         /** @var \Carbon\Carbon */
         $datetime = $n->last_attempt;
-        $dateAdd = $datetime?->addSeconds(Providers::config('token_lifespan', 30));
+        $dateAdd = $datetime?->addSeconds(Provider::config('token_lifespan', 30));
 
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             "send_code::$this->type",
             $n,
             [
@@ -101,7 +101,7 @@ class SendCode extends Notification implements ShouldQueue
                 'token' => $this->token,
                 'label' => 'email address',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name'),
+                'app_name' => Provider::config('app_name'),
                 'duration' => $dateAdd->longAbsoluteDiffForHumans(),
             ]
         );

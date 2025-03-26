@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -27,7 +27,7 @@ class AccountVerified extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [...Providers::config('prefered_notification_channels', ['mail', 'sms']), 'database'];
+        return [...Provider::config('prefered_notification_channels', ['mail', 'sms']), 'database'];
     }
 
     /**
@@ -35,14 +35,14 @@ class AccountVerified extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             'send_verified',
             $notifiable,
             [
                 'type' => $this->type,
                 'label' => 'email address',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name'),
+                'app_name' => Provider::config('app_name'),
             ]
         );
 
@@ -56,14 +56,14 @@ class AccountVerified extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             'send_verified:sms',
             $notifiable,
             [
                 'type' => $this->type,
                 'label' => 'phone number',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name'),
+                'app_name' => Provider::config('app_name'),
             ]
         );
 
@@ -83,14 +83,14 @@ class AccountVerified extends Notification
     {
         $n ??= $n->user ?? $n;
 
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             'send_verified:sms',
             $n,
             [
                 'type' => $this->type,
                 'label' => 'phone number',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name'),
+                'app_name' => Provider::config('app_name'),
             ]
         );
 

@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use Closure;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
@@ -21,9 +21,9 @@ class EnsureEmailIsVerified
         if (
             ! $request->user() ||
             ($request->user() instanceof MustVerifyEmail &&
-            ! $request->user()->hasVerifiedEmail())
+                ! $request->user()->hasVerifiedEmail())
         ) {
-            return Providers::response()->error([
+            return Provider::response()->error([
                 'message' => 'Your email address is not verified.',
             ], HttpStatus::FORBIDDEN);
         }

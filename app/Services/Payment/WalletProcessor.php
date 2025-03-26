@@ -3,7 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Valorin\Random\Random;
@@ -40,7 +40,7 @@ final class WalletProcessor implements PaymentInterface
     ) {
         // Try to create the payment intent
         try {
-            $reference = Providers::config('reference_prefix', 'TRX-').Random::string(20, ! 1, ! 0, ! 0, ! 1);
+            $reference = Provider::config('reference_prefix', 'TRX-') . Random::string(20, ! 1, ! 0, ! 0, ! 1);
 
             $this->user->pay($amount, ['main_wallet'], 'Payment for service/order.');
             $tranx = $this->user->walletLog()->latest()->first();
@@ -153,8 +153,7 @@ final class WalletProcessor implements PaymentInterface
         callable $callback = null,
         callable $error_callback = null,
         ?bool $respond = true
-    ) {
-    }
+    ) {}
 
     /**
      * Do transfter to the specified user
@@ -171,6 +170,5 @@ final class WalletProcessor implements PaymentInterface
         callable $successCallback = null,
         callable $errorCallback = null,
         ?bool $respond = true
-    ) {
-    }
+    ) {}
 }

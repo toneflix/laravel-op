@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
 use App\Events\Verified;
-use App\Helpers\Providers as PV;
+use App\Helpers\Provider;
 use App\Helpers\Url;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -27,7 +27,7 @@ class VerifyEmailPhoneController extends Controller
         $hasVerified = ($type == 'phone') ? $user->hasVerifiedPhone() : $user->hasVerifiedEmail();
 
         if ($hasVerified) {
-            return PV::response()->info(new UserResource($user), HttpStatus::OK, [
+            return Provider::response()->info(new UserResource($user), HttpStatus::OK, [
                 'reboot' => true,
                 'message' => "Your $set_type is already verified.",
             ]);
@@ -42,10 +42,10 @@ class VerifyEmailPhoneController extends Controller
         }
 
         /** @var \Carbon\Carbon */
-        $datetime = $user->last_attempt ?? now()->subSeconds(PV::config('token_lifespan', 30) + 1);
-        $dateAdd = $datetime->addSeconds(PV::config('token_lifespan', 30));
+        $datetime = $user->last_attempt ?? now()->subSeconds(Provider::config('token_lifespan', 30) + 1);
+        $dateAdd = $datetime->addSeconds(Provider::config('token_lifespan', 30));
 
-        return PV::response()->success(new UserResource($user), HttpStatus::CREATED, [
+        return Provider::response()->success(new UserResource($user), HttpStatus::CREATED, [
             'message' => "Verification code has been sent to your {$set_type}.",
             'time_left' => $dateAdd->shortAbsoluteDiffForHumans(),
             'try_at' => $dateAdd->toDateTimeLocalString(),
@@ -65,12 +65,12 @@ class VerifyEmailPhoneController extends Controller
         $set_type = ($type == 'phone') ? 'phone number' : 'email address';
 
         /** @var \Carbon\Carbon */
-        $datetime = $user->last_attempt ?? now()->subSeconds(PV::config('token_lifespan', 30) + 1);
+        $datetime = $user->last_attempt ?? now()->subSeconds(Provider::config('token_lifespan', 30) + 1);
 
-        $dateAdd = $datetime->addSeconds(PV::config('token_lifespan', 30));
+        $dateAdd = $datetime->addSeconds(Provider::config('token_lifespan', 30));
         $hasVerified = ($type == 'phone') ? $user->hasVerifiedPhone() : $user->hasVerifiedEmail();
 
-        return PV::response()->success(new UserResource($user), HttpStatus::OK, [
+        return Provider::response()->success(new UserResource($user), HttpStatus::OK, [
             'reboot' => (bool) $hasVerified,
             'message' => $hasVerified
                 ? "We have successfully verified your $set_type, welcome to our community."
@@ -99,7 +99,7 @@ class VerifyEmailPhoneController extends Controller
             : $user->hasVerifiedEmail();
 
         if ($hasVerified) {
-            return PV::response()->info(new UserResource($user), HttpStatus::OK, [
+            return Provider::response()->info(new UserResource($user), HttpStatus::OK, [
                 'reboot' => true,
                 'message' => "Your $set_type is already verified.",
             ]);
@@ -132,8 +132,8 @@ class VerifyEmailPhoneController extends Controller
             ? $user->phone_verified_at
             : $user->last_attempt;
 
-        if ($requestCode !== $code || $last_attempt->diffInMinutes(now()) >= PV::config('token_lifespan', 30)) {
-            return PV::response()->error([
+        if ($requestCode !== $code || $last_attempt->diffInMinutes(now()) >= Provider::config('token_lifespan', 30)) {
+            return Provider::response()->error([
                 'errors' => ['code' => __($error)],
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
@@ -146,7 +146,7 @@ class VerifyEmailPhoneController extends Controller
             event(new Verified($user, $type));
         }
 
-        return PV::response()->success(new UserResource($user), HttpStatus::OK, [
+        return Provider::response()->success(new UserResource($user), HttpStatus::OK, [
             'reboot' => true,
             'message' => "We have successfully verified your $set_type, welcome to our community.",
         ]);

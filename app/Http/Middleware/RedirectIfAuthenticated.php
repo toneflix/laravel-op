@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +23,8 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return $request->expectsJson()
-                    ? Providers::response()->error([
-                        'message' => 'You are already logged in as '.$request->user()->fullname,
+                    ? Provider::response()->error([
+                        'message' => 'You are already logged in as ' . $request->user()->fullname,
                     ], HttpStatus::FORBIDDEN)
                     : redirect('/');
             }

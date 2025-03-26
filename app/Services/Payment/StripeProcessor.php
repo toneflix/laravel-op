@@ -2,7 +2,7 @@
 
 namespace App\Services\Payment;
 
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use App\Models\User;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ final class StripeProcessor implements PaymentInterface
     {
         // Stripe instance
         $this->request = $request;
-        $this->stripe = Stripe::make(Providers::config('stripe_secret_key', env('STRIPE_SECRET_KEY'), true));
+        $this->stripe = Stripe::make(Provider::config('stripe_secret_key', env('STRIPE_SECRET_KEY'), true));
         $this->user = $user;
     }
 
@@ -44,7 +44,7 @@ final class StripeProcessor implements PaymentInterface
         // Parameters
         $params = [
             'amount' => $amount,
-            'currency' => Providers::config('app_currency', 'USD'),
+            'currency' => Provider::config('app_currency', 'USD'),
             'payment_method' => $this->request->pm_id,
         ];
 
@@ -64,7 +64,7 @@ final class StripeProcessor implements PaymentInterface
             }
 
             return $intent;
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException|NotFoundException $th) {
+        } catch (\Cartalyst\Stripe\Exception\MissingParameterException | NotFoundException $th) {
             if ($errorCallback) {
                 $errorCallback([
                     'code' => $th->getCode(),
@@ -107,7 +107,7 @@ final class StripeProcessor implements PaymentInterface
             }
 
             return $ref;
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException|NotFoundException $th) {
+        } catch (\Cartalyst\Stripe\Exception\MissingParameterException | NotFoundException $th) {
             $error = new \App\Services\CustomObject([
                 'code' => $th->getCode(),
                 'error' => $th->getCode(),
@@ -134,8 +134,7 @@ final class StripeProcessor implements PaymentInterface
         callable $callback = null,
         callable $error_callback = null,
         ?bool $respond = true
-    ) {
-    }
+    ) {}
 
     /**
      * Do transfter to the specified user
@@ -152,6 +151,5 @@ final class StripeProcessor implements PaymentInterface
         callable $successCallback = null,
         callable $errorCallback = null,
         ?bool $respond = true
-    ) {
-    }
+    ) {}
 }

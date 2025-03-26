@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 
@@ -15,9 +15,9 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         return $request->expectsJson()
-        ? Providers::response()->error([
-            'message' => 'please login to continue.',
-        ], HttpStatus::FORBIDDEN)
-        : route('login');
+            ? Provider::response()->error([
+                'message' => 'please login to continue.',
+            ], HttpStatus::FORBIDDEN)
+            : route('login');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use App\Helpers\Strings;
 use App\Models\User;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithConsole;
@@ -21,7 +21,7 @@ class HelpersTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $message = Providers::messageParser(
+        $message = Provider::messageParser(
             'send_code::verify',
             $user,
             [
@@ -30,7 +30,7 @@ class HelpersTest extends TestCase
                 'token' => md5(time()),
                 'label' => 'email address',
                 'app_url' => config('app.frontend_url', config('app.url')),
-                'app_name' => Providers::config('app_name'),
+                'app_name' => Provider::config('app_name'),
                 'duration' => '10 seconds',
             ]
         );

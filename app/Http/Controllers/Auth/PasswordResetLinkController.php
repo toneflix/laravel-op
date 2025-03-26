@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers as PV;
+use App\Helpers\Provider;
 use App\Http\Controllers\Controller;
 use App\Models\PasswordCodeResets;
 use App\Notifications\SendCode;
@@ -38,7 +38,7 @@ class PasswordResetLinkController extends Controller
         $reset->notify(new SendCode());
 
         // And finally return a response
-        return PV::response()->success([
+        return Provider::response()->success([
             'message' => __('We have sent you a message to help with recovering your password.'),
         ], HttpStatus::CREATED);
     }

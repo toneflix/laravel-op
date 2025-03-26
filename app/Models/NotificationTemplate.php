@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -89,8 +89,8 @@ class NotificationTemplate extends Model
     public static function loadDefaults(): Collection
     {
         return new Collection(collect(config('messages'))->map(
-            fn ($_, $key) => self::buildDefault($key)
-        )->filter(fn ($_, $key) => $key !== 'signature')->values());
+            fn($_, $key) => self::buildDefault($key)
+        )->filter(fn($_, $key) => $key !== 'signature')->values());
     }
 
     /**
@@ -100,7 +100,7 @@ class NotificationTemplate extends Model
      */
     public static function buildDefault(string $key, bool $strict = false): self
     {
-        $parsed = Providers::messageParser($key);
+        $parsed = Provider::messageParser($key);
         $allowed = config("messages.$key.allowed", ['html', 'plain']);
 
         if ($parsed->notFound && $strict) {

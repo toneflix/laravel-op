@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \App\Helpers\Providers::buildResponseMacros();
+        \App\Helpers\Provider::buildResponseMacros();
 
         // Force https
         if (config('app.env') === 'production' || config('app.force_https')) {
@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        \App\Helpers\Providers::rateLimitCodeRequests();
-        \App\Helpers\Providers::startLogger();
+        \App\Helpers\Provider::rateLimitCodeRequests();
+        \App\Helpers\Provider::startLogger();
     }
 }

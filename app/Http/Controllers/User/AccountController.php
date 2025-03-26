@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers;
+use App\Helpers\Provider;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -122,7 +122,7 @@ class AccountController extends Controller
             }
 
             if (is_array($filled[$field])) {
-                return [$field.'.*' => ['required']];
+                return [$field . '.*' => ['required']];
             }
 
             return [$field => $vals];
@@ -147,7 +147,7 @@ class AccountController extends Controller
         $this->validate($request, $valid, [], $fields->filter(function ($k) use ($filled) {
             return is_array($filled[$k]);
         })->mapWithKeys(function ($field, $value) use ($filled) {
-            return collect(array_keys((array) $filled[$field]))->mapWithKeys(fn ($k) => ["$field.$k" => "$field $k"]);
+            return collect(array_keys((array) $filled[$field]))->mapWithKeys(fn($k) => ["$field.$k" => "$field $k"]);
         })->all());
 
         $fields = $fields->filter(function ($k) {
@@ -171,13 +171,13 @@ class AccountController extends Controller
 
                 if ($_field === 'email') {
                     $user->email = $request->email;
-                    if (Providers::config('verify_email', false)) {
+                    if (Provider::config('verify_email', false)) {
                         $user->email_verified_at = null;
                         $user->sendEmailVerificationNotification();
                     }
                 } elseif ($_field === 'phone') {
                     $user->phone = $request->phone;
-                    if (Providers::config('verify_phone', false)) {
+                    if (Provider::config('verify_phone', false)) {
                         $user->phone_verified_at = null;
                         $user->sendPhoneVerificationNotification();
                     }
@@ -208,7 +208,7 @@ class AccountController extends Controller
         }
 
         $fields = collect($request->keys())->filter(
-            fn ($k) => ! in_array($k, [
+            fn($k) => ! in_array($k, [
                 'otp',
                 '_method',
                 'password',
@@ -274,7 +274,7 @@ class AccountController extends Controller
         $user = auth()->user();
 
         if (! Hash::check($request->current_password, $user->password)) {
-            return Providers::response()->error([
+            return Provider::response()->error([
                 'message' => 'Your input has a few errors',
                 'status' => 'error',
                 'status_code' => HttpStatus::UNPROCESSABLE_ENTITY,
@@ -324,7 +324,7 @@ class AccountController extends Controller
             return response()->redirectToRoute('web.login');
         }
 
-        return Providers::response()->success([
+        return Provider::response()->success([
             'message' => 'Your account has now been deleted successfully.',
             'status' => 'success',
             'status_code' => HttpStatus::ACCEPTED,

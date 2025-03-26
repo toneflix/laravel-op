@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers as PV;
+use App\Helpers\Provider;
 use App\Helpers\Url;
 use App\Http\Controllers\Controller;
 use App\Models\PasswordCodeResets;
@@ -42,10 +42,10 @@ class NewPasswordController extends Controller
         $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
-        if (! $code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
+        if (! $code || $code->created_at->diffInSeconds(now()) >= Provider::config('token_lifespan', 30)) {
             $code && $code->delete();
 
-            return PV::response()->error([
+            return Provider::response()->error([
                 'message' => 'An error occured.',
                 'errors' => ['code' => __($error)],
             ], HttpStatus::ACCEPTED);
@@ -60,7 +60,7 @@ class NewPasswordController extends Controller
         // delete current code
         $code->delete();
 
-        return PV::response()->success([
+        return Provider::response()->success([
             'message' => __('Your password has successfully been chaged.'),
         ], HttpStatus::ACCEPTED);
     }
@@ -79,7 +79,7 @@ class NewPasswordController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return PV::response()->error([
+            return Provider::response()->error([
                 'message' => $validator->errors()->first() ?: 'Your input has a few errors',
                 'errors' => $validator->errors(),
             ], HttpStatus::UNPROCESSABLE_ENTITY);
@@ -99,16 +99,16 @@ class NewPasswordController extends Controller
         $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
-        if (! $code || $code->created_at->diffInSeconds(now()) >= PV::config('token_lifespan', 30)) {
+        if (! $code || $code->created_at->diffInSeconds(now()) >= Provider::config('token_lifespan', 30)) {
             $code && $code->delete();
 
-            return PV::response()->error([
+            return Provider::response()->error([
                 'message' => 'An error occured.',
                 'errors' => ['code' => __($error)],
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
 
-        return PV::response()->success([
+        return Provider::response()->success([
             'message' => 'Your reset code is valid, you can change your password now.',
         ], HttpStatus::ACCEPTED);
     }

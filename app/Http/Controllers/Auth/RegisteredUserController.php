@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\HttpStatus;
-use App\Helpers\Providers as PV;
+use App\Helpers\Provider;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -52,18 +52,18 @@ class RegisteredUserController extends Controller
     public function createUser(Request $request)
     {
         $firstname = str($request->get('name'))->explode(' ')->first(null, $request->firstname);
-        $lastname = str($request->get('name'))->explode(' ')->last(fn ($n) => $n !== $firstname, $request->lastname);
+        $lastname = str($request->get('name'))->explode(' ')->last(fn($n) => $n !== $firstname, $request->lastname);
 
         $user = User::create([
             'role' => 'user',
-            'type' => $request->get('type', 'farmer'),
+            'type' => $request->get('type', 'default'),
             'email' => $request->get('email'),
             'phone' => $request->get('phone'),
             'password' => $request->get('password'),
             'lastname' => $request->get('lastname', $lastname ?? ''),
             'firstname' => $request->get('firstname', $firstname),
-            'email_verified_at' => ! PV::config('verify_email', false) ? now() : null,
-            'phone_verified_at' => ! PV::config('verify_phone', false) ? now() : null,
+            'email_verified_at' => ! Providers::config('verify_email', false) ? now() : null,
+            'phone_verified_at' => ! Providers::config('verify_phone', false) ? now() : null,
         ]);
 
         return $user;
@@ -76,7 +76,7 @@ class RegisteredUserController extends Controller
         $dev = new DeviceDetector($request->userAgent());
 
         $device = $dev->getBrandName()
-            ? ($dev->getBrandName().$dev->getDeviceName())
+            ? ($dev->getBrandName() . $dev->getDeviceName())
             : $request->userAgent();
 
         $user->save();
@@ -106,11 +106,10 @@ class RegisteredUserController extends Controller
         $user = Auth::user();
 
         /** @var \Carbon\Carbon */
-        $datetime = $user->last_attempt ?? now()->subSeconds(PV::config('token_lifespan', 30) + 1);
-        $dateAdd = $datetime->addSeconds(PV::config('token_lifespan', 30));
-        // dd($dateAdd->format('H:i:s'));
+        $datetime = $user->last_attempt ?? now()->subSeconds(Providers::config('token_lifespan', 30) + 1);
+        $dateAdd = $datetime->addSeconds(Providers::config('token_lifespan', 30));
 
-        return PV::response()->success(new UserResource($user), HttpStatus::CREATED, [
+        return Providers::response()->success(new UserResource($user), HttpStatus::CREATED, [
             'message' => 'Registration was successfull',
             'token' => $token,
             'time_left' => $dateAdd->shortAbsoluteDiffForHumans(),
