@@ -62,8 +62,8 @@ class RegisteredUserController extends Controller
             'password' => $request->get('password'),
             'lastname' => $request->get('lastname', $lastname ?? ''),
             'firstname' => $request->get('firstname', $firstname),
-            'email_verified_at' => ! Providers::config('verify_email', false) ? now() : null,
-            'phone_verified_at' => ! Providers::config('verify_phone', false) ? now() : null,
+            'email_verified_at' => ! Provider::config('verify_email', false) ? now() : null,
+            'phone_verified_at' => ! Provider::config('verify_phone', false) ? now() : null,
         ]);
 
         return $user;
@@ -106,10 +106,10 @@ class RegisteredUserController extends Controller
         $user = Auth::user();
 
         /** @var \Carbon\Carbon */
-        $datetime = $user->last_attempt ?? now()->subSeconds(Providers::config('token_lifespan', 30) + 1);
-        $dateAdd = $datetime->addSeconds(Providers::config('token_lifespan', 30));
+        $datetime = $user->last_attempt ?? now()->subSeconds(Provider::config('token_lifespan', 30) + 1);
+        $dateAdd = $datetime->addSeconds(Provider::config('token_lifespan', 30));
 
-        return Providers::response()->success(new UserResource($user), HttpStatus::CREATED, [
+        return Provider::response()->success(new UserResource($user), HttpStatus::CREATED, [
             'message' => 'Registration was successfull',
             'token' => $token,
             'time_left' => $dateAdd->shortAbsoluteDiffForHumans(),

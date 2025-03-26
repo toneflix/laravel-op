@@ -65,7 +65,7 @@ class Provider
         Response::macro(
             'success',
             function (array|Collection|AbstractPaginator|JsonResource $data, int|HttpStatus $code = 200, ?array $extra = []) {
-                return Providers::jsonResource($data, 'success', $code, $extra);
+                return Provider::jsonResource($data, 'success', $code, $extra);
             }
         );
 
@@ -73,7 +73,7 @@ class Provider
         Response::macro(
             'error',
             function (array|Collection|AbstractPaginator|JsonResource $data, int|HttpStatus $code = 400, ?array $extra = []) {
-                return Providers::jsonResource($data, 'error', $code, $extra);
+                return Provider::jsonResource($data, 'error', $code, $extra);
             }
         );
 
@@ -81,7 +81,7 @@ class Provider
         Response::macro(
             'info',
             function (array|Collection|AbstractPaginator|JsonResource $data, int|HttpStatus $code = 200, ?array $extra = []) {
-                return Providers::jsonResource($data, 'info', $code, $extra);
+                return Provider::jsonResource($data, 'info', $code, $extra);
             }
         );
     }
