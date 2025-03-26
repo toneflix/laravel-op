@@ -15,12 +15,26 @@ class ConfigurationSeeder extends Seeder
      */
     public function run()
     {
-        Cache::forget('configuration::build');
-        Configuration::truncate();
-        Configuration::insert([
+        Cache::forget('laravel-dbconfig.configurations::build');
+
+        Configuration::upsert([
             [
                 'key' => 'app_logo',
                 'title' => 'App Logo',
+                'value' => null,
+                'type' => 'file',
+                'count' => null,
+                'max' => null,
+                'col' => 6,
+                'autogrow' => false,
+                'hint' => '',
+                'secret' => false,
+                'group' => 'main',
+                'choices' => json_encode([]),
+            ],
+            [
+                'key' => 'email_banner',
+                'title' => 'Email Banner',
                 'value' => null,
                 'type' => 'file',
                 'count' => null,
@@ -75,20 +89,6 @@ class ConfigurationSeeder extends Seeder
                 'choices' => json_encode([]),
             ],
             [
-                'key' => 'allow_default_images',
-                'title' => 'Allow Default Images',
-                'value' => true,
-                'type' => 'boolean',
-                'count' => null,
-                'max' => null,
-                'col' => 6,
-                'autogrow' => false,
-                'hint' => 'Determines wether default images or null should be used in place of missing images',
-                'secret' => false,
-                'group' => 'main',
-                'choices' => json_encode([]),
-            ],
-            [
                 'key' => 'prefered_sms_channel',
                 'title' => 'Prefered SMS Channel',
                 'value' => 'TWILLIO',
@@ -131,7 +131,7 @@ class ConfigurationSeeder extends Seeder
                 'choices' => json_encode([]),
             ],
             [
-                'key' => 'verify-phone',
+                'key' => 'verify_phone',
                 'title' => 'Verify Phone',
                 'value' => false,
                 'type' => 'boolean',
@@ -154,6 +154,20 @@ class ConfigurationSeeder extends Seeder
                 'col' => 6,
                 'autogrow' => false,
                 'hint' => 'How long tokens should live (secs.)',
+                'secret' => false,
+                'group' => 'access',
+                'choices' => json_encode([]),
+            ],
+            [
+                'key' => 'enable_admin_permission_middleware',
+                'title' => 'Enable Admin Permission Middleware',
+                'value' => true,
+                'type' => 'boolean',
+                'count' => null,
+                'max' => null,
+                'col' => 6,
+                'autogrow' => false,
+                'hint' => 'If disabled, authorization is available to everyone. (disable in production)',
                 'secret' => false,
                 'group' => 'access',
                 'choices' => json_encode([]),
@@ -228,6 +242,6 @@ class ConfigurationSeeder extends Seeder
                 'group' => 'misc',
                 'choices' => json_encode([]),
             ],
-        ]);
+        ], ['key'], ['title', 'value', 'hint', 'group', 'max', 'col', 'autogrow', 'secret', 'choices']);
     }
 }

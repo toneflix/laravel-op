@@ -16,6 +16,8 @@ class NotificationTemplateController extends Controller
      */
     public function index(/*Request $request*/)
     {
+        \App\Enums\Permission::NOTIFICATIONS_TEMPS->authorize();
+
         $query = NotificationTemplate::query();
 
         $templates = $query->latest()->get();
@@ -36,6 +38,8 @@ class NotificationTemplateController extends Controller
      */
     public function show(NotificationTemplate $template)
     {
+        \App\Enums\Permission::NOTIFICATIONS_TEMPS->authorize();
+
         return (new NotificationTemplateResource($template))->additional([
             'message' => HttpStatus::message(HttpStatus::OK),
             'status' => 'success',
@@ -48,18 +52,36 @@ class NotificationTemplateController extends Controller
      */
     public function update(Request $request, NotificationTemplate $template)
     {
+        \App\Enums\Permission::NOTIFICATIONS_TEMPS->authorize();
+
         if ($template->id === -1) {
             unset($template->id);
         }
 
-        $template->html = $request->html;
-        $template->plain = $request->plain;
-        $template->subject = $request->subject;
+        $template->sms = $request->sms;
         $template->args = $request->args;
+        $template->html = $request->boolean('active') ? $request->html : null;
+        $template->lines = $request->lines;
+        $template->plain = $request->plain;
+        $template->active = $request->boolean('active');
+        $template->subject = $request->subject;
+        $template->footnote = $request->footnote;
+        $template->copyright = $request->copyright;
         $template->save();
 
         return (new NotificationTemplateResource($template))->additional([
             'message' => __('Notification template successfully saved.'),
+            'status' => 'success',
+            'statusCode' => HttpStatus::OK,
+        ])->response()->setStatusCode(HttpStatus::OK->value);
+    }
+
+    public function destroy(Request $request, NotificationTemplate $template)
+    {
+        $template->delete();
+
+        return (new NotificationTemplateResource($template->resolveRouteBinding($template->key)))->additional([
+            'message' => __('Notification template has been reset to default state.'),
             'status' => 'success',
             'statusCode' => HttpStatus::OK,
         ])->response()->setStatusCode(HttpStatus::OK->value);

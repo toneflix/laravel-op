@@ -54,9 +54,20 @@ return [
     | Feel free to add or remove as per your requirements.
     */
     'permissions' => [
+        'dashboard',
+        'transactions',
         'manage-users',
         'manage-admins',
+        'configuration',
         'manage-configuration',
+
+        'users.user',
+        'users.list',
+        'users.create',
+        'users.update',
+        'users.delete',
+
+        'notifications-temps',
     ],
     /*
     |--------------------------------------------------------------------------

@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\NotificationTemplateController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-$permissionMiddlewares = 'role:'.implode('|', config('permission-defs.roles', []));
+$permissionMiddlewares = 'role:' . implode('|', config('permission-defs.roles', []));
 
 Route::middleware(['auth:sanctum', $permissionMiddlewares])->prefix('admin')->group(function () {
     Route::apiResource('users', UserController::class);
@@ -14,5 +14,5 @@ Route::middleware(['auth:sanctum', $permissionMiddlewares])->prefix('admin')->gr
 
     // Notifications Templates
     Route::apiResource('configurations/notifications/templates', NotificationTemplateController::class)
-        ->except(['store', 'destroy']);
+        ->except(['store']);
 });

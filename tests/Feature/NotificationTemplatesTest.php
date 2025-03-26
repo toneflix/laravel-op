@@ -47,7 +47,7 @@ class NotificationTemplatesTest extends TestCase
         $admin->syncRoles(config('permission-defs.roles', []));
         $admin->syncPermissions(config('permission-defs.permissions', []));
 
-        $key = array_keys(config('messages'))[1];
+        $key = array_keys(config('messages'))[3];
 
         $message = Provider::messageParser(
             $key,
@@ -64,6 +64,7 @@ class NotificationTemplatesTest extends TestCase
 
         $this->assertStringContainsString('0000', $message->toPlain());
         $this->assertStringContainsString('0000-0000-0000-0000', $message->toMail()->render());
+        $this->assertStringContainsString('&copy;' . date('Y'), $message->toMail()->render());
         $this->assertInstanceOf(MailMessage::class, $message->toMail());
     }
 }

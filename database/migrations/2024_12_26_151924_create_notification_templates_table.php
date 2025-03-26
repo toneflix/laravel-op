@@ -19,7 +19,11 @@ return new class extends Migration
             $table->string('subject')->nullable();
             $table->text('plain')->nullable();
             $table->text('html')->nullable();
+            $table->text('sms')->nullable();
+            $table->text('footnote')->nullable();
+            $table->text('copyright')->nullable();
             $table->json('args')->nullable();
+            $table->json('lines')->nullable();
             $table->json('allowed')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
