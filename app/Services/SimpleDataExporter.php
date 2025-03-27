@@ -33,7 +33,7 @@ class SimpleDataExporter
     /**
      *
      * @param integer $perPage
-     * @param array $emails
+     * @param array<int, string> $emails
      * @param array<int, string> $dataset
      */
     public function __construct(

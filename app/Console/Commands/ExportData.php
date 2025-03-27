@@ -15,6 +15,7 @@ class ExportData extends Command
     protected $signature = 'app:export
                             {dataset?* : List of exportable dataset (Allowed options are the id defined in your exports.)}
                             {--Q|queue : Queue the process for later}
+                            {--P|per_page=50 : Number of results to add to each sheet}
                             {--e|emails=* : Email addresses that should get exported data notification}
                            ';
 
@@ -33,8 +34,8 @@ class ExportData extends Command
     public function handle()
     {
         (new SimpleDataExporter(
-            perPage: 50,
-            emails: [],
+            perPage: (int) $this->option('per_page'),
+            emails: $this->option('emails'),
             dataset: $this->argument('dataset'),
         ))->export();
 
