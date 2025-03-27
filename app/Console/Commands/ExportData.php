@@ -13,7 +13,9 @@ class ExportData extends Command
      * @var string
      */
     protected $signature = 'app:export
-                            {--Q|queue}
+                            {dataset?* : List of exportable dataset (Allowed options are the id defined in your exports.)}
+                            {--Q|queue : Queue the process for later}
+                            {--e|emails=* : Email addresses that should get exported data notification}
                            ';
 
     /**
@@ -30,7 +32,11 @@ class ExportData extends Command
      */
     public function handle()
     {
-        (new SimpleDataExporter(50))->export();
+        (new SimpleDataExporter(
+            perPage: 50,
+            emails: [],
+            dataset: $this->argument('dataset'),
+        ))->export();
 
         return 0;
     }

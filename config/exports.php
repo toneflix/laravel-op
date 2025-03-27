@@ -15,6 +15,7 @@ return [
 
     'set' => [
         [
+            'id' => 'users',
             'model' => \App\Models\User::class,
             'name' => 'User Data',
             'keywords' => 'data,user data,exports,laravel op',

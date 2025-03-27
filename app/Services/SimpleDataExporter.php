@@ -22,11 +22,29 @@ class SimpleDataExporter
 
     protected array $processing = [];
 
+    protected array $valid_ids = [];
+
+    /**
+     *
+     * @var \Illuminate\Support\Collection<int,array{id:string,model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>}>
+     */
+    protected \Illuminate\Support\Collection $exportables;
+
+    /**
+     *
+     * @param integer $perPage
+     * @param array $emails
+     * @param array<int, string> $dataset
+     */
     public function __construct(
         protected int $perPage = 50,
         protected array $emails = [],
+        protected array $dataset = [],
     ) {
-        $this->data_emails = collect($emails)->map(fn($e) => str($e)); //dbconfig('notifiable_emails', collect([]))->map(fn($e) => str($e));
+        $this->data_emails = collect($emails)->map(fn($e) => str($e));
+        $this->exportables = collect(config('exports.set', []));
+        $this->valid_ids = $this->exportables->pluck('id')->toArray();
+        //dbconfig('notifiable_emails', collect([]))->map(fn($e) => str($e));
     }
 
     /**
@@ -49,14 +67,21 @@ class SimpleDataExporter
             });
     }
 
-    private function exportData(): void
+    /**
+     * Export data
+     *
+     * @param ?array<int,string> $types
+     * @return void
+     */
+    private function exportData(?array $types = null): void
     {
         /** @var array<int,array{model:class-string<TModel>,name:string,columns:array<int,string>}> $set */
-        $set = config('exports.set', []);
+        $set = $this->exportables->when($types, fn($sets) => $sets->filter(fn($s) => in_array($s['id'], $types)));
 
         foreach ($set as $exportable) {
             if ($exportable['model']::count() > 0) {
-                $path = 'exports/users-dataset/data-batch-0.xlsx';
+                $path = "exports/{$exportable['id']}-dataset/data-export.xlsx";
+
                 (new DataExports($exportable, $this->perPage))->store($path);
 
                 $this->dispatchMails(
@@ -71,19 +96,41 @@ class SimpleDataExporter
     /**
      * Perform the actual export
      *
-     * @param ?string $type
+     * @param ?array<int,string> $types
      * @return void
      */
-    public function export(?string $type = null): void
+    public function export(?array $types = null): void
     {
-        if ($type) {
-            $this->processing = array_merge($this->processing, [$type]);
-            $this->exportData($type);
+        if ($types) {
+            $this->processing = array_merge($this->processing, $types);
+            $this->exportData($types);
         }
     }
 
     public function __destruct()
     {
+        if (!empty($this->dataset)) {
+            $validDataset = [];
+            foreach ($this->dataset as $dataset) {
+                $valids = join(',', $this->valid_ids);
+
+                if (!in_array($dataset, $this->valid_ids)) {
+                    throw new \Exception(
+                        "$dataset is not a valid dataset, only \"$valids\" are allowed, check you exports.set config",
+                        1
+                    );
+                }
+
+                $validDataset[] = $dataset;
+            }
+
+            if (empty($this->processing)) {
+                $this->exportData($validDataset);
+            }
+
+            return;
+        }
+
         if (empty($this->processing)) {
             $this->exportData();
         }

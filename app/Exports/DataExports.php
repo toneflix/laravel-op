@@ -33,7 +33,7 @@ class DataExports implements WithMultipleSheets, WithProperties
     ];
 
     /**
-     * @param array{model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>} $exportable
+     * @param array{id:string,model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>} $exportable
      * @param int $perPage
      *
      */

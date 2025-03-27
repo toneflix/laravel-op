@@ -22,7 +22,7 @@ class DataSheets implements FromCollection, ShouldAutoSize, WithHeadings, WithMa
     /**
      * The sheets constructor
      *
-     * @param array{model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>} $exportable
+     * @param array{id:string,model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>} $exportable
      * @param int $page
      * @param  \Illuminate\Database\Eloquent\Collection<int, TModel>  $submisions
      */
