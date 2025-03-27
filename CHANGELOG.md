@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.3 - 2025-03-27
+
+- feat: Add support for passing custom `emails` and `per_page` to SimpleDataExporter
+  **Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.2...3.0.3
+
 ## 3.0.2 - 2025-03-27
 
 - feat: Allow exporting specific datasets only.
