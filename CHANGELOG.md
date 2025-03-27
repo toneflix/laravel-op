@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.2 - 2025-03-27
+
+- feat: Allow exporting specific datasets only.
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.1...3.0.2
+
 ## 3.0.1 - 2025-03-27
 
 - feat: Add Data Exporter.
