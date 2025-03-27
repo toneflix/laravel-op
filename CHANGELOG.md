@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.1 - 2025-03-27
+
+- feat: Add Data Exporter.
+- feat!: Rename Providers helper to Provider
+- fix: Fix wrong Provider imports
+- fix: Fix notification templates.
+- feat: Ensure permission check for default admin controllers.
+- fix: Remove Config Casts
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.0...3.0.1
+
 ## 3.0.0 - 2025-03-26
 
 - Update dependencies to support laravel 12
