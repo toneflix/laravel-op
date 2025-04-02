@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
-    return view('welcome');
+    return [
+        'api' => dbconfig('app_name'),
+        'version' => VERSION
+    ];
 });
 
 Route::get('download/formdata/{timestamp}/{form}/{batch?}', function ($timestamp, $data, int $batch = 0) {

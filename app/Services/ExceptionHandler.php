@@ -7,7 +7,7 @@ use App\Helpers\Provider;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Exceptions\Handler;
+// use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Exceptions\RegisterErrorViewPaths;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
@@ -100,7 +100,7 @@ class ExceptionHandler // extends Handler
     {
         return Provider::response()->error([
             'message' => static::$message ?? $msg,
-            ...array_merge($misc, ['data' => new \stdClass()]),
+            ...array_merge($misc, ['data' => []]),
         ], $code);
     }
 

@@ -152,6 +152,10 @@ return [
             'path' => 'media/logos/',
             'default' => 'default.png',
         ],
+        'dbconfig' => [
+            'path' => 'media/default/',
+            'default' => 'default.png',
+        ],
         'private' => [
             'files' => [
                 'path' => 'files/',
