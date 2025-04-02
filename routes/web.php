@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 Route::get('/', function () {
     return [
         'api' => dbconfig('app_name'),
-        'version' => VERSION
+        'version' => OP_VERSION
     ];
 });
 
