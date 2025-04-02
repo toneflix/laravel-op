@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.4 - 2025-04-02
+
+- Add loader to load Constants dir
+- Add Op constant file to define usefull constants.
+- The default web route now renders the application info in json.
+- Add dbconfig fileable collection.
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.3...3.0.4
+
 ## 3.0.3 - 2025-03-27
 
 - feat: Add support for passing custom `emails` and `per_page` to SimpleDataExporter
