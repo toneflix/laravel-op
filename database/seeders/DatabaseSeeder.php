@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Console\Commands\SyncRoles;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,12 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        if (!User::whereEmail('admin@example.com')->exists()) {
+            $admin = User::factory()->create([
+                'firstname' => 'Default',
+                'lastname' => 'Admin',
+                'email' => 'admin@example.com',
+            ]);
 
-        User::factory()->create([
-            'firstname' => 'Test',
-            'lastname' => 'User',
-            'email' => 'test@example.com',
-        ]);
+            Artisan::call(SyncRoles::class);
+            Artisan::call(SyncRoles::class, [
+                'users' => [$admin->id],
+                '--supes' => true,
+                '--silent' => true,
+                '--no-interaction' => true
+            ]);
+        }
     }
 }
