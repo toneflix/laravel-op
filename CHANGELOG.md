@@ -2,6 +2,13 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.6 - 2025-04-03
+
+- Add show option and support for no-interaction in the app:sync-roles command.
+- Add default admin creation to DatabaseSeeder
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.5...3.0.6
+
 ## 3.0.5 - 2025-04-02
 
 - Add `db:seed ConfigurationSeeder` artisan comand to `post-create-project-cmd` script.
