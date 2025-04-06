@@ -8,8 +8,17 @@ return [
     |
     | These configuration options determine what extra metadata will be
     | appended to your API response.
+    | Providing a map allows modification of the metadata keys.
     |
     | Supported options: "meta", "links"
+    |
+    | Examples
+    | 'paginated_response_extra' => ['meta', 'links'],
+    | - Or Mapped -
+    | 'paginated_response_extra' => [
+    |    'meta' => 'metadata',
+    |    'links' => 'linkdata',
+    | ],
     |
     */
 
@@ -60,4 +69,15 @@ return [
         'prev' => 'prev',
         'next' => 'next',
     ],
+
+    /*
+    |---------------------------------------------------------------------------------
+    | Camel Casing
+    |---------------------------------------------------------------------------------
+    |
+    | When enables, we will try to enforce camel casing for all resource keys
+    |
+    */
+
+    'prefer_camel_casing' => false,
 ];
