@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use App\Models\User;
 use Illuminate\Support\Collection;
 
 class SyncRoles extends Command
@@ -27,6 +26,7 @@ class SyncRoles extends Command
             {--s|supes : Force grant the super admin role role}
             {--t|reset : Resets the permissions and roles, when makin (Use with caution)}
             {--m|make : Create the roles and permissions (Runs by default if user(s) are not specified)}
+            {--a|admin : Use Admin model}
     ';
 
     /**
@@ -36,11 +36,18 @@ class SyncRoles extends Command
      */
     protected $description = 'Command description';
 
+    protected string|null $guard = null;
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        if ($this->option('admin')) {
+            config(['permission-defs.user-model' => \App\Models\Admin::class]);
+            $this->guard = 'admin';
+        }
+
         if ($this->option('show')) {
             $this->show();
         } elseif ($this->option('remove')) {
@@ -136,11 +143,11 @@ class SyncRoles extends Command
     public function sync()
     {
         $users = $this->argument('users');
-        $roles = $this->option('roles');
         $supes = $this->option('supes');
-        $permissions = $this->option('permissions');
+        $roles = collect($this->option('roles'));
+        $permissions = collect($this->option('permissions'));
 
-        /** @var \Illuminate\Database\Eloquent\Collection<TKey,\App\Models\User> */
+        /** @var \Illuminate\Database\Eloquent\Collection<TKey,\App\Models\User|\App\Models\Admin> */
         $users = app(config('permission-defs.user-model', []))->findMany($users);
 
         $conf = str_ireplace(
@@ -154,24 +161,28 @@ class SyncRoles extends Command
                 )
         );
 
-        if (empty($permissions) && empty($roles)) {
+        if ($permissions->isEmpty() && $roles->isEmpty()) {
             // Check if the command is running in console then prompt the user to confirm.
             if (app()->runningInConsole() && ($this->option('no-interaction') || $this->confirm($conf))) {
                 $roles = Role::whereNotIn(
                     'name',
                     ! $supes ? [config('permission-defs.super-admin-role', 'super-admin')] : []
-                )->pluck('name');
+                )->when($this->guard, fn($q) => $q->where('guard_name', $this->guard))->get();
             } else {
                 $this->error('No roles or permissions were specified. Exiting...');
 
                 return;
             }
         } elseif (! empty($roles)) {
-            $roles = Role::whereIn('name', $roles)->orWhereIn('id', $roles)->pluck('name');
+            $roles = Role::where(fn($q) => $q->whereIn('name', $roles)->orWhereIn('id', $roles))
+                ->when($this->guard, fn($q) => $q->where('guard_name', $this->guard))
+                ->get();
         }
 
         if (! empty($permissions)) {
-            $permissions = Permission::whereIn('name', $permissions)->orWhereIn('id', $permissions)->pluck('name');
+            $permissions = Permission::where(fn($q) => $q->whereIn('name', $permissions)->orWhereIn('id', $permissions))
+                ->when($this->guard, fn($q) => $q->where('guard_name', $this->guard))
+                ->get();
         }
 
         $users->each(function ($user) use ($roles, $permissions) {
@@ -224,8 +235,8 @@ class SyncRoles extends Command
         $rolesArray = collect(config('permission-defs.roles', []));
         $permissionsArray = collect(config('permission-defs.permissions', []));
 
-        $rolesArray->each(fn($role) => Role::findOrCreate($role));
-        $permissionsArray->each(fn($role) => Permission::findOrCreate($role));
+        $rolesArray->each(fn($role) => Role::findOrCreate($role, $this->guard));
+        $permissionsArray->each(fn($role) => Permission::findOrCreate($role, $this->guard));
 
         $roles = Role::withCount('permissions')->get();
         $permissions = Permission::get();
@@ -251,7 +262,10 @@ class SyncRoles extends Command
 
     public function show(): void
     {
-        $admins = User::query()
+        /** @var \Illuminate\Database\Eloquent\Builder<\App\Models\User|\App\Models\Admin> */
+        $query = app(config('permission-defs.user-model', []))->query();
+
+        $admins = $query
             ->whereDoesntHave('roles', fn($q) => $q->whereName('admin'))
             ->whereDoesntHave('roles', fn($q) => $q->whereName('super-admin'))
             ->where(fn($q) => $q->whereHas('roles')->orWhereHas('permissions'))
