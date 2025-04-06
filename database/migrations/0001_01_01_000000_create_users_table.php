@@ -28,6 +28,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
+            $table->timestamp('last_seen')->nullable();
             $table->timestamp('deleting_at')->nullable();
             $table->timestamp('last_attempt')->nullable();
             $table->json('data')->nullable();
