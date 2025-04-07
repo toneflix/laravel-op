@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 3.0.7 - 2025-04-06
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.6...3.0.7
+
 ## 3.0.6 - 2025-04-03
 
 - Add show option and support for no-interaction in the app:sync-roles command.
