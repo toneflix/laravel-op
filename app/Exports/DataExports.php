@@ -33,7 +33,7 @@ class DataExports implements WithMultipleSheets, WithProperties
     ];
 
     /**
-     * @param array{id:string,model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>} $exportable
+     * @param array{id:string,model:class-string<TModel>,model_id:string|int|null,keywords:string,name:string,columns:array<int,string>} $exportable
      * @param int $perPage
      *
      */
@@ -44,11 +44,22 @@ class DataExports implements WithMultipleSheets, WithProperties
 
     public function sheets(): array
     {
-        $formData = $this->exportable['model']::query();
+        /** @var \Illuminate\Database\Eloquent\Builder $dataQuery */
+        $dataQuery = $this->exportable['model']::query();
+
+        if (!empty($this->exportable['model_id'])) {
+            $keyName = (new $this->exportable['model'])->getKeyName();
+
+            $key = is_array($this->exportable['model_id'])
+                ? $this->exportable['model_id']
+                : [$this->exportable['model_id']];
+
+            $dataQuery->whereIn($keyName, $key);
+        }
 
         $sheets = [];
 
-        $formData->chunk($this->perPage, function ($data, $page) use (&$sheets) {
+        $dataQuery->chunk($this->perPage, function ($data, $page) use (&$sheets) {
             $sheets[] = new DataSheets($this->exportable, $page, $data);
         });
 

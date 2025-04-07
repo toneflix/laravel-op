@@ -73,24 +73,49 @@ class SimpleDataExporter
      * @param ?array<int,string> $types
      * @return void
      */
-    private function exportData(?array $types = null): void
+    private function exportData(?array $types = null, bool $noMails = false): void
     {
-        /** @var array<int,array{model:class-string<TModel>,name:string,columns:array<int,string>}> $set */
+        /** @var array<int,array{model:class-string<TModel>,model_id:string|int|null,name:string,columns:array<int,string>}> $set */
         $set = $this->exportables->when($types, fn($sets) => $sets->filter(fn($s) => in_array($s['id'], $types)));
 
         foreach ($set as $exportable) {
             if ($exportable['model']::count() > 0) {
-                $path = "exports/{$exportable['id']}-dataset/data-export.xlsx";
+                echo  $path = "exports/{$exportable['id']}-dataset/data-export.xlsx";
 
                 (new DataExports($exportable, $this->perPage))->store($path);
 
-                $this->dispatchMails(
-                    new $exportable['model'](),
-                    $exportable['name'],
-                    0
-                );
+                if (!$noMails) {
+                    $this->dispatchMails(
+                        new $exportable['model'](),
+                        $exportable['name'],
+                        0
+                    );
+                }
             }
         }
+    }
+
+    /**
+     * Export data
+     *
+     * @param Model $model
+     * @return self
+     */
+    public function exportModel(Model $model)
+    {
+        /** @var array<int,array{model:class-string<TModel>,model_id:string|int|null,name:string,columns:array<int,string>}> $set */
+
+        $name = str($model->getMorphClass())->afterLast('\\')->toString();
+
+        $this->exportables = collect([[
+            'id' => strtolower($name) . '-' . $model->id,
+            'model' => $model->getMorphClass(),
+            'model_id' => $model->id,
+            'name' => $name . ' Data',
+            'keywords' => 'data,exports,laravel op, ' . strtolower($name) . ' data',
+            'columns' => $model->getFillable()
+        ]]);
+        return $this;
     }
 
     /**
@@ -99,11 +124,11 @@ class SimpleDataExporter
      * @param ?array<int,string> $types
      * @return void
      */
-    public function export(?array $types = null): void
+    public function export(?array $types = null, bool $noMails = false): void
     {
         if ($types) {
             $this->processing = array_merge($this->processing, $types);
-            $this->exportData($types);
+            $this->exportData($types, $noMails);
         }
     }
 

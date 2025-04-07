@@ -15,17 +15,18 @@ return [
 
     'set' => [
         [
-            'id' => 'users',
-            'model' => \App\Models\User::class,
-            'name' => 'User Data',
-            'keywords' => 'data,user data,exports,laravel op',
+            'id' => 'users', // String
+            'model' => \App\Models\User::class, // class-string
+            'model_id' => null, // integer|string|null
+            'name' => 'User Data', // string
+            'keywords' => 'data,user data,exports,laravel op', // string
             'columns' => [
                 // 'id',
                 'firstname',
                 'lastname',
                 'email',
                 'created_at',
-            ]
+            ] // string[]
         ]
     ],
 
