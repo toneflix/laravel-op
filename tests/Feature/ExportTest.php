@@ -7,6 +7,7 @@ use App\Services\SimpleDataExporter;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 
 class ExportTest extends TestCase
 {
@@ -86,4 +87,18 @@ class ExportTest extends TestCase
 
         Storage::disk('protected')->delete($file);
     }
+
+    // public function test_can_queue_exports(): void
+    // {
+    //     Queue::fake([\Maatwebsite\Excel\Jobs\QueueExport::class]);
+    //     User::factory(3)->create();
+
+    //     (new SimpleDataExporter(50, ['user@example.com'], [], false))->export();
+
+    //     Queue::assertPushed(\Maatwebsite\Excel\Jobs\QueueExport::class);
+
+    //     $file = collect(Storage::disk('protected')->allFiles())->last();
+
+    //     Storage::disk('protected')->delete($file);
+    // }
 }

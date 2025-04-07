@@ -25,21 +25,21 @@ class SimpleDataExporter
     protected array $valid_ids = [];
 
     /**
-     *
      * @var \Illuminate\Support\Collection<int,array{id:string,model:class-string<TModel>,keywords:string,name:string,columns:array<int,string>}>
      */
     protected \Illuminate\Support\Collection $exportables;
 
     /**
-     *
-     * @param integer $perPage
-     * @param array<int, string> $emails
-     * @param array<int, string> $dataset
+     * @param  int  $perPage
+     * @param  array<int, string>  $emails
+     * @param  array<int, string>  $dataset
+     * @param  bool  $queue
      */
     public function __construct(
         protected int $perPage = 50,
         protected array $emails = [],
         protected array $dataset = [],
+        protected bool $queue = false,
     ) {
         $this->data_emails = collect($emails)->map(fn($e) => str($e));
         $this->exportables = collect(config('exports.set', []));
@@ -70,8 +70,7 @@ class SimpleDataExporter
     /**
      * Export data
      *
-     * @param ?array<int,string> $types
-     * @return void
+     * @param  ?array<int,string>  $types
      */
     private function exportData(?array $types = null, bool $noMails = false): void
     {
@@ -80,16 +79,16 @@ class SimpleDataExporter
 
         foreach ($set as $exportable) {
             if ($exportable['model']::count() > 0) {
-                echo  $path = "exports/{$exportable['id']}-dataset/data-export.xlsx";
+                $path = "exports/{$exportable['id']}-dataset/data-export.xlsx";
 
-                (new DataExports($exportable, $this->perPage))->store($path);
+                if ($this->queue) {
+                    (new DataExports($exportable, $this->perPage))->queue($path);
+                } else {
+                    (new DataExports($exportable, $this->perPage))->store($path);
 
-                if (!$noMails) {
-                    $this->dispatchMails(
-                        new $exportable['model'](),
-                        $exportable['name'],
-                        0
-                    );
+                    if (! $noMails) {
+                        $this->dispatchMails(new $exportable['model'](), $exportable['name'], 0);
+                    }
                 }
             }
         }
@@ -98,13 +97,11 @@ class SimpleDataExporter
     /**
      * Export data
      *
-     * @param Model $model
      * @return self
      */
     public function exportModel(Model $model)
     {
         /** @var array<int,array{model:class-string<TModel>,model_id:string|int|null,name:string,columns:array<int,string>}> $set */
-
         $name = str($model->getMorphClass())->afterLast('\\')->toString();
 
         $this->exportables = collect([[
@@ -113,16 +110,16 @@ class SimpleDataExporter
             'model_id' => $model->id,
             'name' => $name . ' Data',
             'keywords' => 'data,exports,laravel op, ' . strtolower($name) . ' data',
-            'columns' => $model->getFillable()
+            'columns' => $model->getFillable(),
         ]]);
+
         return $this;
     }
 
     /**
      * Perform the actual export
      *
-     * @param ?array<int,string> $types
-     * @return void
+     * @param  ?array<int,string>  $types
      */
     public function export(?array $types = null, bool $noMails = false): void
     {
@@ -134,12 +131,12 @@ class SimpleDataExporter
 
     public function __destruct()
     {
-        if (!empty($this->dataset)) {
+        if (! empty($this->dataset)) {
             $validDataset = [];
             foreach ($this->dataset as $dataset) {
-                $valids = join(',', $this->valid_ids);
+                $valids = implode(',', $this->valid_ids);
 
-                if (!in_array($dataset, $this->valid_ids)) {
+                if (! in_array($dataset, $this->valid_ids)) {
                     throw new \Exception(
                         "$dataset is not a valid dataset, only \"$valids\" are allowed, check you exports.set config",
                         1

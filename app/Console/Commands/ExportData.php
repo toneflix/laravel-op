@@ -34,9 +34,10 @@ class ExportData extends Command
     public function handle()
     {
         (new SimpleDataExporter(
-            perPage: (int) $this->option('per_page'),
+            perPage: ((int) $this->option('per_page')) ?? 50,
             emails: $this->option('emails'),
             dataset: $this->argument('dataset'),
+            queue: $this->option('queue'),
         ))->export();
 
         return 0;

@@ -22,6 +22,7 @@
         "laravel/tinker": "^2.10",
         "maatwebsite/excel": "^3.1",
         "matomo/device-detector": "^6.4",
+        "predis/predis": "^2.3",
         "spatie/laravel-permission": "^6.16",
         "toneflix-code/kudisms-notification": "^1.1",
         "toneflix-code/laravel-dbconfig": "^1.1",
