@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exports\DataExports;
+use App\Jobs\DispatchExportsNotifications;
 use App\Mail\ReportGenerated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
@@ -48,26 +49,6 @@ class SimpleDataExporter
     }
 
     /**
-     * Dispatch the exported data to the data_emails
-     */
-    private function dispatchMails(
-        Model $dataset,
-        string $title,
-        int $batch = 1,
-    ): void {
-        $this->data_emails
-            ->unique()
-            ->filter(fn($e) => $e->isNotEmpty())
-            ->each(function ($email) use ($dataset, $batch, $title) {
-                RateLimiter::attempt(
-                    'send-report:' . $email . $batch,
-                    5,
-                    fn() => Mail::to($email->toString())->send(new ReportGenerated($dataset, $batch, $title))
-                );
-            });
-    }
-
-    /**
      * Export data
      *
      * @param  ?array<int,string>  $types
@@ -82,12 +63,24 @@ class SimpleDataExporter
                 $path = "exports/{$exportable['id']}-dataset/data-export.xlsx";
 
                 if ($this->queue) {
-                    (new DataExports($exportable, $this->perPage))->queue($path);
+                    (new DataExports($exportable, $this->perPage))->queue($path)->chain(! $noMails ? [
+                        new DispatchExportsNotifications(
+                            $exportable['model']::first(),
+                            $this->data_emails,
+                            $exportable['name'],
+                            0
+                        )
+                    ] : []);
                 } else {
                     (new DataExports($exportable, $this->perPage))->store($path);
 
                     if (! $noMails) {
-                        $this->dispatchMails(new $exportable['model'](), $exportable['name'], 0);
+                        DispatchExportsNotifications::dispatch(
+                            $exportable['model']::first(),
+                            $this->data_emails,
+                            $exportable['name'],
+                            0
+                        );
                     }
                 }
             }

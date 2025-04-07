@@ -98,6 +98,18 @@ return [
             'If you do not recognize this request no further action is required or you can take steps to secure your account.',
         ],
     ],
+    'send_report' => [
+        'subject' => ':form_name Report is Ready.',
+        'lines' => [
+            'Your :period report report for :form_name is ready!',
+            [
+                'link' => ':link',
+                'title' => 'Download Report',
+            ],
+            'For security and privacy concerns this link expires in :ttl and is only usable once',
+            'If you have any concerns please mail <a href="mailto::mailto">:mailto</a> for support.',
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
