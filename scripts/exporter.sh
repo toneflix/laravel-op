@@ -4,10 +4,12 @@ USER__GROUP='www-data'
 dataset=()
 
 helper() {
-    echo "usage:            ./exporter.sh username:usergroup [<dataset>...]"
-    echo "E.g:              ./exporter.sh www-data:www-data forms users"
+    echo ""
+    echo "usage:            $0  username:usergroup [<dataset>...]"
+    echo "E.g:              $0  www-data:www-data forms users"
     echo "Allowed Dataset:  forms, users, appointment and companies"
     echo "If you do not want to assign usergroup, set it as a period (.)"
+    echo ""
     exit 0
 }
 
