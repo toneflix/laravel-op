@@ -36,13 +36,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | This section allows defining value transformers for specific columns.
-    | You can use closures to format or transform data before export.
+    | Transformers are Helpers created in the App\Helpers\Transformer class.
+    | The first parameter is the name of the transformer (Helper) and the second
+    | is an array of arguments to send pass to the transformer method.
     |
     */
 
     'transformers' => [
-        'created_at' => static fn(\Illuminate\Support\Carbon $date) => $date->isoFormat('MMM DD, YYYY'),
-        'phone' => static fn(string $value) => str($value)->replace('+', ' +'),
+        'created_at' => ['formatDate', ['MMM DD, YYYY']],
+        'phone' => ['stringReplace', ['+', ' +']],
     ]
 
 ];
