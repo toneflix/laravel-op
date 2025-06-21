@@ -2,6 +2,7 @@
 
 namespace App\Exports\Sheets;
 
+use App\Helpers\Transformer;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -64,8 +65,12 @@ class DataSheets implements FromCollection, ShouldAutoSize, WithHeadings, WithMa
                 default => (string) $key
             };
 
-            if (isset(config('exports.transformers')[$key]) && is_callable(config('exports.transformers')[$key])) {
-                return [$valueKey => config('exports.transformers')[$key]($value)];
+            if (config("exports.transformers.$key.0") && method_exists(Transformer::class, config("exports.transformers.$key.0"))) {
+                $transformed = call_user_func_array(
+                    array(Transformer::class, config("exports.transformers.$key.0")),
+                    [$value, ...config("exports.transformers.$key.1")]
+                );
+                return [$valueKey => $transformed];
             }
 
             return [$valueKey => (string) $value];
