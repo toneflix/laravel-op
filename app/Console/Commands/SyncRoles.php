@@ -44,7 +44,7 @@ class SyncRoles extends Command
     public function handle()
     {
         if ($this->option('admin')) {
-            config(['permission-defs.user-model' => \App\Models\Admin::class]);
+            config(['permission-defs.user-model' => \App\Models\User::class]);
             $this->guard = 'admin';
         }
 
@@ -147,7 +147,7 @@ class SyncRoles extends Command
         $roles = collect($this->option('roles'));
         $permissions = collect($this->option('permissions'));
 
-        /** @var \Illuminate\Database\Eloquent\Collection<TKey,\App\Models\User|\App\Models\Admin> */
+        /** @var \Illuminate\Database\Eloquent\Collection<TKey,\App\Models\User> */
         $users = app(config('permission-defs.user-model', []))->findMany($users);
 
         $conf = str_ireplace(
@@ -262,7 +262,7 @@ class SyncRoles extends Command
 
     public function show(): void
     {
-        /** @var \Illuminate\Database\Eloquent\Builder<\App\Models\User|\App\Models\Admin> */
+        /** @var \Illuminate\Database\Eloquent\Builder<\App\Models\User> */
         $query = app(config('permission-defs.user-model', []))->query();
 
         $admins = $query
