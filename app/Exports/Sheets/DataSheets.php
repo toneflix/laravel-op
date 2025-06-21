@@ -67,7 +67,7 @@ class DataSheets implements FromCollection, ShouldAutoSize, WithHeadings, WithMa
 
             if (config("exports.transformers.$key.0") && method_exists(Transformer::class, config("exports.transformers.$key.0"))) {
                 $transformed = call_user_func_array(
-                    array(App\Helpers\Transformer::class, config("exports.transformers.$key.0")),
+                    array(Transformer::class, config("exports.transformers.$key.0")),
                     [$value, ...config("exports.transformers.$key.1")]
                 );
                 return [$valueKey => $transformed];
