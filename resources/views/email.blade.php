@@ -198,7 +198,7 @@
                                                         <tr>
                                                             <td style="width:70px;">
                                                                 <img height="auto"
-                                                                    src="{{ 'data:image/png;base64,' . base64_encode(File::get(public_path('logo.png'))) }}"
+                                                                    src="{{ 'data:image/png;base64,' . base64_encode(File::get(public_path('email-logo.png'))) }}"
                                                                     style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
                                                                     width="150" />
                                                             </td>
