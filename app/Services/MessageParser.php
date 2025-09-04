@@ -30,6 +30,13 @@ class MessageParser
     public $subject = '';
 
     /**
+     * The message $caption
+     *
+     * @var string
+     */
+    public $caption = '';
+
+    /**
      * The message body
      *
      * @var array<int,string|array>
@@ -146,6 +153,9 @@ class MessageParser
         // Parse the message subject
         $this->subject = trans($this->params['subject'] ?? config("messages.{$this->configKey}.subject", ''), $this->params);
 
+        // Parse the message caption
+        $this->caption = trans($this->params['caption'] ?? config("messages.{$this->configKey}.caption", ''), $this->params);
+
         if (! config("messages.{$this->configKey}")) {
             $this->notFound = true;
         }
@@ -158,6 +168,7 @@ class MessageParser
         $template = (new NotificationTemplate())->resolveRouteBinding($this->configKey);
 
         $this->subject = trans($template->subject, $this->params);
+        $this->caption = trans($template->caption ?? '', $this->params);
 
         $this->htmlMessage = $template && $template->active
             ? new \Illuminate\Support\HtmlString((string) trans($template->html, $this->params))
@@ -176,10 +187,12 @@ class MessageParser
                 $init = new static($this->configKey, $this->params);
                 $init->params['lines'] = $template->lines;
                 $init->params['subject'] = $template->subject;
+                $init->params['caption'] = $template->caption;
                 $parse = $init->parse();
 
                 $this->lines = $parse->lines;
                 $this->subject = $parse->subject;
+                $this->caption = $parse->caption;
             } else {
                 $this->lines = $template->lines;
             }
@@ -191,6 +204,7 @@ class MessageParser
                 'meta' => $this->meta,
                 'lines' => $this->lines,
                 'subject' => $this->subject,
+                'caption' => $this->caption,
             ]);
     }
 
@@ -221,6 +235,7 @@ class MessageParser
         $template = (new NotificationTemplate())->resolveRouteBinding($this->configKey);
 
         $this->subject = $template->subject;
+        $this->caption = $template->caption;
 
         $this->htmlMessage = $template && $template->active
             ? new \Illuminate\Support\HtmlString((string) trans($template->html, $this->params))
