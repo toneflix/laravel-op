@@ -355,7 +355,7 @@
                                                     <div
                                                         style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:300;line-height:20px;text-align:center;color:#fafafa;">
                                                         @isset($meta['copyright'])
-                                                            {{ $meta['copyright'] }}
+                                                            {!! $meta['copyright'] !!}
                                                         @else
                                                             &copy;{{ now()->format('Y') }}
                                                             {{ dbconfig('app_name') }}.,
