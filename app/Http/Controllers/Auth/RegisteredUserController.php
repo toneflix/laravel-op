@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
             'phone' => 'required_without:email|string|max:255|unique:users,phone',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'firstname' => ['nullable', 'string', 'max:255'],
-            'laststname' => ['nullable', 'string', 'max:255'],
+            'lastname' => ['nullable', 'string', 'max:255'],
         ], [
             'name.required_without' => 'Please enter your fullname.',
         ], [
