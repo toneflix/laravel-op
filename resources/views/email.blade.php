@@ -298,8 +298,8 @@
                                                         style="font-size:0px;padding:10px 25px;word-break:break-word;">
 
                                                         <div
-                                                            style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:300;line-height:20px;text-align:center;color:#000000;">
-                                                            {!! str($line)->replace('<a ', '<a style="color: #2e58ff; text-decoration: none"') !!}
+                                                            style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:300;line-height:20px;text-align:center;color:#929090;">
+                                                            {!! $meta['footnote'] !!}
                                                         </div>
                                                     </td>
                                                 </tr>
