@@ -64,7 +64,7 @@ class NotificationTemplatesTest extends TestCase
 
         $this->assertStringContainsString('0000', $message->toPlain());
         $this->assertStringContainsString('0000-0000-0000-0000', $message->toMail()->render());
-        $this->assertStringContainsString('&copy;' . date('Y'), $message->toMail()->render());
+        $this->assertStringContainsString('©' . date('Y'), $message->toMail()->render());
         $this->assertInstanceOf(MailMessage::class, $message->toMail());
     }
 }
