@@ -13,6 +13,7 @@ use Illuminate\Notifications\Messages\MailMessage;
  * @property int $id;
  * @property string $key The message template key;
  * @property string $subject The message subject;
+ * @property string $caption The message caption;
  * @property string $plain The message plain content;
  * @property string $html The message html content;
  * @property array<string, string> $args;
@@ -32,6 +33,7 @@ class NotificationTemplate extends Model
     protected $fillable = [
         'key',
         'subject',
+        'caption',
         'plain',
         'html',
         'args',
@@ -113,11 +115,13 @@ class NotificationTemplate extends Model
             ->view(['email', 'email-plain'], [
                 'lines' => $parsed->lines,
                 'subject' => $parsed->subject,
+                'caption' => $parsed->caption,
             ])->render();
 
         $template = new static([
             'id' => -1,
             'key' => $key,
+            'caption' => $parsed->caption,
             'subject' => $parsed->subject,
             'plain' => $parsed->plainBody,
             'html' => $html,
