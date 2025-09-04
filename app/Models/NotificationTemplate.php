@@ -116,6 +116,7 @@ class NotificationTemplate extends Model
                 'lines' => $parsed->lines,
                 'subject' => $parsed->subject,
                 'caption' => $parsed->caption,
+                'meta' => $parsed->meta,
             ])->render();
 
         $template = new static([
