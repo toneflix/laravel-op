@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Exports\Sheets\DataSheets;
+use Maatwebsite\Excel\Concerns\Export;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithProperties;
@@ -11,26 +12,9 @@ use Maatwebsite\Excel\Excel;
 /**
  * @template TModel
  */
-class DataExports implements WithMultipleSheets, WithProperties
+class DataExports implements Export, WithMultipleSheets, WithProperties
 {
     use Exportable;
-
-    /**
-     * Optional Writer Type
-     */
-    private $writerType = Excel::XLSX;
-
-    /**
-     * Optional Disk
-     */
-    private $disk = 'protected';
-
-    /**
-     * Optional Disk OPtions
-     */
-    private $diskOptions = [
-        'visibility' => 'public',
-    ];
 
     /**
      * @param array{id:string,model:class-string<TModel>,model_id:string|int|null,keywords:string,name:string,columns:array<int,string>} $exportable
@@ -40,7 +24,16 @@ class DataExports implements WithMultipleSheets, WithProperties
     public function __construct(
         protected array $exportable,
         protected int $perPage = 50,
-    ) {}
+    ) {
+        // These properties are declared by the Exportable trait itself (with
+        // native types), so they're set here rather than redeclared, which
+        // would otherwise be an incompatible property definition.
+        $this->writerType = Excel::XLSX;
+        $this->disk = 'protected';
+        $this->diskOptions = [
+            'visibility' => 'public',
+        ];
+    }
 
     public function sheets(): array
     {
