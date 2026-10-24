@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 4.0.2 - 2026-10-24
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/4.0.1...4.0.2
+
 ## 4.0.1 - 2026-10-24
 
 ### What's Changed
