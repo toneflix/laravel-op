@@ -49,7 +49,7 @@ trait ControllerCanExtend
 
         if ($this->paymentProcessor === 'paystack') {
             $paymentIntent = (new PaystackProcessor($request, $user))->intent($amount - $discount);
-        } elseif ($this->paymentProcessor === 'paystack') {
+        } elseif ($this->paymentProcessor === 'stripe') {
             $paymentIntent = (new StripeProcessor($request, $user))->intent($amount - $discount);
         } else {
             throw ValidationException::withMessages([
@@ -98,7 +98,7 @@ trait ControllerCanExtend
 
         if ($this->paymentProcessor === 'paystack') {
             $paymentIntent = (new PaystackProcessor($request, $user))->verify($reference);
-        } elseif ($this->paymentProcessor === 'paystack') {
+        } elseif ($this->paymentProcessor === 'stripe') {
             $paymentIntent = (new StripeProcessor($request, $user))->verify($reference);
         } else {
             throw ValidationException::withMessages([
