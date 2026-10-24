@@ -3,6 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Helpers\Provider;
+use App\Models\TempUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Stripe\Exception\ApiErrorException;
@@ -19,7 +20,7 @@ final class StripeProcessor implements PaymentInterface
     /**
      * StripeProcessor constructor.
      */
-    public function __construct(Request $request, ?User $user = null)
+    public function __construct(Request $request, User|TempUser|null $user = null)
     {
         // Stripe instance
         $this->request = $request;
