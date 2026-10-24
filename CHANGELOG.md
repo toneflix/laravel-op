@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 4.0.1 - 2026-10-24
+
+### What's Changed
+
+* docs: document what's bundled and why by @3m1n3nc3 in https://github.com/toneflix/laravel-op/pull/9
+* feat: wire up wallet payments via toneflix/laravel-pay-pocket by @3m1n3nc3 in https://github.com/toneflix/laravel-op/pull/8
+* chore: add AGENTS.md/CLAUDE.md and remove em/en dashes from README by @3m1n3nc3 in https://github.com/toneflix/laravel-op/pull/10
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/4.0.0...4.0.1
+
 ## 4.0.0 - 2026-10-24
 
 ### What's Changed
