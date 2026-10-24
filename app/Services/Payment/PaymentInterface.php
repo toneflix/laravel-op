@@ -9,7 +9,7 @@ interface PaymentInterface
      */
     public function __construct(
         \Illuminate\Http\Request $request,
-        \App\Models\User|\App\Models\TempUser $user
+        \App\Models\User|\App\Models\TempUser|null $user = null
     );
 
     /**

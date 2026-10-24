@@ -17,15 +17,18 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Toneflix\LaravelFileable\Traits\Fileable;
+use Toneflix\LaravelPayPocket\Interfaces\WalletOperations;
+use Toneflix\LaravelPayPocket\Traits\ManagesWallet;
 use Valorin\Random\Random;
 
 #[ScopedBy([NotDeletingUserScope::class])]
-class User extends Authenticatable
+class User extends Authenticatable implements WalletOperations
 {
     use Fileable;
     use HasApiTokens;
     use HasFactory;
     use HasRoles;
+    use ManagesWallet;
     use ModelCanExtend;
     use Notifiable;
 
