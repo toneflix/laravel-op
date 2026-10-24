@@ -127,12 +127,12 @@ class VerifyEmailPhoneController extends Controller
             $error = 'The code you provided has expired or does not exist.';
         }
 
-        // check if it has not expired: the time is 30 minutes and that the code is valid
+        // check if it has not expired: the default lifespan is 30 seconds, and that the code is valid
         $last_attempt = ($user->hasVerifiedPhone() && $user->last_attempt === null)
             ? $user->phone_verified_at
             : $user->last_attempt;
 
-        if ($requestCode !== $code || $last_attempt->diffInMinutes(now()) >= Provider::config('token_lifespan', 30)) {
+        if ($requestCode !== $code || $last_attempt->diffInSeconds(now()) >= Provider::config('token_lifespan', 30)) {
             return Provider::response()->error([
                 'errors' => ['code' => __($error)],
             ], HttpStatus::UNPROCESSABLE_ENTITY);
