@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-op` will be documented in this file
 
+## 4.0.0 - 2026-10-24
+
+### What's Changed
+
+* fix: payment processor dispatch and implicit-nullable parameters by @3m1n3nc3 in https://github.com/toneflix/laravel-op/pull/5
+* feat: upgrade to Laravel 13 and migrate dependencies by @3m1n3nc3 in https://github.com/toneflix/laravel-op/pull/6
+* docs: drop the toneflix-code vendor prefix from README by @3m1n3nc3 in https://github.com/toneflix/laravel-op/pull/7
+
+**Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.12...4.0.0
+
 ## 3.0.12 - 2025-09-04
 
 **Full Changelog**: https://github.com/toneflix/laravel-op/compare/3.0.11...3.0.12
