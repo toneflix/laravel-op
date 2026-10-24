@@ -4,8 +4,9 @@ namespace App\Services\Payment;
 
 use App\Helpers\Provider;
 use App\Models\User;
-use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\Request;
+use Stripe\Exception\ApiErrorException;
+use Stripe\StripeClient;
 
 final class StripeProcessor implements PaymentInterface
 {
@@ -18,11 +19,11 @@ final class StripeProcessor implements PaymentInterface
     /**
      * StripeProcessor constructor.
      */
-    public function __construct(Request $request, User $user = null)
+    public function __construct(Request $request, ?User $user = null)
     {
         // Stripe instance
         $this->request = $request;
-        $this->stripe = Stripe::make(Provider::config('stripe_secret_key', env('STRIPE_SECRET_KEY'), true));
+        $this->stripe = new StripeClient(Provider::config('stripe_secret_key', env('STRIPE_SECRET_KEY'), true));
         $this->user = $user;
     }
 
@@ -37,8 +38,8 @@ final class StripeProcessor implements PaymentInterface
      */
     public function intent(
         int|float $amount,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     ) {
         // Parameters
@@ -55,7 +56,7 @@ final class StripeProcessor implements PaymentInterface
 
         // Try to create the payment intent
         try {
-            $intent = new \App\Services\CustomObject($this->stripe->paymentIntents()->create($params));
+            $intent = new \App\Services\CustomObject($this->stripe->paymentIntents->create($params)->toArray());
             if (isset($intent['status']) && $intent['status'] === 'succeeded') {
                 $intent['status'] = 'success';
             }
@@ -64,7 +65,7 @@ final class StripeProcessor implements PaymentInterface
             }
 
             return $intent;
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException | NotFoundException $th) {
+        } catch (ApiErrorException $th) {
             if ($errorCallback) {
                 $errorCallback([
                     'code' => $th->getCode(),
@@ -88,13 +89,13 @@ final class StripeProcessor implements PaymentInterface
      */
     public function verify(
         string $reference,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true,
     ) {
         // Try to find the payment intent
         try {
-            $ref = $this->stripe->paymentIntents()->find($reference);
+            $ref = $this->stripe->paymentIntents->retrieve($reference)->toArray();
 
             if (isset($ref['status']) && $ref['status'] === 'succeeded') {
                 $ref['status'] = 'success';
@@ -107,7 +108,7 @@ final class StripeProcessor implements PaymentInterface
             }
 
             return $ref;
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException | NotFoundException $th) {
+        } catch (ApiErrorException $th) {
             $error = new \App\Services\CustomObject([
                 'code' => $th->getCode(),
                 'error' => $th->getCode(),
@@ -131,8 +132,8 @@ final class StripeProcessor implements PaymentInterface
      */
     public function deauthorize(
         string $authorization_code,
-        callable $callback = null,
-        callable $error_callback = null,
+        ?callable $callback = null,
+        ?callable $error_callback = null,
         ?bool $respond = true
     ) {}
 
@@ -147,9 +148,9 @@ final class StripeProcessor implements PaymentInterface
      */
     public function transfer(
         int|float $amount,
-        string $reason = null,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?string $reason = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     ) {}
 }
