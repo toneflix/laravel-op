@@ -117,14 +117,22 @@ class VerifyEmailPhoneController extends Controller
                 : null
             );
 
-        $requestCode = Url::base64urlDecode($request->code);
+        // Try the raw submitted value first: this is how a hand-entered OTP
+        // is actually compared. Only fall back to treating it as a base64url
+        // "code|hash" link if it doesn't match outright -- decoding an
+        // arbitrary OTP as base64 can spuriously succeed and happen to
+        // contain a '|' byte, which would otherwise misclassify a valid,
+        // unexpired code as an expired link purely by chance.
+        $requestCode = $request->code;
+        $error = 'The code you provided has expired or does not exist.';
 
-        if (str($requestCode)->contains('|')) {
-            $requestCode = str($requestCode)->explode('|')->first();
-            $error = 'The link you followed has expired, please request a new verification link.';
-        } else {
-            $requestCode = $request->code;
-            $error = 'The code you provided has expired or does not exist.';
+        if ($requestCode !== $code) {
+            $decoded = Url::base64urlDecode($request->code);
+
+            if (str($decoded)->contains('|')) {
+                $requestCode = str($decoded)->explode('|')->first();
+                $error = 'The link you followed has expired, please request a new verification link.';
+            }
         }
 
         // check if it has not expired: the default lifespan is 30 seconds, and that the code is valid
