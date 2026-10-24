@@ -27,7 +27,7 @@
         "toneflix/laravel-dbconfig": "^2.0",
         "toneflix/laravel-fileable": "^3.0",
         "toneflix/laravel-resource-modifier": "^2.0",
-        "toneflix/paystack-php": "^1.0",
+        "toneflix/paystack": "^1.0",
         "valorin/random": "^1.0"
     },
     "require-dev": {
