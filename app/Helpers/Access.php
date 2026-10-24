@@ -66,7 +66,7 @@ class Access
         foreach ($permissions as $permission) {
             Gate::define($permission->value, function (
                 ?User $admin,
-                Model $model = null
+                ?Model $model = null
             ) use ($permission, $canReadOnly) {
                 if (! dbconfig('enable_admin_permission_middleware', true) || (app()->runningInConsole() && ! app()->isProduction())) {
                     return Response::allow();

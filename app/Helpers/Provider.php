@@ -34,7 +34,7 @@ class Provider
      * @return ($key is null ? Collection : ($key is string ? mixed : null))
      */
     public static function config(
-        string|array $key = null,
+        string|array|null $key = null,
         mixed $default = null,
         bool $loadSecret = false
     ): Collection|string|int|float|bool|array|null {

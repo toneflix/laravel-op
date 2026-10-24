@@ -42,7 +42,7 @@ trait ControllerCanExtend
         Request $request,
         User|TempUser $user,
         int $amount,
-        Model $transactable = null,
+        ?Model $transactable = null,
         int $discount = 0,
     ): \Illuminate\Support\Collection {
         $fees = 0;
