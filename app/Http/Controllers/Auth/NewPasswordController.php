@@ -28,18 +28,24 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $code = Url::base64urlDecode($request->code);
+        // Try the raw submitted value first: this is how a hand-entered OTP
+        // is actually stored. Only fall back to treating it as a base64url
+        // "code|hash" link if it isn't a known code outright -- decoding an
+        // arbitrary OTP as base64 can spuriously succeed and happen to
+        // contain a '|' byte, which would otherwise misclassify a valid,
+        // unexpired code as an expired link purely by chance.
+        $code = PasswordCodeResets::firstWhere('code', $request->code);
+        $error = 'The code you provided has expired or does not exist.';
 
-        if (str($code)->contains('|')) {
-            $code = str($code)->explode('|')->first();
-            $error = 'The link you followed has expired, please request a new reset link.';
-        } else {
-            $code = $request->code;
-            $error = 'The code you provided has expired or does not exist.';
+        if (! $code) {
+            $decoded = Url::base64urlDecode($request->code);
+
+            if (str($decoded)->contains('|')) {
+                $decoded = str($decoded)->explode('|')->first();
+                $error = 'The link you followed has expired, please request a new reset link.';
+                $code = PasswordCodeResets::firstWhere('code', $decoded);
+            }
         }
-
-        // find the code
-        $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
         if (! $code || $code->created_at->diffInSeconds(now()) >= Provider::config('token_lifespan', 30)) {
@@ -85,18 +91,24 @@ class NewPasswordController extends Controller
             ], HttpStatus::UNPROCESSABLE_ENTITY);
         }
 
-        $code = Url::base64urlDecode($request->code);
+        // Try the raw submitted value first: this is how a hand-entered OTP
+        // is actually stored. Only fall back to treating it as a base64url
+        // "code|hash" link if it isn't a known code outright -- decoding an
+        // arbitrary OTP as base64 can spuriously succeed and happen to
+        // contain a '|' byte, which would otherwise misclassify a valid,
+        // unexpired code as an expired link purely by chance.
+        $code = PasswordCodeResets::firstWhere('code', $request->code);
+        $error = 'The code you provided has expired or does not exist.';
 
-        if (str($code)->contains('|')) {
-            $code = str($code)->explode('|')->first();
-            $error = 'The link you followed has expired, please request a new reset link.';
-        } else {
-            $code = $request->code;
-            $error = 'The code you provided has expired or does not exist.';
+        if (! $code) {
+            $decoded = Url::base64urlDecode($request->code);
+
+            if (str($decoded)->contains('|')) {
+                $decoded = str($decoded)->explode('|')->first();
+                $error = 'The link you followed has expired, please request a new reset link.';
+                $code = PasswordCodeResets::firstWhere('code', $decoded);
+            }
         }
-
-        // find the code
-        $code = PasswordCodeResets::firstWhere('code', $code);
 
         // check if it has not expired: the default time is 30 seconds
         if (! $code || $code->created_at->diffInSeconds(now()) >= Provider::config('token_lifespan', 30)) {

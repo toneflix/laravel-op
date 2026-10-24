@@ -30,7 +30,7 @@ class CustomObject implements \ArrayAccess
     /**
      * Get the underlying customItem
      */
-    public function get(object|array $customItem = null): \ArrayObject
+    public function get(object|array|null $customItem = null): \ArrayObject
     {
         return new \ArrayObject(
             $customItem ?? $this->customItem,

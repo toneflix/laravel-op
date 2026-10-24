@@ -17,7 +17,7 @@ final class WalletProcessor implements PaymentInterface
     /**
      * WalletProcessor constructor.
      */
-    public function __construct(Request $request, User $user = null)
+    public function __construct(Request $request, ?User $user = null)
     {
         $this->request = $request;
         $this->user = $user;
@@ -34,8 +34,8 @@ final class WalletProcessor implements PaymentInterface
      */
     public function intent(
         int|float $amount,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     ) {
         // Try to create the payment intent
@@ -90,8 +90,8 @@ final class WalletProcessor implements PaymentInterface
      */
     public function verify(
         string $reference,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true,
     ) {
         // Try to find the payment intent
@@ -150,8 +150,8 @@ final class WalletProcessor implements PaymentInterface
      */
     public function deauthorize(
         string $authorization_code,
-        callable $callback = null,
-        callable $error_callback = null,
+        ?callable $callback = null,
+        ?callable $error_callback = null,
         ?bool $respond = true
     ) {}
 
@@ -166,9 +166,9 @@ final class WalletProcessor implements PaymentInterface
      */
     public function transfer(
         int|float $amount,
-        string $reason = null,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?string $reason = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     ) {}
 }
