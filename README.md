@@ -31,15 +31,15 @@ Three interchangeable payment processors behind a single `PaymentInterface` (`in
 |---|---|---|
 | `paystack` | [`toneflix/paystack-php`](https://github.com/toneflix/paystack-php) | This kit's own Paystack SDK, replacing the abandoned `yabacon/paystack-php`. |
 | `stripe` | [`stripe/stripe-php`](https://github.com/stripe/stripe-php) (official SDK) | Replaces the abandoned `cartalyst/stripe-laravel`. |
-| `wallet` | [`toneflix/laravel-pay-pocket`](https://github.com/toneflix/laravel-pay-pocket) | Internal balance-based payments — no external gateway. Deducts synchronously from the user's wallet(s); see [Preparation](https://github.com/toneflix/laravel-pay-pocket#preparation) in that package's README for wallet types (`App\Enums\WalletEnums`) and priority order. |
+| `wallet` | [`toneflix/laravel-pay-pocket`](https://github.com/toneflix/laravel-pay-pocket) | Internal balance-based payments, no external gateway. Deducts synchronously from the user's wallet(s); see [Preparation](https://github.com/toneflix/laravel-pay-pocket#preparation) in that package's README for wallet types (`App\Enums\WalletEnums`) and priority order. |
 
 Every attempt is recorded in the `Transaction` model (`App\Models\Transaction`), including a polymorphic `transactable` link back to whatever the payment was for.
 
 ### Notifications
 
-- **Email & SMS verification** — 6-digit OTP codes (via `valorin/random`, not `rand()`), rate-limited, with a time-limited window (`token_lifespan` setting, in seconds). Also supports a base64url "code|hash" link variant for clickable email links.
-- **SMS delivery** is pluggable between [`laravel-notification-channels/twilio`](https://github.com/laravel-notification-channels/twilio) and [`toneflix/kudisms-notification`](https://github.com/toneflix/kudisms-notification) (a Nigeria-market gateway), switchable at runtime via the `prefered_sms_channel` setting — no redeploy needed.
-- **DB-editable templates** — every system email/SMS has a hardcoded default in `config/messages.php`, but an admin can override the copy per-key from the database via the admin API, without touching code.
+- **Email & SMS verification**: 6-digit OTP codes (via `valorin/random`, not `rand()`), rate-limited, with a time-limited window (`token_lifespan` setting, in seconds). Also supports a base64url "code|hash" link variant for clickable email links.
+- **SMS delivery** is pluggable between [`laravel-notification-channels/twilio`](https://github.com/laravel-notification-channels/twilio) and [`toneflix/kudisms-notification`](https://github.com/toneflix/kudisms-notification) (a Nigeria-market gateway), switchable at runtime via the `prefered_sms_channel` setting, no redeploy needed.
+- **DB-editable templates**: every system email/SMS has a hardcoded default in `config/messages.php`, but an admin can override the copy per-key from the database via the admin API, without touching code.
 
 ### Settings
 
@@ -59,7 +59,7 @@ Every attempt is recorded in the `Transaction` model (`App\Models\Transaction`),
 
 ### Exports
 
-Any model registered in `config/exports.php` can be exported to `.xlsx` via [`maatwebsite/excel`](https://github.com/SpartnerNL/Laravel-Excel) — synchronously, or queued with an email notification linking to a time-limited signed download (`php artisan app:export`, or the generic `SimpleDataExporter` service).
+Any model registered in `config/exports.php` can be exported to `.xlsx` via [`maatwebsite/excel`](https://github.com/SpartnerNL/Laravel-Excel), synchronously, or queued with an email notification linking to a time-limited signed download (`php artisan app:export`, or the generic `SimpleDataExporter` service).
 
 ### Sessions & devices
 
