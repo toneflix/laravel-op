@@ -1,10 +1,10 @@
 # Laravel OP
 
 [![Test & Lint](https://github.com/toneflix/laravel-op/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/toneflix/laravel-op/actions/workflows/run-tests.yml)
-[![Latest Stable Version](https://img.shields.io/packagist/v/toneflix-code/laravel-op.svg)](https://packagist.org/packages/toneflix-code/laravel-op)
-[![Total Downloads](https://img.shields.io/packagist/dt/toneflix-code/laravel-op.svg)](https://packagist.org/packages/toneflix-code/laravel-op)
-[![License](https://img.shields.io/packagist/l/toneflix-code/laravel-op.svg)](https://packagist.org/packages/toneflix-code/laravel-op)
-[![PHP Version Require](https://img.shields.io/packagist/dependency-v/toneflix-code/laravel-op/php)](https://packagist.org/packages/toneflix-code/laravel-op)
+[![Latest Stable Version](https://img.shields.io/packagist/v/toneflix/laravel-op.svg)](https://packagist.org/packages/toneflix/laravel-op)
+[![Total Downloads](https://img.shields.io/packagist/dt/toneflix/laravel-op.svg)](https://packagist.org/packages/toneflix/laravel-op)
+[![License](https://img.shields.io/packagist/l/toneflix/laravel-op.svg)](https://packagist.org/packages/toneflix/laravel-op)
+[![PHP Version Require](https://img.shields.io/packagist/dependency-v/toneflix/laravel-op/php)](https://packagist.org/packages/toneflix/laravel-op)
 [![codecov](https://codecov.io/gh/toneflix/laravel-op/graph/badge.svg?token=2O7aFulQ9P)](https://codecov.io/gh/toneflix/laravel-op)
 
 <!-- ![GitHub Actions](https://github.com/toneflix/laravel-op/actions/workflows/main.yml/badge.svg) -->
@@ -16,7 +16,7 @@ Laravel OP is a simple API agnostic fork of Laravel that provides a set of tools
 To use this package you have to initialize it as a project using composer:
 
 ```bash
-composer create-project toneflix-code/laravel-op
+composer create-project toneflix/laravel-op
 ```
 
 ## TODO: Add Documentation
