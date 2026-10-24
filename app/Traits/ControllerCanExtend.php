@@ -7,6 +7,7 @@ use App\Models\TempUser;
 use App\Models\User;
 use App\Services\Payment\PaystackProcessor;
 use App\Services\Payment\StripeProcessor;
+use App\Services\Payment\WalletProcessor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -51,6 +52,8 @@ trait ControllerCanExtend
             $paymentIntent = (new PaystackProcessor($request, $user))->intent($amount - $discount);
         } elseif ($this->paymentProcessor === 'stripe') {
             $paymentIntent = (new StripeProcessor($request, $user))->intent($amount - $discount);
+        } elseif ($this->paymentProcessor === 'wallet') {
+            $paymentIntent = (new WalletProcessor($request, $user))->intent($amount - $discount);
         } else {
             throw ValidationException::withMessages([
                 'payment_method' => 'Unknown Payment Method Selected.',
@@ -100,6 +103,8 @@ trait ControllerCanExtend
             $paymentIntent = (new PaystackProcessor($request, $user))->verify($reference);
         } elseif ($this->paymentProcessor === 'stripe') {
             $paymentIntent = (new StripeProcessor($request, $user))->verify($reference);
+        } elseif ($this->paymentProcessor === 'wallet') {
+            $paymentIntent = (new WalletProcessor($request, $user))->verify($reference);
         } else {
             throw ValidationException::withMessages([
                 'payment_method' => 'Unknown Payment Method Selected.',
