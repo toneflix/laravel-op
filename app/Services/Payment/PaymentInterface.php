@@ -23,8 +23,8 @@ interface PaymentInterface
      */
     public function intent(
         int|float $amount,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     );
 
@@ -37,8 +37,8 @@ interface PaymentInterface
      */
     public function verify(
         string $reference,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     );
 
@@ -51,8 +51,8 @@ interface PaymentInterface
      */
     public function deauthorize(
         string $authorization_code,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     );
 
@@ -67,9 +67,9 @@ interface PaymentInterface
      */
     public function transfer(
         int|float $amount,
-        string $reason = null,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?string $reason = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     );
 }
