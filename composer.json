@@ -1,12 +1,11 @@
 {
-    "name": "toneflix-code/laravel-op",
+    "name": "toneflix/laravel-op",
     "type": "project",
     "description": "Laravel OP is a simple fork of Laravel that provides a set of tools to help you build your Laravel application faster and easier. It is a collection of useful classes, traits, and functions that I have found useful in my own projects. It is a work in progress and I will be adding more features as I need them. I hope you find it useful too.",
     "keywords": [
         "framework",
         "laravel",
         "toneflix",
-        "toneflix-code",
         "library",
         "laravel-op",
         "bootstrap",
@@ -15,31 +14,31 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "cartalyst/stripe-laravel": "^17.0",
-        "laravel-notification-channels/twilio": "^4.1",
-        "laravel/framework": "^12",
-        "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.10",
-        "maatwebsite/excel": "^3.1",
+        "laravel-notification-channels/twilio": "^4.2",
+        "laravel/framework": "^13.0",
+        "laravel/sanctum": "^4.3",
+        "laravel/tinker": "^3.0",
+        "maatwebsite/excel": "^4.0",
         "matomo/device-detector": "^6.4",
         "predis/predis": "^2.3",
         "spatie/laravel-permission": "^6.16",
-        "toneflix-code/kudisms-notification": "^1.1",
-        "toneflix-code/laravel-dbconfig": "^1.1",
-        "toneflix-code/laravel-fileable": "^2.1",
-        "toneflix-code/laravel-resource-modifier": "^1.1",
-        "valorin/random": "^1.0",
-        "yabacon/paystack-php": "^2.2"
+        "stripe/stripe-php": "^22.0",
+        "toneflix/kudisms-notification": "^2.0",
+        "toneflix/laravel-dbconfig": "^2.0",
+        "toneflix/laravel-fileable": "^3.0",
+        "toneflix/laravel-resource-modifier": "^2.0",
+        "toneflix/paystack-php": "^1.0",
+        "valorin/random": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
+        "laravel/pint": "^1.27",
+        "laravel/sail": "^1.69",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^11.0",
-        "spatie/laravel-ignition": "^2.4",
-        "toneflix-code/fakerphp-lorem-toneflix": "^1.0.1"
+        "nunomaduro/collision": "^8.9",
+        "phpunit/phpunit": "^12.0",
+        "spatie/laravel-ignition": "^2.12",
+        "toneflix/faker-pictwo": "^1.0"
     },
     "autoload": {
         "psr-4": {
