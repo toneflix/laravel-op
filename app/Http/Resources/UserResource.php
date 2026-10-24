@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use ToneflixCode\ResourceModifier\Services\Json\JsonResource;
+use Toneflix\ResourceModifier\Services\Json\JsonResource;
 
 class UserResource extends JsonResource
 {

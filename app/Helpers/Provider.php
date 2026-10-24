@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Response;
-use ToneflixCode\DbConfig\Helpers\Configure;
+use Toneflix\DbConfig\Helpers\Configure;
 
 class Provider
 {

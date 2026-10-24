@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-use ToneflixCode\LaravelFileable\Media;
+use Toneflix\LaravelFileable\Media;
 
 class AccountController extends Controller
 {

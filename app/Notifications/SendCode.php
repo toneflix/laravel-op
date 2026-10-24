@@ -114,7 +114,7 @@ class SendCode extends Notification implements ShouldQueue
         return $this->toSms($n);
     }
 
-    public function toKudiSms($n): \ToneflixCode\KudiSmsNotification\KudiSmsMessage
+    public function toKudiSms($n): \Toneflix\KudiSmsNotification\KudiSmsMessage
     {
         return $this->toSms($n);
     }

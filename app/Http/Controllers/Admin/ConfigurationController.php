@@ -6,7 +6,7 @@ use App\Enums\HttpStatus;
 use App\Helpers\Provider;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use ToneflixCode\DbConfig\Models\Configuration;
+use Toneflix\DbConfig\Models\Configuration;
 
 class ConfigurationController extends Controller
 {
