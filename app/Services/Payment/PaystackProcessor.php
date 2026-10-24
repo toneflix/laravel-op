@@ -7,10 +7,10 @@ use App\Helpers\Provider;
 use App\Models\TempUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Toneflix\Paystack\Exception\ApiException;
+use Toneflix\Paystack\MetadataBuilder;
+use Toneflix\Paystack\Paystack;
 use Valorin\Random\Random;
-use Yabacon\Paystack;
-use Yabacon\Paystack\Exception\ApiException;
-use Yabacon\Paystack\MetadataBuilder;
 
 class PaystackProcessor implements PaymentInterface
 {
@@ -21,7 +21,7 @@ class PaystackProcessor implements PaymentInterface
     /**
      * PaystackProcessor constructor.
      */
-    public function __construct(Request $request, User|TempUser $user = null)
+    public function __construct(Request $request, User|TempUser|null $user = null)
     {
         $this->request = $request;
         $this->user = $user;
@@ -38,8 +38,8 @@ class PaystackProcessor implements PaymentInterface
      */
     public function intent(
         int|float $amount,
-        callable $callback = null,
-        callable $error_callback = null,
+        ?callable $callback = null,
+        ?callable $error_callback = null,
         ?bool $respond = true
     ) {
         $tranx = null;
@@ -143,8 +143,8 @@ class PaystackProcessor implements PaymentInterface
      */
     public function verify(
         string $reference,
-        callable $callback = null,
-        callable $error_callback = null,
+        ?callable $callback = null,
+        ?callable $error_callback = null,
         ?bool $respond = true
     ) {
         $response = new \stdClass();
@@ -231,8 +231,8 @@ class PaystackProcessor implements PaymentInterface
      */
     public function deauthorize(
         string $authorization_code,
-        callable $callback = null,
-        callable $error_callback = null,
+        ?callable $callback = null,
+        ?callable $error_callback = null,
         ?bool $respond = true
     ) {
         $response = new \stdClass();
@@ -245,10 +245,7 @@ class PaystackProcessor implements PaymentInterface
         } else {
             try {
                 $paystack = new Paystack(Provider::config('paystack_secret_key', env('PAYSTACK_SECRET_KEY'), true));
-                $paystack->useRoutes(['deauth' => PaystackDeauth::class]);
-                $tranx = $paystack->deauth->deactivateAuthorization([
-                    'authorization_code' => $authorization_code,
-                ]);
+                $tranx = $paystack->customer->deactivateAuthorization($authorization_code);
             } catch (ApiException | \InvalidArgumentException | \ErrorException $e) {
                 $tranx = $e instanceof ApiException ? $e->getResponseObject() : new \stdClass();
                 $code = HttpStatus::UNPROCESSABLE_ENTITY;
@@ -285,9 +282,9 @@ class PaystackProcessor implements PaymentInterface
      */
     public function transfer(
         int|float $amount,
-        string $reason = null,
-        callable $successCallback = null,
-        callable $errorCallback = null,
+        ?string $reason = null,
+        ?callable $successCallback = null,
+        ?callable $errorCallback = null,
         ?bool $respond = true
     ) {
         $response = new \stdClass();
@@ -340,7 +337,7 @@ class PaystackProcessor implements PaymentInterface
                     return $response;
                 }
             }
-        } catch (\Yabacon\Paystack\Exception\ApiException $e) {
+        } catch (ApiException $e) {
             $tranx = $e instanceof ApiException ? $e->getResponseObject() : new \stdClass();
             $code = HttpStatus::UNPROCESSABLE_ENTITY;
             $msg = $e->getMessage();
