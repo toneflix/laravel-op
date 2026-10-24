@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Cache;
-use ToneflixCode\DbConfig\Models\Fileable as ModelsFileable;
-use ToneflixCode\LaravelFileable\Traits\Fileable;
+use Toneflix\DbConfig\Models\Fileable as ModelsFileable;
+use Toneflix\LaravelFileable\Traits\Fileable;
 
 class File extends ModelsFileable
 {

@@ -5,8 +5,8 @@ namespace App\Enums;
 use App\Helpers\Provider;
 use NotificationChannels\Twilio\TwilioChannel;
 use NotificationChannels\Twilio\TwilioSmsMessage;
-use ToneflixCode\KudiSmsNotification\KudiSmsChannel;
-use ToneflixCode\KudiSmsNotification\KudiSmsMessage;
+use Toneflix\KudiSmsNotification\KudiSmsChannel;
+use Toneflix\KudiSmsNotification\KudiSmsMessage;
 
 /**
  * HTTP Status codes.

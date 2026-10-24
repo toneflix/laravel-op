@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withSingletons([
         \Faker\Generator::class => function () {
             $faker = \Faker\Factory::create();
-            $faker->addProvider(new \ToneflixCode\FakerLoremToneflix\FakerLoremToneflixProvider($faker));
+            $faker->addProvider(new \Toneflix\FakerPicTwo\FakerPicTwoProvider($faker));
 
             return $faker;
         },

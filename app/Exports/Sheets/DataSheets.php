@@ -3,6 +3,7 @@
 namespace App\Exports\Sheets;
 
 use App\Helpers\Transformer;
+use Illuminate\Support\Enumerable;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -45,7 +46,7 @@ class DataSheets implements FromCollection, ShouldAutoSize, WithHeadings, WithMa
         )->toArray();
     }
 
-    public function collection()
+    public function collection(): Enumerable
     {
         return $this->submisions;
     }
@@ -86,7 +87,7 @@ class DataSheets implements FromCollection, ShouldAutoSize, WithHeadings, WithMa
         return 'Page ' . $this->page;
     }
 
-    public function styles(Worksheet $sheet)
+    public function styles(Worksheet $sheet): ?array
     {
         return [
             // Style the first row as bold text.
